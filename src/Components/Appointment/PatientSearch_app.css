@@ -1,0 +1,217 @@
+.searchWrapper_app {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.filterControls_app {
+    display: flex;
+    gap: 30px;
+    align-items: flex-end;
+    background: var(--surface);
+    padding: 30px;
+    border-radius: 32px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+}
+
+.searchGroup_app {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.searchGroup_app label {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.searchInput_app {
+    width: 100%;
+    padding: 18px 20px 18px 56px;
+    border-radius: 18px;
+    border: 2px solid var(--bg-deep);
+    background: var(--bg-soft);
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    outline: none;
+}
+
+.searchInput_app:focus {
+    border-color: var(--primary);
+    background: var(--surface);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
+}
+
+.searchIcon_app {
+    position: absolute;
+    left: 20px;
+    color: var(--text-light);
+}
+
+.selectGroup_app {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.selectGroup_app label {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.specialtySelect_app {
+    width: 100%;
+    padding: 18px;
+    border-radius: 18px;
+    border: 2px solid var(--bg-deep);
+    background: var(--bg-soft);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    outline: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.specialtySelect_app:focus {
+    border-color: var(--primary);
+    background: var(--surface);
+}
+
+.docGrid_app {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 30px;
+}
+
+.docCard_app {
+    background: var(--surface);
+    border-radius: 32px;
+    padding: 30px;
+    border: 1px solid var(--border-light);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.docCard_app:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: transparent;
+}
+
+.docHeader_app {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.docImgWrapper_app {
+    position: relative;
+    width: 90px;
+    height: 90px;
+}
+
+.docImg_app {
+    width: 100%;
+    height: 100%;
+    border-radius: 24px;
+    object-fit: cover;
+    background: var(--bg-soft);
+}
+
+.onlineBadge_app {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 18px;
+    height: 18px;
+    background: #22c55e;
+    border: 4px solid white;
+    border-radius: 50%;
+}
+
+.docMeta_app h3 {
+    font-size: 1.4rem;
+    color: var(--text-main);
+    font-weight: 800;
+}
+
+.specTag_app {
+    display: inline-block;
+    padding: 6px 14px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 6px;
+}
+
+.docStats_app {
+    display: flex;
+    gap: 20px;
+    border-top: 1px solid var(--bg-soft);
+    padding-top: 20px;
+}
+
+.statItem_app {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.bookBtn_app {
+    width: 100%;
+    padding: 18px;
+    border-radius: 18px;
+    border: none;
+    background: var(--primary);
+    color: white;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.bookBtn_app:hover {
+    background: var(--primary-dark);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.25);
+}
+
+.noResults_app {
+    padding: 100px;
+    background: var(--surface);
+    border-radius: 32px;
+    border: 2px dashed var(--border-light);
+    text-align: center;
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+    .filterControls_app {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

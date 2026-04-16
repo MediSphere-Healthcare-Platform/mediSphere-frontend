@@ -1,0 +1,238 @@
+.wrapper_paconsult {
+    background-color: #f7fafc;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Hero Section */
+.hero_paconsult {
+    height: 350px;
+    background-image: url('https://images.unsplash.com/photo-1576091160550-217359f42f8c?auto=format&fit=crop&q=80&w=1200');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.heroOverlay_paconsult {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(26, 32, 44, 0.8), rgba(26, 32, 44, 0.6));
+}
+
+.heroContent_paconsult {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 0 20px;
+    animation: fadeInDown_paconsult 0.8s ease-out;
+}
+
+@keyframes fadeInDown_paconsult {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.heroContent_paconsult h1 {
+    font-size: 42px;
+    margin: 0;
+}
+
+.heroContent_paconsult span {
+    color: #4299e1;
+}
+
+.heroContent_paconsult p {
+    font-size: 16px;
+    color: #cbd5e0;
+    margin-top: 15px;
+    line-height: 1.6;
+}
+
+.container_paconsult {
+    display: flex;
+    height: calc(100vh - 100px); /* Adjust for overlap if needed */
+    background-color: #1a202c;
+    color: white;
+    margin: -50px 20px 20px;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.main_paconsult {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+}
+
+.videoGrid_paconsult {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 1024px) {
+    .videoGrid_paconsult {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+    }
+}
+
+.videoCard_paconsult {
+    background: #2d3748;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.videoCard_paconsult img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.videoLabel_paconsult {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 6px 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    backdrop-filter: blur(4px);
+}
+
+.selfVideo_paconsult {
+    width: 100%;
+    height: 100%;
+    background: #4a5568;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.selfVideoMock_paconsult {
+    font-size: 24px;
+    font-weight: 700;
+    color: #a0aec0;
+}
+
+.controls_paconsult {
+    background: #2d3748;
+    padding: 15px 30px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.controlBtn_paconsult {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    border: none;
+    background: #4a5568;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.controlBtn_paconsult:hover {
+    background: #718096;
+}
+
+.controlBtn_paconsult.active_paconsult {
+    background: #e53e3e;
+}
+
+.controlBtn_paconsult.hangup_paconsult {
+    background: #e53e3e;
+    width: 70px;
+}
+
+.controlBtn_paconsult.hangup_paconsult:hover {
+    background: #c53030;
+}
+
+.divider_paconsult {
+    width: 2px;
+    height: 30px;
+    background: #4a5568;
+    margin: 0 10px;
+}
+
+.sidebar_paconsult {
+    width: 350px;
+    background: #2d3748;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #4a5568;
+}
+
+.sidebarHeader_paconsult {
+    padding: 20px;
+    border-bottom: 1px solid #4a5568;
+}
+
+.chatSpace_paconsult {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+}
+
+.message_paconsult {
+    max-width: 85%;
+    padding: 12px;
+    border-radius: 15px;
+    font-size: 14px;
+}
+
+.message_paconsult p { margin: 0; line-height: 1.4; }
+.message_paconsult span { font-size: 10px; color: #a0aec0; display: block; margin-top: 5px; }
+
+.bot_paconsult { background: #4a5568; align-self: center; text-align: center; font-style: italic; }
+.doctor_paconsult { background: #3182ce; align-self: flex-start; border-bottom-left-radius: 2px; }
+
+.chatInput_paconsult {
+    padding: 20px;
+    display: flex;
+    gap: 10px;
+    background: #1a202c;
+}
+
+.chatInput_paconsult input {
+    flex-grow: 1;
+    background: #2d3748;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    color: white;
+    outline: none;
+}
+
+.chatInput_paconsult button {
+    background: #3182ce;
+    color: white;
+    border: none;
+    padding: 0 15px;
+    border-radius: 10px;
+    cursor: pointer;
+}

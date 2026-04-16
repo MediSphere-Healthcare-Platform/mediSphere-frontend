@@ -1,0 +1,321 @@
+.dcWrapper_docon {
+    background-color: #f7fafc;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    padding-bottom: 80px;
+}
+
+/* Hero Section */
+.dcHero_docon {
+    height: 350px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.dcHeroOverlay_docon {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(26, 32, 44, 0.8), rgba(26, 32, 44, 0.6));
+}
+
+.dcHeroContent_docon {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.dcHeroContent_docon h1 {
+    font-size: 44px;
+    margin: 0;
+}
+
+.dcHeroContent_docon span {
+    color: #4299e1;
+}
+
+.dcHeroContent_docon p {
+    font-size: 16px;
+    color: #cbd5e0;
+    margin-top: 15px;
+}
+
+/* Container */
+.dcContainer_docon {
+    max-width: 1400px;
+    margin: -60px auto 0;
+    position: relative;
+    z-index: 10;
+    padding: 0 20px;
+}
+
+.dcSession_docon {
+    display: grid;
+    grid-template-columns: 1fr 500px;
+    gap: 30px;
+}
+
+/* Video Area */
+.dcVideoArea_docon {
+    background: #1a202c;
+    border-radius: 30px;
+    overflow: hidden;
+    position: relative;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.dcRemoteVideo_docon {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.dcVideoPlaceholder_docon {
+    text-align: center;
+    color: #4a5568;
+}
+
+.dcVideoPlaceholder_docon p {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.dcLocalVideo_docon {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 200px;
+    height: 120px;
+    background: #2d3748;
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dcLiveCam_docon {
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.dcCamOff_docon { color: #718096; }
+
+.dcVideoControls_docon {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.dcVideoControls_docon button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.dcVideoControls_docon button.active { background: white; color: #1a202c; }
+.dcVideoControls_docon button.inactive { background: #e53e3e; color: white; }
+
+.dcEndCall_docon { background: #e53e3e !important; color: white !important; }
+.dcEndCall_docon:hover { transform: scale(1.1); }
+
+/* Interface Area */
+.dcInterface_docon {
+    background: white;
+    border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #edf2f7;
+}
+
+.dcTabs_docon {
+    display: flex;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.dcTabs_docon button {
+    flex: 1;
+    padding: 20px;
+    border: none;
+    background: none;
+    font-weight: 700;
+    color: #718096;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.dcTabs_docon button.active {
+    color: #3182ce;
+    box-shadow: inset 0 -3px 0 #3182ce;
+    background: #f7fafc;
+}
+
+.dcTabContent_docon {
+    padding: 30px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.dcPrescription_docon h3, .dcNotes_docon h3 {
+    margin-top: 0;
+    font-size: 18px;
+    color: #2d3748;
+    margin-bottom: 25px;
+}
+
+.dcPresTable_docon {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.dcPresHeader_docon {
+    display: grid;
+    grid-template-columns: 1fr 100px 100px 100px 40px;
+    gap: 15px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #a0aec0;
+    text-transform: uppercase;
+    padding: 0 5px;
+}
+
+.dcPresRow_docon {
+    display: grid;
+    grid-template-columns: 1fr 100px 100px 100px 40px;
+    gap: 15px;
+    align-items: center;
+}
+
+.dcPresRow_docon input {
+    background: #f7fafc;
+    border: 1px solid #edf2f7;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+.dcPresRow_docon input:focus { border-color: #4299e1; }
+
+.dcPresRow_docon button {
+    background: #fff5f5;
+    color: #e53e3e;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.dcAddRow_docon {
+    margin-top: 20px;
+    background: none;
+    border: 2px dashed #e2e8f0;
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    color: #718096;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.dcAddRow_docon:hover { border-color: #3182ce; color: #3182ce; background: #ebf8ff; }
+
+.dcPresFooter_docon {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #edf2f7;
+}
+
+.dcWarning_docon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #718096;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.dcSubmitPres_docon {
+    width: 100%;
+    padding: 16px;
+    background: #3182ce;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(49, 130, 206, 0.2);
+    transition: 0.3s;
+}
+
+.dcSubmitPres_docon:hover { background: #2c5282; transform: translateY(-3px); }
+
+.dcNotes_docon textarea {
+    width: 100%;
+    height: 300px;
+    padding: 20px;
+    background: #f7fafc;
+    border: 1px solid #edf2f7;
+    border-radius: 15px;
+    font-size: 15px;
+    outline: none;
+    box-sizing: border-box;
+    line-height: 1.6;
+}
+
+.dcSaveNotes_docon {
+    margin-top: 20px;
+    padding: 12px 25px;
+    background: #2d3748;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+    .dcSession_docon { grid-template-columns: 1fr; }
+}

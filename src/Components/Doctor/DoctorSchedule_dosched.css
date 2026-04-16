@@ -1,0 +1,339 @@
+.dsWrapper_dosched {
+    background-color: #f7fafc;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    padding-bottom: 80px;
+}
+
+/* Hero Section */
+.dsHero_dosched {
+    height: 350px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.dsHeroOverlay_dosched {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(26, 32, 44, 0.8), rgba(26, 32, 44, 0.6));
+}
+
+.dsHeroContent_dosched {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.dsHeroContent_dosched h1 {
+    font-size: 44px;
+    margin: 0;
+}
+
+.dsHeroContent_dosched span {
+    color: #4299e1;
+}
+
+.dsHeroContent_dosched p {
+    font-size: 16px;
+    color: #cbd5e0;
+    margin-top: 15px;
+}
+
+/* Container */
+.dsContainer_dosched {
+    max-width: 1200px;
+    margin: -50px auto 0;
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 30px;
+    padding: 0 20px;
+}
+
+/* Sidebar */
+.dsSidebar_dosched {
+    background: white;
+    padding: 30px;
+    border-radius: 24px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    border: 1px solid #edf2f7;
+    height: fit-content;
+}
+
+.dsSidebar_dosched h3 {
+    font-size: 18px;
+    color: #2d3748;
+    margin-bottom: 25px;
+}
+
+.dsDayList_dosched {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dsDayItem_dosched {
+    background: #f7fafc;
+    border: 1px solid #edf2f7;
+    padding: 15px 20px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.dsDayItem_dosched:hover {
+    background: #edf2f7;
+}
+
+.dsDayItem_dosched.active {
+    background: #ebf8ff;
+    border-color: #3182ce;
+    color: #3182ce;
+    font-weight: 700;
+}
+
+.dsDayItem_dosched span:first-child {
+    font-size: 15px;
+}
+
+.dsSlotCount_dosched {
+    font-size: 12px;
+    background: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: #718096;
+}
+
+.active .dsSlotCount_dosched {
+    background: #3182ce;
+    color: white;
+}
+
+/* Main Area */
+.dsMain_dosched {
+    background: white;
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    border: 1px solid #edf2f7;
+}
+
+.dsMainHeader_dosched {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.dsMainHeader_dosched h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #2d3748;
+}
+
+.dsAddBtn_dosched {
+    background: #3182ce;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.dsAddBtn_dosched:hover {
+    background: #2c5282;
+    transform: translateY(-2px);
+}
+
+.dsSlotList_dosched {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 40px;
+    min-height: 200px;
+}
+
+.dsSlotCard_dosched {
+    background: #f7fafc;
+    padding: 20px 25px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #edf2f7;
+    transition: 0.3s;
+}
+
+.dsSlotCard_dosched:hover {
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.dsSlotInfo_dosched {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.dsSlotIcon_dosched {
+    color: #4299e1;
+}
+
+.dsSlotTime_dosched {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+.dsSlotType_dosched {
+    font-size: 13px;
+    color: #a0aec0;
+}
+
+.dsTrashBtn_dosched {
+    background: #fff5f5;
+    color: #e53e3e;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.dsTrashBtn_dosched:hover {
+    background: #feb2b2;
+}
+
+.dsNoSlots_dosched {
+    text-align: center;
+    padding: 60px 0;
+    color: #a0aec0;
+}
+
+.dsFooter_dosched {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 30px;
+    border-top: 1px solid #edf2f7;
+}
+
+.dsStatus_dosched {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #38a169;
+    font-weight: 600;
+}
+
+.dsSaveBtn_dosched {
+    background: #2d3748;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.dsSaveBtn_dosched:hover {
+    background: #1a202c;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal */
+.dsModalOverlay_dosched {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.dsModal_dosched {
+    background: white;
+    padding: 40px;
+    border-radius: 24px;
+    width: 90%;
+    max-width: 400px;
+}
+
+.dsModal_dosched h3 {
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+.dsInputGroup_dosched {
+    margin-bottom: 20px;
+}
+
+.dsInputGroup_dosched label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #718096;
+    margin-bottom: 8px;
+}
+
+.dsInputGroup_dosched input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    box-sizing: border-box;
+}
+
+.dsModalActions_dosched {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.dsModalActions_dosched button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.dsCancel_dosched { background: #f7fafc; color: #718096; }
+.dsConfirm_dosched { background: #3182ce; color: white; }
+
+@media (max-width: 1024px) {
+    .dsContainer_dosched {
+        grid-template-columns: 1fr;
+    }
+}

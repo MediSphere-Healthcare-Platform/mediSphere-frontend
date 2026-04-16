@@ -1,0 +1,197 @@
+.container_paprescription {
+    background-color: #f7fafc;
+    min-height: 100vh;
+}
+
+/* Hero Section */
+.hero_paprescription {
+    height: 350px;
+    background-image: url('https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&q=80&w=1200');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    margin-bottom: 50px;
+}
+
+.heroOverlay_paprescription {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(26, 32, 44, 0.8), rgba(26, 32, 44, 0.6));
+}
+
+.heroContent_paprescription {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 0 20px;
+    animation: fadeInDown_paprescription 0.8s ease-out;
+}
+
+.heroContent_paprescription h1 {
+    font-size: 42px;
+    margin: 0;
+}
+
+.heroContent_paprescription span {
+    color: #4299e1;
+}
+
+.heroContent_paprescription p {
+    font-size: 16px;
+    color: #cbd5e0;
+    margin: 15px 0 0;
+}
+
+@keyframes fadeInDown_paprescription {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.list_paprescription {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.card_paprescription {
+    background: white;
+    border-radius: 25px;
+    padding: 35px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    border: 1px solid #edf2f7;
+    position: relative;
+    overflow: hidden;
+}
+
+.card_paprescription::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: #4299e1;
+}
+
+.cardHeader_paprescription {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 25px;
+}
+
+.idBadge_paprescription {
+    background: #ebf8ff;
+    color: #3182ce;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: block;
+    width: fit-content;
+    margin-bottom: 8px;
+}
+
+.cardHeader_paprescription h3 {
+    margin: 0;
+    font-size: 24px;
+    color: #2d3748;
+}
+
+.actions_paprescription {
+    display: flex;
+    gap: 10px;
+}
+
+.actions_paprescription button {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    padding: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #4a5568;
+    transition: 0.2s;
+}
+
+.actions_paprescription button:hover {
+    background: #edf2f7;
+    color: #2d3748;
+}
+
+.metaGrid_paprescription {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.metaItem_paprescription {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #718096;
+    font-size: 14px;
+}
+
+.medSection_paprescription h4, 
+.notes_paprescription h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #2d3748;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.medTable_paprescription {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 25px;
+}
+
+.medTable_paprescription th {
+    text-align: left;
+    padding: 12px;
+    background: #f8fafc;
+    color: #4a5568;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.medTable_paprescription td {
+    padding: 15px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #4a5568;
+    font-size: 14px;
+}
+
+.notes_paprescription p {
+    background: #fffaf0;
+    padding: 15px;
+    border-radius: 12px;
+    color: #744210;
+    font-size: 14px;
+    margin: 0;
+    border-left: 4px solid #f6ad55;
+}
+
+.warning_paprescription {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: #a0aec0;
+    font-style: italic;
+}

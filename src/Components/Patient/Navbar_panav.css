@@ -1,0 +1,161 @@
+.nav_panav {
+    height: 84px;
+    background: var(--surface);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 60px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.logo_panav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.logoIcon_panav {
+    width: 32px;
+    height: 32px;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.logo_panav span {
+    font-family: 'Outfit', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-main);
+    letter-spacing: -0.03em;
+}
+
+.links_panav {
+    display: flex;
+    gap: 40px;
+}
+
+.link_panav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    position: relative;
+    padding: 10px 0;
+}
+
+.link_panav svg {
+    color: var(--text-light);
+    transition: 0.2s;
+}
+
+.link_panav:hover {
+    color: var(--primary);
+}
+
+.link_panav:hover svg {
+    color: var(--primary);
+}
+
+.link_panav::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: var(--primary);
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.link_panav:hover::after {
+    width: 100%;
+}
+
+.profile_panav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-left: 40px;
+    border-left: 1px solid var(--border-light);
+}
+
+.userInfo_panav {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+
+.userName_panav {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.userRole_panav {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.avatar_panav {
+    width: 44px;
+    height: 44px;
+    background: var(--bg-soft);
+    border: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    color: var(--primary);
+    transition: 0.2s;
+}
+
+.avatar_panav:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+}
+
+.logoutBtn_panav {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logoutBtn_panav:hover {
+    background: #fef2f2;
+}
+
+@media (max-width: 1200px) {
+    .nav_panav {
+        padding: 0 20px;
+    }
+    .links_panav {
+        gap: 20px;
+    }
+    .userInfo_panav {
+        display: none;
+    }
+}

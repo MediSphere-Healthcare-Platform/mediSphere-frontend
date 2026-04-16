@@ -1,0 +1,475 @@
+.wrapper_paprofile {
+    min-height: 100vh;
+    background-color: #f0f4f8;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    padding-bottom: 60px;
+}
+
+/* Hero Section */
+.hero_paprofile {
+    height: 350px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.heroOverlay_paprofile {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(26, 32, 44, 0.8), rgba(26, 32, 44, 0.6));
+}
+
+.heroContent_paprofile {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.heroContent_paprofile h1 {
+    font-size: 40px;
+    margin: 0;
+}
+
+.heroContent_paprofile h1 span {
+    color: #4299e1;
+}
+
+.heroContent_paprofile p {
+    font-size: 16px;
+    color: #cbd5e0;
+    margin-top: 15px;
+    line-height: 1.6;
+}
+
+/* Main Layout Container */
+.mainContainer_paprofile {
+    max-width: 1200px;
+    margin: -60px auto 0;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 30px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Sidebar Styling */
+.sidebar_paprofile {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    height: fit-content;
+}
+
+.avatarWrapper_paprofile {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 25px;
+}
+
+.mainAvatar_paprofile {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid white;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.changePhotoBtn_paprofile {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: #4299e1;
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(66, 153, 225, 0.4);
+    transition: 0.3s;
+}
+
+.changePhotoBtn_paprofile:hover {
+    transform: scale(1.1);
+}
+
+.sidebarInfo_paprofile {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.sidebarInfo_paprofile h1 {
+    font-size: 22px;
+    color: #2d3748;
+    margin: 0 0 5px;
+}
+
+.patientId_paprofile {
+    color: #a0aec0;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.statusBadge_paprofile {
+    display: inline-block;
+    background: #e6fffa;
+    color: #2c7a7b;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Nav Menu */
+.navMenu_paprofile {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 35px;
+}
+
+.menuItem_paprofile {
+    background: none;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #718096;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: left;
+}
+
+.menuItem_paprofile:hover {
+    background: #f7fafc;
+    color: #4a5568;
+}
+
+.menuItem_paprofile.active {
+    background: #ebf8ff;
+    color: #3182ce;
+}
+
+/* Sidebar Card */
+.sidebarCard_paprofile {
+    background: #2d3748;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.cardImg_paprofile {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    opacity: 0.8;
+}
+
+.cardIn_paprofile {
+    padding: 15px;
+    color: white;
+}
+
+.cardIn_paprofile h4 {
+    margin: 0 0 5px;
+    font-size: 14px;
+}
+
+.cardIn_paprofile p {
+    font-size: 11px;
+    margin: 0;
+    color: #cbd5e0;
+}
+
+/* Content Area */
+.contentArea_paprofile {
+    background: white;
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    animation: fadeIn_paprofile 0.5s ease-out;
+}
+
+@keyframes fadeIn_paprofile {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.contentHeader_paprofile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.contentTitle_paprofile h2 {
+    font-size: 24px;
+    color: #2d3748;
+    margin: 0 0 5px;
+}
+
+.contentTitle_paprofile p {
+    color: #a0aec0;
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Details Grid */
+.detailsGrid_paprofile {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+}
+
+.detailField_paprofile {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.detailField_paprofile label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #718096;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.valueBox_paprofile {
+    background: #f7fafc;
+    padding: 14px 20px;
+    border-radius: 12px;
+    color: #2d3748;
+    font-weight: 500;
+    border: 1px solid #edf2f7;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.disabled_paprofile {
+    background: #edf2f7;
+    color: #a0aec0;
+}
+
+.detailField_paprofile input {
+    background: white;
+    padding: 14px 20px;
+    border-radius: 12px;
+    border: 2px solid #ebf8ff;
+    color: #2d3748;
+    font-weight: 500;
+    outline: none;
+    transition: 0.3s;
+}
+
+.detailField_paprofile input:focus {
+    border-color: #4299e1;
+    box-shadow: 0 0 0 4px rgba(66, 153, 225, 0.1);
+}
+
+/* Action Buttons */
+.primaryEditBtn_paprofile {
+    background: #4299e1;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.primaryEditBtn_paprofile:hover {
+    background: #3182ce;
+    box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+}
+
+.editActions_paprofile {
+    display: flex;
+    gap: 15px;
+}
+
+.saveBtn_paprofile {
+    background: #38a169;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.cancelBtn_paprofile {
+    background: #f7fafc;
+    color: #718096;
+    border: 1px solid #e2e8f0;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Health Cards */
+.statsFlex_paprofile {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.healthCard_paprofile {
+    background: #f7fafc;
+    padding: 25px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hcIcon_paprofile {
+    color: #e53e3e;
+    margin-bottom: 5px;
+}
+
+.blue_paprofile { color: #3182ce; }
+.green_paprofile { color: #38a169; }
+
+.healthCard_paprofile span {
+    font-size: 13px;
+    color: #a0aec0;
+    font-weight: 600;
+}
+
+.healthCard_paprofile strong {
+    font-size: 20px;
+    color: #2d3748;
+}
+
+/* Security List */
+.securityList_paprofile {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.secItem_paprofile {
+    background: #f7fafc;
+    padding: 20px 25px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.secItem_paprofile:hover {
+    background: #edf2f7;
+}
+
+.secInfo_paprofile strong {
+    display: block;
+    color: #2d3748;
+    font-size: 15px;
+}
+
+.secInfo_paprofile p {
+    margin: 5px 0 0;
+    color: #718096;
+    font-size: 13px;
+}
+
+.badge_paprofile {
+    background: #e6fffa;
+    color: #2c7a7b;
+    padding: 4px 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* Status / Alerts */
+.errorAlert_paprofile {
+    grid-column: span 2;
+    margin-top: 30px;
+    background: #fff5f5;
+    color: #c53030;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.loadingContainer_paprofile {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    color: #4a5568;
+}
+
+.spinner_paprofile {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #ebf8ff;
+    border-top-color: #4299e1;
+    border-radius: 50%;
+    animation: spin_paprofile 1s infinite linear;
+}
+
+@keyframes spin_paprofile {
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 1024px) {
+    .mainContainer_paprofile {
+        grid-template-columns: 1fr;
+    }
+    .sidebar_paprofile {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .detailsGrid_paprofile, .statsFlex_paprofile {
+        grid-template-columns: 1fr;
+    }
+    .contentArea_paprofile {
+        padding: 25px;
+    }
+}

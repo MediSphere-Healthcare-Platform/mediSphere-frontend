@@ -1,0 +1,64 @@
+.app_container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main_content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Base button style inspired by Multilac */
+.btn_primary {
+    background: var(--primary);
+    color: white;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    border: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.btn_primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+}
+
+.btn_secondary {
+    background: var(--surface);
+    color: var(--primary);
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--primary);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn_secondary:hover {
+    background: var(--primary-light);
+}
+
+/* Clean Cards */
+.card_clean {
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card_clean:hover {
+    border-color: transparent;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+}

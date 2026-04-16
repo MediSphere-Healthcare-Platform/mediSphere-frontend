@@ -1,0 +1,123 @@
+.footer_pafoot {
+    background: var(--surface);
+    padding: 80px 60px 40px;
+    border-top: 1px solid var(--border-light);
+    color: var(--text-main);
+}
+
+.content_pafoot {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 60px;
+}
+
+.branding_pafoot {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.logo_pafoot {
+    font-family: 'Outfit', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.03em;
+}
+
+.branding_pafoot p {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 320px;
+}
+
+.section_pafoot h4 {
+    color: var(--text-main);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 25px;
+    font-weight: 800;
+}
+
+.section_pafoot ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.section_pafoot ul li, 
+.section_pafoot ul li a {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.2s;
+}
+
+.section_pafoot ul li a:hover {
+    color: var(--primary);
+    padding-left: 5px;
+}
+
+.socials_pafoot {
+    display: flex;
+    gap: 15px;
+}
+
+.socials_pafoot div {
+    width: 40px;
+    height: 40px;
+    background: var(--bg-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid var(--border-light);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.socials_pafoot div:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: translateY(-3px);
+}
+
+.bottom_pafoot {
+    margin-top: 80px;
+    padding-top: 30px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-light);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+    .content_pafoot {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+}
+
+@media (max-width: 640px) {
+    .content_pafoot {
+        grid-template-columns: 1fr;
+    }
+    .footer_pafoot {
+        padding: 60px 20px 30px;
+    }
+}

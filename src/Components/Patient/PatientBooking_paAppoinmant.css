@@ -1,0 +1,233 @@
+.container_paAppoinmant {
+    background-color: #f7fafc;
+    min-height: 100vh;
+}
+
+/* Hero Section */
+.hero_paAppoinmant {
+    height: 350px;
+    background-image: url('https://images.unsplash.com/photo-1576091160550-217359f42f8c?auto=format&fit=crop&q=80&w=1200');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    margin-bottom: 40px;
+}
+
+.heroOverlay_paAppoinmant {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(26, 32, 44, 0.8), rgba(26, 32, 44, 0.6));
+}
+
+.heroContent_paAppoinmant {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 0 20px;
+    animation: fadeInDown_paAppoinmant 0.8s ease-out;
+}
+
+.heroContent_paAppoinmant h1 {
+    font-size: 42px;
+    margin: 0;
+}
+
+.heroContent_paAppoinmant span {
+    color: #4299e1;
+}
+
+.heroContent_paAppoinmant p {
+    font-size: 16px;
+    color: #cbd5e0;
+    margin: 15px 0 30px;
+}
+
+@keyframes fadeInDown_paAppoinmant {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Updated Search Bar */
+.searchBar_paAppoinmant {
+    background: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    max-width: 500px;
+    margin: 0 auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.searchIcon_paAppoinmant {
+    color: #a0aec0;
+}
+
+.searchBar_paAppoinmant input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    color: #2d3748;
+}
+
+.doctorGrid_paAppoinmant {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.doctorCard_paAppoinmant {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+}
+
+.doctorCard_paAppoinmant:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.docImageWrapper_paAppoinmant {
+    position: relative;
+    height: 200px;
+}
+
+.docImageWrapper_paAppoinmant img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.specialtyBadge_paAppoinmant {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    background: rgba(66, 153, 225, 0.9);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.docInfo_paAppoinmant {
+    padding: 20px;
+}
+
+.docInfo_paAppoinmant h3 {
+    margin: 0 0 10px;
+    color: #2d3748;
+}
+
+.docInfo_paAppoinmant p {
+    color: #718096;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 5px 0;
+}
+
+.bookBtn_paAppoinmant {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    background: #ebf8ff;
+    color: #3182ce;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.bookBtn_paAppoinmant:hover {
+    background: #3182ce;
+    color: white;
+}
+
+/* Modal Styling */
+.modalOverlay_paAppoinmant {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+}
+
+.modal_paAppoinmant {
+    background: white;
+    width: 90%;
+    max-width: 450px;
+    padding: 30px;
+    border-radius: 25px;
+    animation: zoomIn_paAppoinmant 0.3s ease-out;
+}
+
+@keyframes zoomIn_paAppoinmant {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modalHeader_paAppoinmant {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.bookingForm_paAppoinmant {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.inputGroup_paAppoinmant label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 8px;
+}
+
+.inputGroup_paAppoinmant input, 
+.inputGroup_paAppoinmant textarea {
+    padding: 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.confirmBtn_paAppoinmant {
+    background: #4299e1;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.confirmBtn_paAppoinmant:hover {
+    background: #3182ce;
+}
