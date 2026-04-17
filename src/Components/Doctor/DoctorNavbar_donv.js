@@ -1,50 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link, NavLink, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { LayoutDashboard, CalendarDays, Users, FileText, ClipboardList, UserCircle, LogOut } from 'lucide-react';
-import { doctorApi } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import './DoctorNavbar_donv.css';
 
 const DoctorNavbar_donv = () => {
+    const navigate = useNavigate();
     const location = useLocation();
-    const [doctorInfo, setDoctorInfo] = useState(null);
-    const defaultDoctorId = "UD102616";
+    const { logout, user } = useAuth();
+    const { doctorId: urlDoctorId } = useParams();
 
-    // Helper to get ID from URL or Storage
+    // Resolve doctorId from URL, context, or sessionStorage
     const getActiveDoctorId = () => {
-        // 1. Try to find UD pattern in any segment of the URL
+        // 1. Extract UD-pattern from URL path
         const pathParts = location.pathname.split('/');
-        const idFromUrl = pathParts.find(part => part.startsWith('UD') && part.length > 5);
-        
-        if (idFromUrl) {
-            sessionStorage.setItem('currentDoctorId', idFromUrl);
-            return idFromUrl;
-        }
-
-        // 2. Fallback to Session Storage
-        const savedId = sessionStorage.getItem('currentDoctorId');
-        if (savedId) return savedId;
-
-        // 3. Fallback to default
-        return defaultDoctorId;
+        const fromPath = pathParts.find(p => p.startsWith('UD') && p.length > 4);
+        if (fromPath) return fromPath;
+        // 2. From context
+        if (user?.msUserId) return user.msUserId;
+        // 3. From sessionStorage
+        try {
+            const stored = sessionStorage.getItem('medisphere_user');
+            if (stored) return JSON.parse(stored)?.msUserId || '';
+        } catch { return ''; }
+        return '';
     };
 
-    const currentDoctorId = getActiveDoctorId();
+    const doctorId = getActiveDoctorId();
 
-    useEffect(() => {
-        const fetchDoctorInfo = async () => {
-            try {
-                const response = await doctorApi.get(`/getDoctorById/${currentDoctorId}`);
-                setDoctorInfo(response.data.data);
-            } catch (err) {
-                console.error('Error fetching navbar doctor info:', err);
-            }
-        };
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
 
-        fetchDoctorInfo();
-    }, [currentDoctorId]);
-
-    // Helper for generating dynamic links
-    const getLink = (basePath) => `${basePath}/${currentDoctorId}`;
+    const displayName = user?.name || `Dr. (${doctorId})`;
 
     return (
         <nav className="nav_donv">
@@ -52,34 +41,34 @@ const DoctorNavbar_donv = () => {
                 <div className="logoIcon_donv">+</div>
                 <span>MediSphere <strong>Pro</strong></span>
             </div>
-            
+
             <div className="links_donv">
-                <NavLink to={getLink('/doctor/dashboard')} end className={({ isActive }) => isActive ? "link_donv active" : "link_donv"}>
+                <NavLink to={`/doctor/dashboard/${doctorId}`} className={({ isActive }) => isActive ? 'link_donv active' : 'link_donv'}>
                     <LayoutDashboard size={18} /> Dashboard
                 </NavLink>
-                <NavLink to={getLink('/doctor/appointments')} className={({ isActive }) => isActive ? "link_donv active" : "link_donv"}>
+                <NavLink to={`/doctor/appointments/${doctorId}`} className={({ isActive }) => isActive ? 'link_donv active' : 'link_donv'}>
                     <ClipboardList size={18} /> Appointments
                 </NavLink>
-                <NavLink to={getLink('/doctor/schedule')} className={({ isActive }) => isActive ? "link_donv active" : "link_donv"}>
+                <NavLink to={`/doctor/schedule/${doctorId}`} className={({ isActive }) => isActive ? 'link_donv active' : 'link_donv'}>
                     <CalendarDays size={18} /> Schedule
                 </NavLink>
-                <NavLink to={getLink('/doctor/patients')} className={({ isActive }) => isActive ? "link_donv active" : "link_donv"}>
+                <NavLink to={`/doctor/patients/${doctorId}`} className={({ isActive }) => isActive ? 'link_donv active' : 'link_donv'}>
                     <Users size={18} /> Patients
                 </NavLink>
-                <NavLink to={getLink('/doctor/reports')} className={({ isActive }) => isActive ? "link_donv active" : "link_donv"}>
+                <NavLink to={`/doctor/reports/${doctorId}`} className={({ isActive }) => isActive ? 'link_donv active' : 'link_donv'}>
                     <FileText size={18} /> Reports
                 </NavLink>
             </div>
 
             <div className="profile_donv">
                 <div className="info_donv">
-                    <span className="name_donv">Dr. {doctorInfo?.firstName || 'Sarah'} {doctorInfo?.lastName || 'Smith'}</span>
-                    <span className="role_donv">{doctorInfo?.specialty || 'Medical Specialist'}</span>
+                    <span className="name_donv">{displayName}</span>
+                    <span className="role_donv">Doctor</span>
                 </div>
-                <Link to={getLink('/doctor/profile')} className="avatar_donv">
+                <Link to={`/doctor/profile/${doctorId}`} className="avatar_donv">
                     <UserCircle size={24} />
                 </Link>
-                <button className="logout_donv" title="Logout">
+                <button className="logout_donv" title="Logout" onClick={handleLogout}>
                     <LogOut size={18} />
                 </button>
             </div>

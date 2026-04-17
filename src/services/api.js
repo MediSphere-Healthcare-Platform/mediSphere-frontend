@@ -6,20 +6,25 @@ const PATIENT_BASE_URL = 'http://localhost:8084/patient/api/v1';
 // Doctor Service Base URL
 const DOCTOR_BASE_URL = 'http://localhost:8085/doctor/api/v1';
 
+// Auth Service Base URL
+const AUTH_BASE_URL = 'http://localhost:8083/api/v1/auth';
+
 // Instance for Patient Service
 export const patientApi = axios.create({
     baseURL: PATIENT_BASE_URL,
-    headers: {
-        'Content-Type': 'application/json'
-    }
+    headers: { 'Content-Type': 'application/json' }
 });
 
 // Instance for Doctor Service
 export const doctorApi = axios.create({
     baseURL: DOCTOR_BASE_URL,
-    headers: {
-        'Content-Type': 'application/json'
-    }
+    headers: { 'Content-Type': 'application/json' }
+});
+
+// Instance for Auth Service
+export const authApi = axios.create({
+    baseURL: AUTH_BASE_URL,
+    headers: { 'Content-Type': 'application/json' }
 });
 
 // Helper for generic interceptors
@@ -36,7 +41,7 @@ const addInterceptors = (instance, name) => {
                     data: error.response.data
                 });
             } else if (error.request) {
-                console.error(`[${name} Error] No response received from ${error.config.url}. Ensure the service is running.`);
+                console.error(`[${name} Error] No response received. Ensure the service is running.`);
             } else {
                 console.error(`[${name} Error] Request setup failed:`, error.message);
             }
@@ -47,6 +52,7 @@ const addInterceptors = (instance, name) => {
 
 addInterceptors(patientApi, 'PatientAPI');
 addInterceptors(doctorApi, 'DoctorAPI');
+addInterceptors(authApi, 'AuthAPI');
 
-// Exporting patientApi as default to maintain compatibility for now
+// Exporting patientApi as default to maintain backward compatibility
 export default patientApi;

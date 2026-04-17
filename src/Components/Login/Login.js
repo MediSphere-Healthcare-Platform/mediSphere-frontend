@@ -1,32 +1,107 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AtSign, Lock, ArrowRight, Shield } from 'lucide-react';
+import { AtSign, Lock, ArrowRight, Shield, AlertCircle, Loader2 } from 'lucide-react';
+import { authApi, patientApi } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import './Login.css';
 
 const Login = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
+
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const loginImage = "https://images.unsplash.com/photo-1576091160550-217359f42f8c?auto=format&fit=crop&q=80&w=1400";
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        if (error) setError('');
     };
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         setLoading(true);
-        // Simulate auth
-        setTimeout(() => {
-            // Check if it's a doctor or patient based on email for demo
-            if (formData.email.includes('doctor')) {
-                navigate('/doctor');
-            } else {
-                navigate('/');
+        setError('');
+
+        try {
+            // Step 1: Call auth service
+            const authRes = await authApi.post('/login', {
+                email: formData.email,
+                password: formData.password
+            });
+
+            const { status, data } = authRes.data;
+
+            if (status !== 'SUCCESS' || !data) {
+                setError('Login failed. Please check your credentials.');
+                setLoading(false);
+                return;
             }
+
+            const { token, role, msUserId } = data;
+
+            if (role === 'DOCTOR') {
+                // For doctors: msUserId IS the doctorId (UD#### format)
+                const userData = {
+                    token,
+                    role,
+                    msUserId,
+                    doctorId: msUserId,
+                    email: formData.email,
+                    name: `Dr. (ID: ${msUserId})`
+                };
+                login(userData);
+                navigate(`/doctor/dashboard/${msUserId}`);
+
+            } else if (role === 'PATIENT') {
+                // For patients: msUserId = UP#### but API uses patientId = P###
+                // Resolve msUserId → patientId via getAllPatientForAdmin
+                try {
+                    const patientsRes = await patientApi.get('/getAllPatientForAdmin');
+                    const patients = patientsRes.data?.data || [];
+                    const matchedPatient = patients.find(p => p.msUserId === msUserId);
+
+                    if (!matchedPatient) {
+                        setError('Patient profile not found. Please contact support.');
+                        setLoading(false);
+                        return;
+                    }
+
+                    const patientId = matchedPatient.patientId;
+                    const userData = {
+                        token,
+                        role,
+                        msUserId,
+                        patientId,
+                        email: formData.email,
+                        name: `${matchedPatient.firstName || ''} ${matchedPatient.lastName || ''}`.trim()
+                    };
+                    login(userData);
+                    navigate(`/dashboard/${patientId}`);
+
+                } catch (pErr) {
+                    console.error('Failed to resolve patientId:', pErr);
+                    setError('Could not load patient profile. Make sure the patient service is running.');
+                }
+
+            } else {
+                setError(`Unknown role: ${role}. Access denied.`);
+            }
+
+        } catch (err) {
+            console.error('Login error:', err);
+            if (err.response?.status === 403 || err.response?.status === 401) {
+                setError('Invalid email or password. Please try again.');
+            } else if (err.request) {
+                setError('Could not connect to auth service. Make sure it is running on port 8083.');
+            } else {
+                setError('An unexpected error occurred. Please try again.');
+            }
+        } finally {
             setLoading(false);
-        }, 1000);
+        }
     };
 
     return (
@@ -39,7 +114,7 @@ const Login = () => {
                             <Shield className="brand-icon" size={32} />
                             <span>MediSphere</span>
                         </div>
-                        
+
                         <div className="login-header">
                             <h1>Welcome Back</h1>
                             <p>Enter your credentials to access your healthcare portal.</p>
@@ -48,28 +123,48 @@ const Login = () => {
                         <form onSubmit={handleLogin} className="login-form">
                             <div className="input-group">
                                 <label><AtSign size={16} /> Email Address</label>
-                                <input 
-                                    type="email" 
-                                    name="email" 
-                                    placeholder="name@example.com" 
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="name@example.com"
+                                    value={formData.email}
                                     onChange={handleChange}
-                                    required 
+                                    required
+                                    disabled={loading}
                                 />
                             </div>
 
                             <div className="input-group">
                                 <label><Lock size={16} /> Password</label>
-                                <input 
-                                    type="password" 
-                                    name="password" 
-                                    placeholder="••••••••" 
+                                <input
+                                    type="password"
+                                    name="password"
+                                    placeholder="••••••••"
+                                    value={formData.password}
                                     onChange={handleChange}
-                                    required 
+                                    required
+                                    disabled={loading}
                                 />
                             </div>
 
+                            {error && (
+                                <div className="login-error" style={{
+                                    display: 'flex', alignItems: 'center', gap: '8px',
+                                    padding: '12px 16px', borderRadius: '8px',
+                                    background: '#fef2f2', border: '1px solid #fee2e2',
+                                    color: '#991b1b', fontSize: '14px', marginBottom: '8px'
+                                }}>
+                                    <AlertCircle size={16} />
+                                    <span>{error}</span>
+                                </div>
+                            )}
+
                             <button type="submit" className="login-submit-btn" disabled={loading}>
-                                {loading ? "Signing In..." : "Sign In"} <ArrowRight size={18} />
+                                {loading ? (
+                                    <><Loader2 size={18} className="spinning" /> Signing In...</>
+                                ) : (
+                                    <>Sign In <ArrowRight size={18} /></>
+                                )}
                             </button>
                         </form>
 

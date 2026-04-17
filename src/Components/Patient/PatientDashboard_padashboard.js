@@ -6,11 +6,15 @@ import {
     Database, Network
 } from 'lucide-react';
 import api from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import './PatientDashboard_padashboard.css';
 
-const PatientDashboard_padashboard = ({ patientId: propPatientId = "P002" }) => {
+const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
     const { patientId: urlPatientId } = useParams();
-    const [currentId, setCurrentId] = useState(urlPatientId || propPatientId);
+    const { user } = useAuth();
+    // Priority: URL param > auth context > prop fallback
+    const resolvedId = urlPatientId || user?.patientId || propPatientId || '';
+    const [currentId, setCurrentId] = useState(resolvedId);
     const [idInput, setIdInput] = useState(currentId);
 
     const [stats, setStats] = useState({
