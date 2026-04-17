@@ -18,7 +18,7 @@ const PatientSearch_app = ({ patientId }) => {
 
     const fetchDoctors = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/patient/api/v1/getAllDoctors');
+            const response = await axios.get('http://localhost:8084/patient/api/v1/getAllDoctors');
             const docs = response.data.data || [];
             setDoctors(docs);
             

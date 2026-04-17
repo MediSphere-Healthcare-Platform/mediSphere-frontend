@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { doctorApi } from '../../services/api';
 import { 
     User, Mail, Phone, Award, Shield, MapPin, 
     Edit2, Save, X, Camera, Globe, Briefcase, Info 
 } from 'lucide-react';
 import './DoctorProfile_doprof.css';
 
-const DoctorProfile_doprof = ({ doctorId = "D001" }) => {
+const DoctorProfile_doprof = ({ doctorId: propDoctorId = "UD102616" }) => {
+    const { doctorId: urlDoctorId } = useParams();
+    
+    // ID Resolution Logic
+    const getActiveId = () => {
+        if (urlDoctorId) {
+            sessionStorage.setItem('currentDoctorId', urlDoctorId);
+            return urlDoctorId;
+        }
+        return sessionStorage.getItem('currentDoctorId') || propDoctorId;
+    };
+
+    const currentDoctorId = getActiveId();
+
     const [profile, setProfile] = useState(null);
     const [editMode, setEditMode] = useState(false);
     const [formData, setFormData] = useState({});
@@ -18,11 +32,11 @@ const DoctorProfile_doprof = ({ doctorId = "D001" }) => {
 
     useEffect(() => {
         fetchProfile();
-    }, [doctorId]);
+    }, [currentDoctorId]);
 
     const fetchProfile = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/doctor/api/v1/getDoctorById/${doctorId}`);
+            const response = await doctorApi.get(`/getDoctorById/${currentDoctorId}`);
             setProfile(response.data.data);
             setFormData(response.data.data);
         } catch (err) {
@@ -39,7 +53,7 @@ const DoctorProfile_doprof = ({ doctorId = "D001" }) => {
 
     const handleUpdate = async () => {
         try {
-            await axios.put(`http://localhost:8080/doctor/api/v1/updateDoctorDetails/${doctorId}`, formData);
+            await doctorApi.put(`/updateDoctorDetails/${currentDoctorId}`, formData);
             setProfile(formData);
             setEditMode(false);
             alert('Professional details updated successfully!');

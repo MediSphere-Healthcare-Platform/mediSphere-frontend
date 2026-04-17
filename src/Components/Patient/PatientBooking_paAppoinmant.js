@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { Search, Calendar, Clock, User, Award, ArrowRight, ShieldCheck } from 'lucide-react';
+import api from '../../services/api';
 import './PatientBooking_paAppoinmant.css';
 
-const PatientBooking_paAppoinmant = ({ patientId = "P001" }) => {
+const PatientBooking_paAppoinmant = ({ patientId: propPatientId = "P002" }) => {
+    const { patientId: urlPatientId } = useParams();
+    const patientId = urlPatientId || propPatientId;
+
     const [doctors, setDoctors] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedDoctor, setSelectedDoctor] = useState(null);
@@ -16,15 +20,17 @@ const PatientBooking_paAppoinmant = ({ patientId = "P001" }) => {
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
+        console.log(`[Booking] Initializing for Patient ID: ${patientId}`);
         fetchDoctors();
     }, []);
 
     const fetchDoctors = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/patient/api/v1/getAllDoctors');
-            setDoctors(response.data.data);
+            const response = await api.get('/getAllDoctors');
+            const finalData = response.data.data || response.data || [];
+            setDoctors(Array.isArray(finalData) ? finalData : []);
         } catch (err) {
-            console.error('Error fetching doctors:', err);
+            console.error('[Booking] Fetch Doctors Error:', err);
         } finally {
             setLoading(false);
         }
@@ -34,20 +40,24 @@ const PatientBooking_paAppoinmant = ({ patientId = "P001" }) => {
         e.preventDefault();
         try {
             const payload = {
-                patientId,
+                patientId: patientId,
                 doctorId: selectedDoctor.doctorId,
-                ...bookingData
+                appointmentDate: bookingData.appointmentDate,
+                appointmentTime: bookingData.appointmentTime,
+                reason: bookingData.comments,
+                status: 'Scheduled'
             };
-            await axios.post('http://localhost:8080/patient/api/v1/appointments/bookAppointment', payload);
+
+            await api.post('/appointments/createAppointment', payload);
             alert('Appointment booked successfully!');
             setShowModal(false);
         } catch (err) {
-            console.error('Booking failed:', err);
-            alert('Failed to book appointment.');
+            const msg = err.response?.data?.message || err.message || 'Booking failed.';
+            alert(`Booking failed: ${msg}`);
         }
     };
 
-    const filteredDoctors = doctors.filter(doc => 
+    const filteredDoctors = doctors.filter(doc =>
         doc.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         doc.specialization.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -59,12 +69,12 @@ const PatientBooking_paAppoinmant = ({ patientId = "P001" }) => {
                 <div className="heroContent_paAppoinmant">
                     <h1>Find & Book <span>Expert Care</span></h1>
                     <p>Search through our network of certified specialists and schedule your consultation in seconds.</p>
-                    
+
                     <div className="searchBar_paAppoinmant">
                         <Search size={22} className="searchIcon_paAppoinmant" />
-                        <input 
-                            type="text" 
-                            placeholder="Search by name or specialization..." 
+                        <input
+                            type="text"
+                            placeholder="Search by name or specialization..."
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
@@ -86,8 +96,8 @@ const PatientBooking_paAppoinmant = ({ patientId = "P001" }) => {
                                 <h3>Dr. {doctor.firstName} {doctor.lastName}</h3>
                                 <p><Award size={14} /> {doctor.experience} Experience</p>
                                 <p><ShieldCheck size={14} /> Verified Professional</p>
-                                <button 
-                                    className="bookBtn_paAppoinmant" 
+                                <button
+                                    className="bookBtn_paAppoinmant"
                                     onClick={() => { setSelectedDoctor(doctor); setShowModal(true); }}
                                 >
                                     Book Now <ArrowRight size={16} />
@@ -107,30 +117,30 @@ const PatientBooking_paAppoinmant = ({ patientId = "P001" }) => {
                         </div>
                         <form onSubmit={handleBooking} className="bookingForm_paAppoinmant">
                             <p>Booking with <strong>Dr. {selectedDoctor.firstName}</strong></p>
-                            
+
                             <div className="inputGroup_paAppoinmant">
                                 <label><Calendar size={16} /> Date</label>
-                                <input 
-                                    type="date" 
-                                    required 
-                                    onChange={(e) => setBookingData({...bookingData, appointmentDate: e.target.value})} 
+                                <input
+                                    type="date"
+                                    required
+                                    onChange={(e) => setBookingData({ ...bookingData, appointmentDate: e.target.value })}
                                 />
                             </div>
 
                             <div className="inputGroup_paAppoinmant">
                                 <label><Clock size={16} /> Time Slot</label>
-                                <input 
-                                    type="time" 
-                                    required 
-                                    onChange={(e) => setBookingData({...bookingData, appointmentTime: e.target.value})} 
+                                <input
+                                    type="time"
+                                    required
+                                    onChange={(e) => setBookingData({ ...bookingData, appointmentTime: e.target.value })}
                                 />
                             </div>
 
                             <div className="inputGroup_paAppoinmant">
                                 <label>Symptoms / Comments</label>
-                                <textarea 
-                                    placeholder="Briefly describe your health concern..." 
-                                    onChange={(e) => setBookingData({...bookingData, comments: e.target.value})} 
+                                <textarea
+                                    placeholder="Briefly describe your health concern..."
+                                    onChange={(e) => setBookingData({ ...bookingData, comments: e.target.value })}
                                 />
                             </div>
 

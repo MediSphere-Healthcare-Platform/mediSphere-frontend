@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { Calendar, Clock, ChevronRight, Activity, ClipboardList, CheckCircle2, XCircle } from 'lucide-react';
+import api from '../../services/api';
 import './PatientHistory_pahistory.css';
 
-const PatientHistory_pahistory = ({ patientId = "P001" }) => {
+const PatientHistory_pahistory = ({ patientId: propPatientId = "P002" }) => {
+    const { patientId: urlPatientId } = useParams();
+    const patientId = urlPatientId || propPatientId;
+
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        console.log(`[History] Fetching for Patient ID: ${patientId}`);
         fetchHistory();
     }, [patientId]);
 
     const fetchHistory = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/patient/api/v1/appointments/allAppointmentsByPatientId/${patientId}`);
-            setAppointments(response.data.data);
+            const response = await api.get(`/appointments/allAppointmentsByPatientId/${patientId}`);
+            const finalData = response.data.data || response.data || [];
+            setAppointments(Array.isArray(finalData) ? finalData : []);
         } catch (err) {
-            console.error('Error fetching history:', err);
+            console.error('[History] Fetch Error:', err);
         } finally {
             setLoading(false);
         }

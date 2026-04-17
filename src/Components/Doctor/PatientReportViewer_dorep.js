@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { doctorApi } from '../../services/api';
 import { 
     FileText, Search, Filter, Eye, Download, 
     Calendar, User, AlertCircle, Bookmark, CheckCircle2
 } from 'lucide-react';
 import './PatientReportViewer_dorep.css';
 
-const PatientReportViewer_dorep = ({ doctorId = "D001" }) => {
+const PatientReportViewer_dorep = ({ doctorId: propDoctorId = "UD102616" }) => {
+    const { doctorId: urlDoctorId } = useParams();
+    
+    // ID Resolution Logic
+    const getActiveId = () => {
+        if (urlDoctorId) {
+            sessionStorage.setItem('currentDoctorId', urlDoctorId);
+            return urlDoctorId;
+        }
+        return sessionStorage.getItem('currentDoctorId') || propDoctorId;
+    };
+
+    const currentDoctorId = getActiveId();
+
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -16,12 +30,12 @@ const PatientReportViewer_dorep = ({ doctorId = "D001" }) => {
 
     useEffect(() => {
         fetchReports();
-    }, [doctorId]);
+    }, [currentDoctorId]);
 
     const fetchReports = async () => {
         try {
             // Calling a likely patientClient endpoint found in DoctorController
-            const response = await axios.get(`http://localhost:8080/doctor/api/v1/getMedicalReportsByDoctorId/${doctorId}`);
+            const response = await doctorApi.get(`/getMedicalReportsByDoctorId/${currentDoctorId}`);
             setReports(response.data.data || []);
         } catch (err) {
             console.error('Error fetching reports:', err);

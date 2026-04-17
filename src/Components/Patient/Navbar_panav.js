@@ -17,7 +17,6 @@ const Navbar_panav = () => {
                 <Link to="/history" className="link_panav"><History size={18} /> History</Link>
                 <Link to="/reports" className="link_panav"><FileText size={18} /> Reports</Link>
                 <Link to="/prescriptions" className="link_panav"><Pill size={18} /> Prescriptions</Link>
-                <Link to="/consult" className="link_panav"><Video size={18} /> Consult</Link>
             </div>
 
             <div className="profile_panav">

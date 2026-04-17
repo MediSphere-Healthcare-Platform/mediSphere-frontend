@@ -23,7 +23,7 @@ const PatientBookingForm_app = ({ doctor, patientId, existingAppointment = null,
                     appointmentTime: formData.appointmentTime,
                     reason: formData.reason
                 };
-                await axios.put('http://localhost:8080/patient/api/v1/updateAppointment', payload);
+                await axios.put('http://localhost:8084/patient/api/v1/updateAppointment', payload);
                 alert('Appointment updated successfully!');
             } else {
                 const payload = {
@@ -34,7 +34,7 @@ const PatientBookingForm_app = ({ doctor, patientId, existingAppointment = null,
                     appointmentTime: formData.appointmentTime,
                     reason: formData.reason
                 };
-                await axios.post('http://localhost:8080/patient/api/v1/appointments/bookAppointment', payload);
+                await axios.post('http://localhost:8084/patient/api/v1/appointments/bookAppointment', payload);
                 alert('Appointment booked successfully!');
             }
             onSuccess();

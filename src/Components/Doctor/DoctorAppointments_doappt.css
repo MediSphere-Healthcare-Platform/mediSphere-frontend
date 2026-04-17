@@ -254,6 +254,19 @@
     color: #2d3748;
 }
 
+.daTeleBtn_doappt {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.daTeleBtn_doappt:hover {
+    background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+    box-shadow: 0 6px 15px rgba(99, 102, 241, 0.3);
+    transform: translateY(-2px);
+}
+
 .daLoading_doappt, .daNoData_doappt {
     text-align: center;
     padding: 80px 0;

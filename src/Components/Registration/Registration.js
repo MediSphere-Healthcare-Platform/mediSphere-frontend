@@ -52,12 +52,12 @@ const Registration = () => {
 
         try {
             if (role === 'patient') {
-                await axios.post('http://localhost:8080/patient/api/v1/createPatient', {
+                await axios.post('http://localhost:8084/patient/api/v1/createPatient', {
                     patient: formData,
                     profileImage: null
                 });
             } else {
-                await axios.post('http://localhost:8080/doctor/api/v1/createDoctor', formData);
+                await axios.post('http://localhost:8084/doctor/api/v1/createDoctor', formData);
             }
             alert('Registration Successful!');
             navigate('/login');
