@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { doctorApi } from '../../services/api';
 import { 
     FileText, Search, Filter, Eye, Download, 
     Calendar, User, AlertCircle, Bookmark, CheckCircle2
 } from 'lucide-react';
 import './PatientReportViewer_dorep.css';
 
-const PatientReportViewer_dorep = ({ doctorId = "D001" }) => {
+const PatientReportViewer_dorep = ({ doctorId: propDoctorId = "UD102616" }) => {
+    const { doctorId: urlDoctorId } = useParams();
+    
+    // ID Resolution Logic
+    const getActiveId = () => {
+        if (urlDoctorId) {
+            sessionStorage.setItem('currentDoctorId', urlDoctorId);
+            return urlDoctorId;
+        }
+        return sessionStorage.getItem('currentDoctorId') || propDoctorId;
+    };
+
+    const currentDoctorId = getActiveId();
+
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -16,12 +30,12 @@ const PatientReportViewer_dorep = ({ doctorId = "D001" }) => {
 
     useEffect(() => {
         fetchReports();
-    }, [doctorId]);
+    }, [currentDoctorId]);
 
     const fetchReports = async () => {
         try {
             // Calling a likely patientClient endpoint found in DoctorController
-            const response = await axios.get(`http://localhost:8080/doctor/api/v1/getMedicalReportsByDoctorId/${doctorId}`);
+            const response = await doctorApi.get(`/getMedicalReportsByDoctorId/${currentDoctorId}`);
             setReports(response.data.data || []);
         } catch (err) {
             console.error('Error fetching reports:', err);
@@ -36,9 +50,9 @@ const PatientReportViewer_dorep = ({ doctorId = "D001" }) => {
     };
 
     const filteredReports = reports.filter(r => {
-        const matchesCategory = category === 'All' || r.category === category;
+        const matchesCategory = category === 'All' || r.reportType === category;
         const matchesSearch = (r.patientName || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
-                             (r.reportTitle || '').toLowerCase().includes(searchTerm.toLowerCase());
+                             (r.reportName || '').toLowerCase().includes(searchTerm.toLowerCase());
         return matchesCategory && matchesSearch;
     });
 
@@ -88,21 +102,25 @@ const PatientReportViewer_dorep = ({ doctorId = "D001" }) => {
                                     </div>
                                     <div className="drvCardBody_dorep">
                                         <div className="drvMeta_dorep">
-                                            <span className="drvTag_dorep">{report.category}</span>
-                                            <span className="drvDate_dorep">{new Date(report.uploadedAt).toLocaleDateString()}</span>
+                                            <span className="drvTag_dorep">{report.reportType}</span>
+                                            <span className="drvDate_dorep">{report.uploadedAt ? new Date(report.uploadedAt).toLocaleDateString() : 'N/A'}</span>
                                         </div>
-                                        <h3>{report.reportTitle}</h3>
+                                        <h3>{report.reportName}</h3>
                                         <div className="drvPatient_dorep">
-                                            <User size={14} /> <span>{report.patientName}</span>
+                                            <User size={14} /> <span>{report.patientName || 'Unknown Patient'}</span>
                                         </div>
                                     </div>
                                     <div className="drvActions_dorep">
-                                        <a href={report.reportUrl} target="_blank" rel="noopener noreferrer" className="drvViewBtn_dorep" title="View Report">
-                                            <Eye size={18} />
-                                        </a>
-                                        <button className="drvDownloadBtn_dorep" title="Download">
-                                            <Download size={18} />
-                                        </button>
+                                        {report.fileUrl && (
+                                            <>
+                                                <a href={report.fileUrl} target="_blank" rel="noopener noreferrer" className="drvViewBtn_dorep" title="View Report">
+                                                    <Eye size={18} />
+                                                </a>
+                                                <a href={report.fileUrl} download={report.reportName} className="drvDownloadBtn_dorep" title="Download">
+                                                    <Download size={18} />
+                                                </a>
+                                            </>
+                                        )}
                                         <button className="drvMarkBtn_dorep" title="Mark as Reviewed">
                                             <CheckCircle2 size={18} />
                                         </button>

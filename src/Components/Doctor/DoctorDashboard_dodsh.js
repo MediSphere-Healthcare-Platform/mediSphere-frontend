@@ -1,20 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { useParams, Link, useLocation } from 'react-router-dom';
+import { doctorApi } from '../../services/api';
 import { 
-    Users, Calendar, Clock, ClipboardList, CheckCircle, 
+    Users, Clock, ClipboardList, CheckCircle, 
     XCircle, ArrowRight, UserCheck, Activity, Award, FileText
 } from 'lucide-react';
 import './DoctorDashboard_dodsh.css';
 
-const DoctorDashboard_dodsh = ({ doctorId = "D001" }) => {
+const DoctorDashboard_dodsh = ({ doctorId: propDoctorId = "UD102616" }) => {
+    const { doctorId: urlDoctorId } = useParams();
+    const location = useLocation();
+    
+    // Robust ID Resolution Logic (Synced with Navbar)
+    const getActiveId = () => {
+        // 1. Try to find UD pattern in any segment of the URL (most robust)
+        const pathParts = location.pathname.split('/');
+        const idFromUrl = pathParts.find(part => part.startsWith('UD') && part.length > 5);
+        
+        if (idFromUrl) {
+            sessionStorage.setItem('currentDoctorId', idFromUrl);
+            return idFromUrl;
+        }
+
+        // 2. Check useParams (specifically for dashboard/:doctorId route)
+        if (urlDoctorId) {
+            sessionStorage.setItem('currentDoctorId', urlDoctorId);
+            return urlDoctorId;
+        }
+
+        // 3. Fallback to Session Storage then Prop
+        return sessionStorage.getItem('currentDoctorId') || propDoctorId;
+    };
+
+    const currentDoctorId = getActiveId();
+
     const [stats, setStats] = useState({
-        totalAppointments: 124,
-        pendingRequests: 8,
-        completedToday: 5,
-        totalPatients: 450
+        totalAppointments: 0,
+        pendingRequests: 0,
+        completedToday: 0,
+        totalPatients: 0
     });
     const [recentAppointments, setRecentAppointments] = useState([]);
+    const [doctorInfo, setDoctorInfo] = useState(null);
     const [loading, setLoading] = useState(true);
 
     const today = new Date().toLocaleDateString('en-US', { 
@@ -22,31 +49,67 @@ const DoctorDashboard_dodsh = ({ doctorId = "D001" }) => {
     });
 
     useEffect(() => {
+        const fetchDoctorInfo = async () => {
+            try {
+                const response = await doctorApi.get(`getDoctorById/${currentDoctorId}`);
+                setDoctorInfo(response.data.data);
+            } catch (err) {
+                console.error('Error fetching dashboard doctor info:', err);
+            }
+        };
+        fetchDoctorInfo();
+    }, [currentDoctorId]);
+
+    useEffect(() => {
         fetchDashboardData();
-    }, [doctorId]);
+    }, [currentDoctorId]);
 
     const fetchDashboardData = async () => {
+        setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8080/doctor/api/v1/appointments/allAppointmentsByDoctorId/${doctorId}`);
-            // In a real app, I'd filter or get separate stats
-            setRecentAppointments(response.data.data.slice(0, 5));
+            // Fetch appointments
+            const appointRes = await doctorApi.get(`appointments/allAppointmentsByDoctorId/${currentDoctorId}`);
+            const resData = appointRes.data?.data !== undefined ? appointRes.data.data : appointRes.data;
+            const allAppointments = Array.isArray(resData) ? resData : (resData?.doctorAppointments || []);
+            
+            // Calculate stats dynamically
+            const todayStr = new Date().toISOString().split('T')[0];
+            const uniquePatients = new Set(allAppointments.map(a => a.patientId).filter(id => !!id)).size;
+            
+            const pendingCount = allAppointments.filter(a => 
+                a.status && a.status.toLowerCase() === 'pending'
+            ).length;
+            
+            const completedToday = allAppointments.filter(a => 
+                a.status && a.status.toLowerCase() === 'completed' && a.appointmentDate === todayStr
+            ).length;
+
+            setStats({
+                totalAppointments: allAppointments.length,
+                pendingRequests: pendingCount,
+                completedToday: completedToday,
+                totalPatients: uniquePatients
+            });
+
+            setRecentAppointments(allAppointments.slice(0, 5));
         } catch (err) {
-            console.error('Error fetching dashboard data:', err);
+            console.error('Error fetching clinical data:', err);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleStatusChange = async (appointmentId, status) => {
+    const handleStatusChange = async (appointmentReferenceId, status) => {
         try {
-            await axios.put('http://localhost:8080/doctor/api/v1/appointments/appointmentStatusChange', {
-                appointmentId,
+            await doctorApi.put('appointments/appointmentStatusChange', {
+                appointmentReferenceId,
                 status
             });
             fetchDashboardData();
             alert(`Appointment ${status.toLowerCase()} successfully!`);
         } catch (err) {
             console.error('Status change failed:', err);
+            alert('Failed to update appointment status. Please try again.');
         }
     };
 
@@ -58,15 +121,18 @@ const DoctorDashboard_dodsh = ({ doctorId = "D001" }) => {
                     <div className="heroBadge_dodsh">
                         <UserCheck size={14} /> <span>Clinical Excellence</span>
                     </div>
-                    <h1>Welcome back, <span>Dr. Smith</span></h1>
+                    <h1>Welcome back, <span>
+                        {doctorInfo ? `Dr. ${doctorInfo.firstName || ''} ${doctorInfo.lastName || ''}` : (loading ? 'Loading...' : 'Dr. Smith')}
+                    </span></h1>
                     <p className="heroDate_dodsh">{today}</p>
-                    <p className="heroSub_dodsh">Your patient schedule for today is ready. You have {stats.pendingRequests} new appointment requests waiting for review.</p>
+                    <p className="heroSub_dodsh">Your patient schedule for today is ready. You have {stats.pendingRequests} new consultation requests waiting for review.</p>
                 </div>
                 <div className="heroOverlay_dodsh"></div>
             </div>
 
             {/* Stats Grid */}
             <div className="statsGrid_dodsh">
+                {/* ... (stats keep as is) ... */}
                 <div className="statCard_dodsh">
                     <div className="statIcon_dodsh blue_dodsh"><ClipboardList /></div>
                     <div className="statValue_dodsh">{stats.totalAppointments}</div>
@@ -82,18 +148,13 @@ const DoctorDashboard_dodsh = ({ doctorId = "D001" }) => {
                     <div className="statValue_dodsh">{stats.completedToday}</div>
                     <div className="statLabel_dodsh">Completed Today</div>
                 </div>
-                <div className="statCard_dodsh">
-                    <div className="statIcon_dodsh purple_dodsh"><Users /></div>
-                    <div className="statValue_dodsh">{stats.totalPatients}</div>
-                    <div className="statLabel_dodsh">Unique Patients</div>
-                </div>
             </div>
 
             <div className="mainGrid_dodsh">
                 <div className="leftCol_dodsh">
                     <div className="sectionHeader_dodsh">
                         <h2>Recent Appointments</h2>
-                        <Link to="/doctor/appointments" className="viewAll_dodsh">
+                        <Link to={`/doctor/appointments/${currentDoctorId}`} className="viewAll_dodsh">
                             View All <ArrowRight size={16} />
                         </Link>
                     </div>
@@ -113,10 +174,10 @@ const DoctorDashboard_dodsh = ({ doctorId = "D001" }) => {
                                         </div>
                                     </div>
                                     <div className="appActions_dodsh">
-                                        {app.status === 'Pending' ? (
+                                        {app.status?.toUpperCase() === 'PENDING' ? (
                                             <>
-                                                <button onClick={() => handleStatusChange(app.appointmentId, 'Accepted')} className="acceptBtn_dodsh" title="Accept"><CheckCircle size={18} /></button>
-                                                <button onClick={() => handleStatusChange(app.appointmentId, 'Rejected')} className="rejectBtn_dodsh" title="Reject"><XCircle size={18} /></button>
+                                                <button onClick={() => handleStatusChange(app.appointmentReferenceId, 'APPROVED')} className="acceptBtn_dodsh" title="Accept"><CheckCircle size={18} /></button>
+                                                <button onClick={() => handleStatusChange(app.appointmentReferenceId, 'REJECTED')} className="rejectBtn_dodsh" title="Reject"><XCircle size={18} /></button>
                                             </>
                                         ) : (
                                             <span className={`statusSpan_dodsh ${app.status?.toLowerCase()}_dodsh`}>{app.status}</span>
@@ -135,17 +196,13 @@ const DoctorDashboard_dodsh = ({ doctorId = "D001" }) => {
                         <Award className="proIcon_dodsh" size={40} />
                         <h3>Professional Identity</h3>
                         <p>Keep your profile information and medical license details up to date to maintain patient trust.</p>
-                        <Link to="/doctor/profile" className="proBtn_dodsh">Manage Profile</Link>
+                        <Link to={`/doctor/profile/${currentDoctorId}`} className="proBtn_dodsh">Manage Profile</Link>
                     </div>
 
                     <div className="quickTools_dodsh">
                         <h3>Quick Clinical Tools</h3>
                         <div className="toolGrid_dodsh">
-                            <Link to="/doctor/schedule" className="toolItem_dodsh">
-                                <Calendar size={20} />
-                                <span>Schedule</span>
-                            </Link>
-                            <Link to="/doctor/reports" className="toolItem_dodsh">
+                            <Link to={`/doctor/reports/${currentDoctorId}`} className="toolItem_dodsh">
                                 <FileText size={20} />
                                 <span>Reports</span>
                             </Link>
@@ -156,6 +213,27 @@ const DoctorDashboard_dodsh = ({ doctorId = "D001" }) => {
                         </div>
                     </div>
                 </div>
+            </div>
+            {/* Debug Panel */}
+            <div className="debugSection_dodsh" style={{ marginTop: '40px', padding: '20px', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                <div className="debugHeader_dodsh" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                    <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b' }}><Activity size={18} /> Doctor Network Diagnostic Panel</h3>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', background: '#fff', border: '1px solid #cbd5e1', borderRadius: '6px', padding: '2px 8px' }}>
+                            <span style={{ fontSize: '11px', color: '#94a3b8', marginRight: '5px' }}>Active ID:</span>
+                            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#6366f1' }}>{currentDoctorId}</span>
+                        </div>
+                    </div>
+                </div>
+                <p style={{ fontSize: '12px', color: '#64748b', margin: 0 }}>
+                    Connected to Doctor Service on <strong>port 8085</strong>. 
+                    Data fetched dynamically. Found <strong>{stats.totalAppointments}</strong> appointments in system.
+                </p>
+                {stats.totalAppointments === 0 && (
+                    <p style={{ fontSize: '11px', color: '#f43f5e', marginTop: '8px' }}>
+                        Notice: System returned 0 appointments for this ID. Check if appointments are linked to {currentDoctorId}.
+                    </p>
+                )}
             </div>
         </div>
     );

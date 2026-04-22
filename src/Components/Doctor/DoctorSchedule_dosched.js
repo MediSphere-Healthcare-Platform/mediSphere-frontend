@@ -1,8 +1,21 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Calendar as CalendarIcon, Clock, Plus, Trash2, Save, Info, CheckCircle2 } from 'lucide-react';
 import './DoctorSchedule_dosched.css';
 
-const DoctorSchedule_dosched = () => {
+const DoctorSchedule_dosched = ({ doctorId: propDoctorId = "UD102616" }) => {
+    const { doctorId: urlDoctorId } = useParams();
+    
+    // ID Resolution Logic
+    const getActiveId = () => {
+        if (urlDoctorId) {
+            sessionStorage.setItem('currentDoctorId', urlDoctorId);
+            return urlDoctorId;
+        }
+        return sessionStorage.getItem('currentDoctorId') || propDoctorId;
+    };
+
+    const currentDoctorId = getActiveId();
     const [schedule, setSchedule] = useState([
         { day: 'Monday', slots: ['09:00 AM - 12:00 PM', '02:00 PM - 05:00 PM'] },
         { day: 'Tuesday', slots: ['09:00 AM - 01:00 PM'] },

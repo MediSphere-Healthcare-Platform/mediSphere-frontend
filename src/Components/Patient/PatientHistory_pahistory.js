@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { Calendar, Clock, ChevronRight, Activity, ClipboardList, CheckCircle2, XCircle } from 'lucide-react';
+import api from '../../services/api';
 import './PatientHistory_pahistory.css';
 
-const PatientHistory_pahistory = ({ patientId = "P001" }) => {
+const PatientHistory_pahistory = ({ patientId: propPatientId = "P002" }) => {
+    const { patientId: urlPatientId } = useParams();
+    const patientId = urlPatientId || propPatientId;
+
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        console.log(`[History] Fetching for Patient ID: ${patientId}`);
         fetchHistory();
     }, [patientId]);
 
     const fetchHistory = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/patient/api/v1/appointments/allAppointmentsByPatientId/${patientId}`);
-            setAppointments(response.data.data);
+            const response = await api.get(`appointments/allAppointmentsByPatientId/${patientId}`);
+            const resData = response.data?.data !== undefined ? response.data.data : response.data;
+            const finalData = Array.isArray(resData) ? resData : (resData?.patientAppointments || []);
+            setAppointments(finalData);
         } catch (err) {
-            console.error('Error fetching history:', err);
+            console.error('[History] Fetch Error:', err);
         } finally {
             setLoading(false);
         }
@@ -53,15 +60,18 @@ const PatientHistory_pahistory = ({ patientId = "P001" }) => {
                                 </div>
                                 <div className="eventContent_pahistory">
                                     <div className="eventHeader_pahistory">
-                                        <h3>Dr. {app.doctorName || 'General Specialist'}</h3>
+                                        <div>
+                                            <h3>Dr. {app.doctorName || 'General Specialist'}</h3>
+                                            <p className="refId_pahistory" style={{ fontSize: '12px', color: '#64748b' }}>Ref ID: {app.appointmentId || 'N/A'}</p>
+                                        </div>
                                         <span className={`status_pahistory ${app.status?.toLowerCase()}_pahistory`}>
                                             {getStatusIcon(app.status)} {app.status || 'Scheduled'}
                                         </span>
                                     </div>
                                     <div className="eventDetails_pahistory">
-                                        <p><Calendar size={14} /> {app.appointmentDate}</p>
-                                        <p><Clock size={14} /> {app.appointmentTime}</p>
-                                        <p><ClipboardList size={14} /> {app.reason || 'Routine Checkup'}</p>
+                                        <p><Calendar size={14} /> <strong>Date:</strong> {app.appointmentDate}</p>
+                                        <p><Clock size={14} /> <strong>Time:</strong> {app.appointmentTime}</p>
+                                        <p><ClipboardList size={14} /> <strong>Reason:</strong> {app.reason || 'Routine Checkup'}</p>
                                     </div>
                                     {app.status === 'Completed' && (
                                         <button className="viewPresBtn_pahistory">

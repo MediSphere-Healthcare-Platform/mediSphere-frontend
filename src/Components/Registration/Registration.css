@@ -1,10 +1,13 @@
 .reg-wrapper {
-    min-height: 100vh;
-    background-color: var(--bg-soft);
+    flex: 1;
+    background:
+        linear-gradient(rgba(5, 15, 10, 0.52), rgba(20, 30, 10, 0.52)),
+        url('https://images.unsplash.com/photo-1468581264429-2548ef9eb732?auto=format&fit=crop&w=1600&q=80')
+        center/cover no-repeat fixed;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 40px 20px;
+    padding: 60px 20px;
     font-family: 'Inter', sans-serif;
 }
 

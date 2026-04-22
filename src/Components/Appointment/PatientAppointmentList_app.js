@@ -16,7 +16,7 @@ const PatientAppointmentList_app = ({ patientId }) => {
     const fetchAppointments = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8080/patient/api/v1/appointments/allAppointmentsByPatientId/${patientId}`);
+            const response = await axios.get(`http://localhost:8084/patient/api/v1/appointments/allAppointmentsByPatientId/${patientId}`);
             setAppointments(response.data || []);
         } catch (err) {
             console.error("Failed to fetch appointments:", err);
@@ -28,7 +28,7 @@ const PatientAppointmentList_app = ({ patientId }) => {
     const handleDelete = async (refId) => {
         if (!window.confirm("Are you sure you want to cancel this appointment?")) return;
         try {
-            await axios.delete(`http://localhost:8080/patient/api/v1/appointments/cancel/${refId}`);
+            await axios.delete(`http://localhost:8084/patient/api/v1/appointments/cancel/${refId}`);
             alert("Appointment cancelled successfully.");
             fetchAppointments();
         } catch (err) {

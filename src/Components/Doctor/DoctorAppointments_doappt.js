@@ -1,27 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useParams, Link } from 'react-router-dom';
+import { doctorApi } from '../../services/api';
 import { 
-    Calendar, Clock, User, Filter, Search, 
-    CheckCircle, XCircle, Info, MoreVertical 
+    Search, Filter, Calendar, Clock, User, 
+    MessageSquare, CheckCircle, XCircle, MoreVertical,
+    Activity, Video, ChevronRight, FileText
 } from 'lucide-react';
 import './DoctorAppointments_doappt.css';
 
-const DoctorAppointments_doappt = ({ doctorId = "D001" }) => {
+const DoctorAppointments_doappt = () => {
+    const { doctorId: urlDoctorId } = useParams();
+    const currentDoctorId = urlDoctorId || sessionStorage.getItem('currentDoctorId') || "UD102616";
+    
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState('All');
     const [searchTerm, setSearchTerm] = useState('');
-
-    const heroImg = "https://images.unsplash.com/photo-1576091160550-217359f42f8c?auto=format&fit=crop&q=80&w=1200";
+    const [statusFilter, setStatusFilter] = useState('All');
 
     useEffect(() => {
         fetchAppointments();
-    }, [doctorId]);
+    }, [currentDoctorId]);
 
     const fetchAppointments = async () => {
+        setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8080/doctor/api/v1/appointments/allAppointmentsByDoctorId/${doctorId}`);
-            setAppointments(response.data.data);
+            const response = await doctorApi.get(`appointments/allAppointmentsByDoctorId/${currentDoctorId}`);
+            const resData = response.data?.data !== undefined ? response.data.data : response.data;
+            const appointmentData = Array.isArray(resData) ? resData : (resData?.doctorAppointments || []);
+            setAppointments(appointmentData);
         } catch (err) {
             console.error('Error fetching appointments:', err);
         } finally {
@@ -29,125 +35,153 @@ const DoctorAppointments_doappt = ({ doctorId = "D001" }) => {
         }
     };
 
-    const handleStatusChange = async (appointmentId, status) => {
+    const handleStatusChange = async (appointmentReferenceId, status) => {
         try {
-            await axios.put('http://localhost:8080/doctor/api/v1/appointments/appointmentStatusChange', {
-                appointmentId,
+            await doctorApi.put('appointments/appointmentStatusChange', {
+                appointmentReferenceId,
                 status
             });
-            fetchAppointments();
+            fetchAppointments(); // Refresh list
+            alert(`Appointment marked as ${status} successfully.`);
         } catch (err) {
-            console.error('Status change failed:', err);
+            console.error('Status update failed:', err);
+            alert('Failed to update status. Please try again.');
         }
     };
 
     const filteredAppointments = appointments.filter(app => {
-        const matchesFilter = filter === 'All' || app.status === filter;
-        const matchesSearch = (app.patientName || '').toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesFilter && matchesSearch;
+        const matchesSearch = (app.patientName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                             (app.appointmentReferenceId || '').toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesStatus = statusFilter === 'All' || 
+                             (app.status && app.status.toLowerCase() === statusFilter.toLowerCase());
+        return matchesSearch && matchesStatus;
     });
 
     return (
         <div className="daWrapper_doappt">
-            {/* Hero Section */}
-            <div className="daHero_doappt" style={{ backgroundImage: `url(${heroImg})` }}>
-                <div className="daHeroContent_doappt">
-                    <h1>Appointment <span>Management</span></h1>
-                    <p>Review patient consultation requests and manage your daily clinical schedule.</p>
-                </div>
+            {/* Rich Hero Header */}
+            <header className="daHero_doappt">
+                <div className="daHeroBg_doappt"></div>
                 <div className="daHeroOverlay_doappt"></div>
-            </div>
+                <div className="daHeroContent_doappt">
+                    <div className="daBadge_doappt">
+                        <Activity size={14} /> <span>Clinical Workflow</span>
+                    </div>
+                    <h1>Appointment <span>Management</span></h1>
+                    <p>Review, manage, and coordinate your patient consultations with real-time status tracking.</p>
+                </div>
+            </header>
 
             <div className="daContainer_doappt">
+                {/* Control Panel - Glassmorphism */}
                 <div className="daControls_doappt">
                     <div className="daSearch_doappt">
-                        <Search size={20} />
+                        <Search size={20} className="daSearchIcon_doappt" />
                         <input 
                             type="text" 
-                            placeholder="Search patient name..." 
+                            placeholder="Search by patient name or reference ID..." 
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <div className="daFilter_doappt">
-                        <Filter size={18} />
-                        <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-                            <option value="All">All Status</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Accepted">Accepted</option>
-                            <option value="Completed">Completed</option>
-                            <option value="Rejected">Rejected</option>
-                        </select>
+                    
+                    <div className="daFilters_doappt">
+                        <div className="daFilterItem_doappt">
+                            <Filter size={18} />
+                            <select 
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                            >
+                                <option value="All">All Statuses</option>
+                                <option value="Pending">Pending</option>
+                                <option value="APPROVED">Accepted</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
+                {/* Appointment List */}
                 {loading ? (
                     <div className="daLoading_doappt">
                         <div className="daSpinner_doappt"></div>
-                        <p>Syncing appointments...</p>
+                        <p>Synchronizing your clinical schedule...</p>
                     </div>
-                ) : (
+                ) : filteredAppointments.length > 0 ? (
                     <div className="daGrid_doappt">
-                        {filteredAppointments.length > 0 ? (
-                            filteredAppointments.map((app) => (
-                                <div key={app.appointmentId} className="daCard_doappt">
-                                    <div className="daCardHeader_doappt">
-                                        <div className="daPatientInfo_doappt">
-                                            <div className="daAvatar_doappt">
-                                                {app.patientName?.charAt(0) || 'P'}
-                                            </div>
-                                            <div>
-                                                <h3>{app.patientName || 'Anonymous Patient'}</h3>
-                                                <span className={`daStatusBadge_doappt ${app.status.toLowerCase()}_doappt`}>
-                                                    {app.status}
-                                                </span>
-                                            </div>
+                        {filteredAppointments.map((app, index) => (
+                            <div className="daCard_doappt" key={app.appointmentReferenceId || index}>
+                                <div className="daCardHeader_doappt">
+                                    <div className="daPatientMeta_doappt">
+                                        <div className="daAvatar_doappt">
+                                            {app.patientName?.charAt(0) || 'P'}
                                         </div>
-                                        <MoreVertical size={20} className="daMore_doappt" />
+                                        <div className="daPatientText_doappt">
+                                            <h3>{app.patientName || 'Anonymous Patient'}</h3>
+                                            <span className="daRef_doappt">REF: {app.appointmentReferenceId}</span>
+                                        </div>
                                     </div>
-
-                                    <div className="daCardBody_doappt">
-                                        <div className="daDetailItem_doappt">
-                                            <Calendar size={16} /> <span>{app.appointmentDate}</span>
-                                        </div>
-                                        <div className="daDetailItem_doappt">
-                                            <Clock size={16} /> <span>{app.appointmentTime}</span>
-                                        </div>
-                                        {app.comments && (
-                                            <div className="daComment_doappt">
-                                                <Info size={14} /> <p>{app.comments}</p>
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className="daCardFooter_doappt">
-                                        {app.status === 'Pending' ? (
-                                            <>
-                                                <button 
-                                                    className="daRejectBtn_doappt"
-                                                    onClick={() => handleStatusChange(app.appointmentId, 'Rejected')}
-                                                >
-                                                    <XCircle size={18} /> Reject
-                                                </button>
-                                                <button 
-                                                    className="daAcceptBtn_doappt"
-                                                    onClick={() => handleStatusChange(app.appointmentId, 'Accepted')}
-                                                >
-                                                    <CheckCircle size={18} /> Accept
-                                                </button>
-                                            </>
-                                        ) : (
-                                            <button className="daViewBtn_doappt">View Details</button>
-                                        )}
+                                    <div className={`daStatusTag_doappt ${app.status?.toLowerCase()}_doappt`}>
+                                        {app.status}
                                     </div>
                                 </div>
-                            ))
-                        ) : (
-                            <div className="daNoData_doappt">
-                                <Info size={40} />
-                                <p>No matching appointments found.</p>
+
+                                <div className="daCardBody_doappt">
+                                    <div className="daDetail_doappt">
+                                        <Calendar size={16} />
+                                        <span>{app.appointmentDate}</span>
+                                    </div>
+                                    <div className="daDetail_doappt">
+                                        <Clock size={16} />
+                                        <span>{app.appointmentTime}</span>
+                                    </div>
+                                    <div className="daReasonBox_doappt">
+                                        <MessageSquare size={16} />
+                                        <p>{app.reason || 'No reason provided.'}</p>
+                                    </div>
+                                </div>
+
+                                <div className="daCardActions_doappt">
+                                    {app.status?.toUpperCase() === 'PENDING' ? (
+                                        <>
+                                            <button 
+                                                className="daBtnAccept_doappt"
+                                                onClick={() => handleStatusChange(app.appointmentReferenceId, 'APPROVED')}
+                                            >
+                                                <CheckCircle size={18} /> Accept
+                                            </button>
+                                            <button 
+                                                className="daBtnReject_doappt"
+                                                onClick={() => handleStatusChange(app.appointmentReferenceId, 'REJECTED')}
+                                            >
+                                                <XCircle size={18} /> Reject
+                                            </button>
+                                        </>
+                                    ) : app.status?.toUpperCase() === 'APPROVED' ? (
+                                        <>
+                                            <Link to={`/doctor/consultation/${app.appointmentReferenceId}`} className="daBtnConsult_doappt">
+                                                <Video size={18} /> Start Session
+                                            </Link>
+                                        </>
+                                    ) : (
+                                        <button className="daBtnArchive_doappt" disabled>
+                                            <FileText size={18} /> View History
+                                        </button>
+                                    )}
+                                </div>
                             </div>
-                        )}
+                        ))}
+                    </div>
+                ) : (
+                    <div className="daNoData_doappt">
+                        <div className="daNoDataIcon_doappt">
+                            <Calendar size={48} />
+                        </div>
+                        <h3>No consultations found</h3>
+                        <p>Adjust your filters or search term to find what you're looking for.</p>
+                        <button className="daResetBtn_doappt" onClick={() => { setSearchTerm(''); setStatusFilter('All'); }}>
+                            Clear All Filters
+                        </button>
                     </div>
                 )}
             </div>

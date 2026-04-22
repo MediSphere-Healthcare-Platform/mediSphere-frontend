@@ -16,7 +16,7 @@ const DoctorAppointmentList_app = ({ doctorId }) => {
     const fetchAppointments = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8080/doctor/api/v1/appointments/allAppointmentsByDoctorId/${doctorId}`);
+            const response = await axios.get(`http://localhost:8084/doctor/api/v1/appointments/allAppointmentsByDoctorId/${doctorId}`);
             setAppointments(response.data || []);
         } catch (err) {
             console.error("Failed to fetch doctor appointments:", err);
@@ -31,7 +31,7 @@ const DoctorAppointmentList_app = ({ doctorId }) => {
                 appointmentReferenceId: refId,
                 status: newStatus
             };
-            await axios.put('http://localhost:8080/doctor/api/v1/appointments/appointmentStatusChange', payload);
+            await axios.put('http://localhost:8084/doctor/api/v1/appointments/appointmentStatusChange', payload);
             alert(`Appointment ${newStatus.toLowerCase()} successfully.`);
             fetchAppointments();
         } catch (err) {
