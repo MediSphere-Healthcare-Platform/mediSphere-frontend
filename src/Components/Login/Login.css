@@ -1,10 +1,13 @@
 .login-wrapper {
-    min-height: 100vh;
-    background-color: var(--bg-soft);
+    flex: 1;
+    background:
+        linear-gradient(rgba(5, 15, 10, 0.52), rgba(20, 30, 10, 0.52)),
+        url('https://images.unsplash.com/photo-1468581264429-2548ef9eb732?auto=format&fit=crop&w=1600&q=80')
+        center/cover no-repeat fixed;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 60px 20px;
     font-family: 'Inter', sans-serif;
 }
 
@@ -197,4 +200,73 @@
     .login-form-side {
         padding: 40px 30px;
     }
+}
+
+/* Admin Specific Styles */
+.admin-login-link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.admin-login-link a {
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: 0.3s;
+    letter-spacing: 0.02em;
+}
+
+.admin-login-link a:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+.admin-theme .login-container {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-brand span span {
+    color: #ef4444; /* Alert/Admin red */
+    margin-left: 4px;
+    font-weight: 400;
+}
+
+.admin-submit-btn {
+    background: #1f2937; /* Dark charcoal for admin */
+}
+
+.admin-submit-btn:hover {
+    background: #111827;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.admin-overlay {
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(31, 41, 55, 0.7));
+}
+
+.admin-overlay h2 span {
+    color: #f87171;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    transition: 0.3s;
+}
+
+.back-link:hover {
+    color: var(--primary);
+    transform: translateX(-3px);
+}
+
+.admin-error {
+    background: #fff1f2 !important;
+    border: 1px solid #fecdd3 !important;
+    color: #9f1239 !important;
 }

@@ -1,13 +1,13 @@
 import axios from 'axios';
 
 // Patient Service Base URL
-const PATIENT_BASE_URL = 'http://localhost:8084/patient/api/v1';
+const PATIENT_BASE_URL = 'http://127.0.0.1:8084/patient/api/v1';
 
 // Doctor Service Base URL
-const DOCTOR_BASE_URL = 'http://localhost:8085/doctor/api/v1';
+const DOCTOR_BASE_URL = 'http://127.0.0.1:8085/doctor/api/v1';
 
 // Auth Service Base URL
-const AUTH_BASE_URL = 'http://localhost:8083/api/v1/auth';
+const AUTH_BASE_URL = 'http://127.0.0.1:8083/api/v1/auth';
 
 // Instance for Patient Service
 export const patientApi = axios.create({
@@ -24,6 +24,12 @@ export const doctorApi = axios.create({
 // Instance for Auth Service
 export const authApi = axios.create({
     baseURL: AUTH_BASE_URL,
+    headers: { 'Content-Type': 'application/json' }
+});
+
+// Instance for Admin Service
+export const adminApi = axios.create({
+    baseURL: 'http://127.0.0.1:8089/api/v1/admin',
     headers: { 'Content-Type': 'application/json' }
 });
 
@@ -53,6 +59,7 @@ const addInterceptors = (instance, name) => {
 addInterceptors(patientApi, 'PatientAPI');
 addInterceptors(doctorApi, 'DoctorAPI');
 addInterceptors(authApi, 'AuthAPI');
+addInterceptors(adminApi, 'AdminAPI');
 
 // Exporting patientApi as default to maintain backward compatibility
 export default patientApi;

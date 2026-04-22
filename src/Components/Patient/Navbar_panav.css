@@ -1,6 +1,8 @@
+/* ── Patient & Guest NavBar ─────────────────────────────── */
+
 .nav_panav {
-    height: 84px;
-    background: var(--surface);
+    height: 72px;
+    background: #0b1628;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -8,7 +10,7 @@
     position: sticky;
     top: 0;
     z-index: 1000;
-    border-bottom: 1px solid var(--border-light);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .logo_panav {
@@ -16,81 +18,124 @@
     align-items: center;
     gap: 12px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .logoIcon_panav {
-    width: 32px;
-    height: 32px;
-    background: var(--primary);
+    width: 34px;
+    height: 34px;
+    background: #2563eb;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 22px;
     font-weight: 800;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
 }
 
 .logo_panav span {
     font-family: 'Outfit', sans-serif;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 800;
-    color: var(--text-main);
+    color: #f8fafc;
     letter-spacing: -0.03em;
 }
 
 .links_panav {
     display: flex;
-    gap: 40px;
+    gap: 4px;
 }
 
 .link_panav {
     display: flex;
     align-items: center;
-    gap: 8px;
-    color: var(--text-muted);
+    gap: 7px;
+    color: #94a3b8;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    position: relative;
-    padding: 10px 0;
+    letter-spacing: 0.08em;
+    padding: 8px 14px;
+    border-radius: 10px;
+    transition: 0.2s;
+    text-decoration: none;
 }
 
 .link_panav svg {
-    color: var(--text-light);
+    color: #64748b;
     transition: 0.2s;
 }
 
 .link_panav:hover {
-    color: var(--primary);
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.06);
 }
 
 .link_panav:hover svg {
-    color: var(--primary);
+    color: #60a5fa;
 }
 
-.link_panav::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 3px;
-    background: var(--primary);
-    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.link_active_panav {
+    color: #60a5fa !important;
+    background: rgba(37, 99, 235, 0.12) !important;
+    border: 1px solid rgba(37, 99, 235, 0.2);
 }
 
-.link_panav:hover::after {
-    width: 100%;
+.link_active_panav svg {
+    color: #60a5fa !important;
+}
+
+/* Guest CTAs (shown when not logged in) */
+.guestCtas_panav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.guestLogin_panav {
+    color: #94a3b8;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.guestLogin_panav:hover {
+    color: #f1f5f9;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.guestRegister_panav {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #fff;
+    background: #2563eb;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 9px 20px;
+    border-radius: 100px;
+    transition: 0.25s;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+}
+
+.guestRegister_panav:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.45);
 }
 
 .profile_panav {
     display: flex;
     align-items: center;
-    gap: 20px;
-    padding-left: 40px;
-    border-left: 1px solid var(--border-light);
+    gap: 16px;
+    padding-left: 32px;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .userInfo_panav {
@@ -100,44 +145,45 @@
 }
 
 .userName_panav {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
-    color: var(--text-main);
+    color: #f1f5f9;
 }
 
 .userRole_panav {
     font-size: 11px;
-    font-weight: 700;
-    color: var(--text-light);
+    font-weight: 600;
+    color: #60a5fa;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 .avatar_panav {
-    width: 44px;
-    height: 44px;
-    background: var(--bg-soft);
-    border: 1px solid var(--border-light);
+    width: 40px;
+    height: 40px;
+    background: rgba(37, 99, 235, 0.12);
+    border: 1px solid rgba(37, 99, 235, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
-    color: var(--primary);
+    border-radius: 10px;
+    color: #60a5fa;
     transition: 0.2s;
+    text-decoration: none;
 }
 
 .avatar_panav:hover {
-    background: var(--primary-light);
-    border-color: var(--primary);
+    background: rgba(37, 99, 235, 0.2);
+    border-color: #3b82f6;
 }
 
 .logoutBtn_panav {
-    background: transparent;
-    border: none;
-    color: #ef4444;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #f87171;
     cursor: pointer;
-    padding: 8px;
-    border-radius: 8px;
+    padding: 8px 10px;
+    border-radius: 10px;
     transition: 0.2s;
     display: flex;
     align-items: center;
@@ -145,7 +191,8 @@
 }
 
 .logoutBtn_panav:hover {
-    background: #fef2f2;
+    background: rgba(239, 68, 68, 0.15);
+    border-color: #ef4444;
 }
 
 @media (max-width: 1200px) {
@@ -153,9 +200,15 @@
         padding: 0 20px;
     }
     .links_panav {
-        gap: 20px;
+        gap: 4px;
     }
     .userInfo_panav {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .links_panav {
         display: none;
     }
 }

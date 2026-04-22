@@ -5,7 +5,7 @@ import {
     ArrowRight, CheckCircle2, Award,
     FileUp, FileText, AlertCircle, CheckCircle, Loader2
 } from 'lucide-react';
-import { authApi } from '../../services/api';
+import { authApi, adminApi } from '../../services/api';
 import './Registration.css';
 
 const Registration = () => {
@@ -36,11 +36,7 @@ const Registration = () => {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        if (file) {
-            setLicenceFile(file);
-            // Store filename as licenseUrl for now (doctor service stores this)
-            setFormData({ ...formData, licenseUrl: file.name });
-        }
+        if (file) setLicenceFile(file);
     };
 
     const handleRegister = async (e) => {
@@ -72,15 +68,27 @@ const Registration = () => {
                 }
 
             } else {
-                // POST /api/v1/auth/register/doctor
-                const res = await authApi.post('/register/doctor', {
-                    email: formData.email,
-                    password: formData.password,
-                    firstName: formData.firstName,
-                    lastName: formData.lastName,
-                    specialty: formData.specialty,
-                    phone: formData.phone,
-                    licenseUrl: formData.licenseUrl || licenceFile?.name || 'N/A'
+                // For Doctors, registration data goes to Admin Service for approval
+                if (!licenceFile) {
+                    setError('Please upload your medical licence image.');
+                    setLoading(false);
+                    return;
+                }
+
+                const formPayload = new FormData();
+                formPayload.append('email', formData.email);
+                formPayload.append('password', formData.password);
+                formPayload.append('firstName', formData.firstName);
+                formPayload.append('lastName', formData.lastName);
+                formPayload.append('specialty', formData.specialty);
+                formPayload.append('phone', formData.phone);
+                formPayload.append('licenceImage', licenceFile);
+
+                const res = await adminApi({
+                    method: 'post',
+                    url: '/doctors/pending',
+                    data: formPayload,
+                    headers: { 'Content-Type': undefined }
                 });
 
                 if (res.data?.status === 'SUCCESS') {
@@ -95,7 +103,9 @@ const Registration = () => {
             if (err.response?.data?.message) {
                 setError(err.response.data.message);
             } else if (err.request) {
-                setError('Could not connect to auth service. Make sure it is running on port 8083.');
+                const serviceName = role === 'patient' ? 'Auth' : 'Admin';
+                const port = role === 'patient' ? '8083' : '8089';
+                setError(`Could not connect to ${serviceName} service. Please ensure it is running on port ${port}.`);
             } else {
                 setError('Registration failed. Please try again.');
             }
@@ -185,13 +195,13 @@ const Registration = () => {
                                         </select>
                                     </div>
                                     <div className="input-group">
-                                        <label><FileUp size={16} /> Medical Licence</label>
+                                        <label><FileUp size={16} /> Medical Licence (Image)</label>
                                         <div className="file-upload-wrapper">
                                             <input
                                                 type="file"
                                                 id="licence-upload"
                                                 className="file-upload-input"
-                                                accept=".pdf,image/*"
+                                                accept="image/*"
                                                 onChange={handleFileChange}
                                                 required
                                                 disabled={loading}
@@ -200,7 +210,7 @@ const Registration = () => {
                                                 {licenceFile ? (
                                                     <><FileText size={16} /> {licenceFile.name}</>
                                                 ) : (
-                                                    'Choose File...'
+                                                    'Upload Licence Image...'
                                                 )}
                                             </label>
                                         </div>

@@ -25,6 +25,13 @@ import DoctorProfile_doprof from './Components/Doctor/DoctorProfile_doprof';
 import DoctorAppointments_doappt from './Components/Doctor/DoctorAppointments_doappt';
 import DoctorSchedule_dosched from './Components/Doctor/DoctorSchedule_dosched';
 import PatientReportViewer_dorep from './Components/Doctor/PatientReportViewer_dorep';
+// Admin Components
+import AdminNavbar_admin from './Components/NavBar/AdminNavbar_admin';
+import AdminDashboard_admin from './Components/Admin/AdminDashboard_admin';
+import PendingApprovals_admin from './Components/Admin/PendingApprovals_admin';
+import DoctorReports_admin from './Components/Admin/DoctorReports_admin';
+import AdminLogin from './Components/Admin/AdminLogin';
+import Splash from './Components/Splash/Splash';
 
 import './App.css';
 
@@ -33,34 +40,45 @@ function AppContent() {
   const { user, isLoggedIn } = useAuth();
 
   const isDoctorPath = window.location.pathname.startsWith('/doctor');
-  const isAuthPath = window.location.pathname === '/login' || window.location.pathname === '/register';
+  const isAdminPath = window.location.pathname.startsWith('/admin');
+  const isAuthPath = window.location.pathname === '/' || 
+                    window.location.pathname === '/login' || 
+                    window.location.pathname === '/register' || 
+                    window.location.pathname === '/admin/login';
 
   return (
     <div className="App" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       {/* Conditional Navigation */}
-      {!isAuthPath && (
-        <Routes>
-          <Route path="/doctor/*" element={<DoctorNavbar_donv />} />
-          <Route path="/*" element={<Navbar_panav />} />
-        </Routes>
-      )}
+      <Routes>
+        <Route path="/doctor/*" element={<DoctorNavbar_donv />} />
+        <Route path="/admin/login" element={<Navbar_panav />} />
+        <Route path="/admin/*" element={<AdminNavbar_admin />} />
+        <Route path="/*" element={<Navbar_panav />} />
+      </Routes>
 
-      <main className="content_main" style={{ flexGrow: 1 }}>
+      <main className="content_main" style={{ 
+        flexGrow: 1, 
+        marginLeft: (isAdminPath && !isAuthPath) ? '260px' : '0',
+        transition: 'margin-left 0.3s ease'
+      }}>
         <Routes>
           {/* Default root: redirect based on auth state */}
           <Route
             path="/"
             element={
               isLoggedIn()
-                ? user.role === 'DOCTOR'
-                  ? <Navigate to={`/doctor/dashboard/${user.msUserId}`} replace />
-                  : <Navigate to={`/dashboard/${user.patientId}`} replace />
-                : <Navigate to="/login" replace />
+                ? user.role === 'ADMIN'
+                  ? <Navigate to="/admin/dashboard" replace />
+                  : user.role === 'DOCTOR'
+                    ? <Navigate to={`/doctor/dashboard/${user.msUserId}`} replace />
+                    : <Navigate to={`/dashboard/${user.patientId}`} replace />
+                : <Splash />
             }
           />
 
           {/* Auth Routes */}
           <Route path="/login" element={<Login />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/register" element={<Registration />} />
 
           {/* Patient Routes — all use dynamic :patientId from URL */}
@@ -79,6 +97,11 @@ function AppContent() {
           <Route path="/doctor/reports/:doctorId" element={<PatientReportViewer_dorep />} />
           <Route path="/doctor/patients/:doctorId" element={<PatientReportViewer_dorep />} />
 
+          {/* Admin Routes */}
+          <Route path="/admin/dashboard" element={<AdminDashboard_admin />} />
+          <Route path="/admin/approvals" element={<PendingApprovals_admin />} />
+          <Route path="/admin/reports" element={<DoctorReports_admin />} />
+
           {/* Legacy routes: redirect to login if not authenticated */}
           <Route path="/doctor" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
@@ -86,7 +109,7 @@ function AppContent() {
       </main>
 
       {/* Global Footer */}
-      {!isAuthPath && <Footer_pafoot />}
+      {(!isAdminPath || isAuthPath) && <Footer_pafoot />}
     </div>
   );
 }

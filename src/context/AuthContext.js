@@ -35,10 +35,11 @@ export const AuthProvider = ({ children }) => {
 
     const isDoctor = () => user?.role === 'DOCTOR';
     const isPatient = () => user?.role === 'PATIENT';
+    const isAdmin = () => user?.role === 'ADMIN';
     const isLoggedIn = () => !!user;
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, getDashboardId, isDoctor, isPatient, isLoggedIn }}>
+        <AuthContext.Provider value={{ user, login, logout, getDashboardId, isDoctor, isPatient, isAdmin, isLoggedIn }}>
             {children}
         </AuthContext.Provider>
     );

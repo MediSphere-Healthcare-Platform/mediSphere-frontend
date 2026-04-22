@@ -166,6 +166,10 @@ const Login = () => {
                                     <>Sign In <ArrowRight size={18} /></>
                                 )}
                             </button>
+
+                            <div className="admin-login-link">
+                                <Link to="/admin/login">Log in admin</Link>
+                            </div>
                         </form>
 
                         <div className="login-footer">

@@ -1,0 +1,147 @@
+/* ── Admin Sidebar NavBar ───────────────────────────────── */
+
+.navbar_admin {
+    background: #0b1628;
+    height: 100vh;
+    width: 260px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    font-family: 'Inter', sans-serif;
+}
+
+.navBrand_admin {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 0.5rem 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    margin-bottom: 1.75rem;
+}
+
+.brandIcon_admin {
+    color: #60a5fa;
+    flex-shrink: 0;
+}
+
+.brandText_admin {
+    color: #f8fafc;
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    font-family: 'Outfit', sans-serif;
+}
+
+.brandBadge_admin {
+    background: rgba(37, 99, 235, 0.2);
+    color: #60a5fa;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    margin-left: 0.35rem;
+    vertical-align: middle;
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.navLinks_admin {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex-grow: 1;
+}
+
+.navLink_admin {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.875rem 1rem;
+    color: #64748b;
+    text-decoration: none;
+    border-radius: 0.625rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.navLink_admin:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #f1f5f9;
+}
+
+.navLink_admin.active_admin {
+    background: rgba(37, 99, 235, 0.15);
+    color: #60a5fa;
+    border: 1px solid rgba(37, 99, 235, 0.25);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
+.linkIcon_admin {
+    flex-shrink: 0;
+}
+
+.logoutBtn_admin {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: rgba(239, 68, 68, 0.06);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border-radius: 0.625rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.logoutBtn_admin:hover {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+}
+
+@media (max-width: 768px) {
+    .navbar_admin {
+        width: 100%;
+        height: auto;
+        position: relative;
+        flex-direction: row;
+        padding: 1rem 1.5rem;
+        align-items: center;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .navBrand_admin {
+        padding: 0;
+        margin-bottom: 0;
+        border-bottom: none;
+    }
+
+    .navLinks_admin {
+        flex-direction: row;
+        margin-left: auto;
+        gap: 0.5rem;
+        flex-grow: 0;
+    }
+
+    .logoutBtn_admin {
+        margin-top: 0;
+        padding: 0.6rem 0.75rem;
+    }
+
+    .logoutBtn_admin span {
+        display: none;
+    }
+}

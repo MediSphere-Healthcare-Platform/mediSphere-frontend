@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { doctorApi } from '../../services/api';
 import { 
     User, Mail, Phone, Award, Shield, MapPin, 
-    Edit2, Save, X, Camera, Globe, Briefcase, Info 
+    Edit2, Save, X, Camera, Globe, Briefcase, Info, Loader2
 } from 'lucide-react';
 import './DoctorProfile_doprof.css';
 
 const DoctorProfile_doprof = ({ doctorId: propDoctorId = "UD102616" }) => {
     const { doctorId: urlDoctorId } = useParams();
     
-    // ID Resolution Logic
     const getActiveId = () => {
         if (urlDoctorId) {
             sessionStorage.setItem('currentDoctorId', urlDoctorId);
@@ -20,13 +19,18 @@ const DoctorProfile_doprof = ({ doctorId: propDoctorId = "UD102616" }) => {
     };
 
     const currentDoctorId = getActiveId();
+    const fileInputRef = useRef(null);
 
     const [profile, setProfile] = useState(null);
     const [editMode, setEditMode] = useState(false);
     const [formData, setFormData] = useState({});
     const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [photoUploading, setPhotoUploading] = useState(false);
     const [error, setError] = useState('');
     const [activeTab, setActiveTab] = useState('professional');
+    const [previewImg, setPreviewImg] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const headerBg = "https://images.unsplash.com/photo-1559839734-2b71f1536780?auto=format&fit=crop&q=80&w=1200";
 
@@ -37,8 +41,10 @@ const DoctorProfile_doprof = ({ doctorId: propDoctorId = "UD102616" }) => {
     const fetchProfile = async () => {
         try {
             const response = await doctorApi.get(`/getDoctorById/${currentDoctorId}`);
-            setProfile(response.data.data);
-            setFormData(response.data.data);
+            const data = response.data.data;
+            setProfile(data);
+            setFormData(data);
+            setPreviewImg(null);
         } catch (err) {
             setError('Failed to load professional profile.');
             console.error(err);
@@ -51,15 +57,57 @@ const DoctorProfile_doprof = ({ doctorId: propDoctorId = "UD102616" }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    /* ── Profile Photo Selection (preview only) ── */
+    const handlePhotoClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handlePhotoChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+            alert('Please select a valid image file.');
+            return;
+        }
+        // Store file for upload
+        setSelectedFile(file);
+        // Show local preview
+        const reader = new FileReader();
+        reader.onloadend = () => setPreviewImg(reader.result);
+        reader.readAsDataURL(file);
+    };
+
+    /* ── Save All Changes via multipart/form-data ── */
     const handleUpdate = async () => {
+        setSaving(true);
         try {
-            await doctorApi.put(`/updateDoctorDetails/${currentDoctorId}`, formData);
-            setProfile(formData);
+            const formPayload = new FormData();
+            // Doctor fields as JSON part
+            formPayload.append('doctor', new Blob([JSON.stringify({
+                firstName: formData.firstName,
+                lastName:  formData.lastName,
+                drContactNo: formData.drContactNo,
+                status:    formData.status || profile?.status || 'ACTIVE',
+            })], { type: 'application/json' }));
+            // Profile image as separate part (optional)
+            if (selectedFile) {
+                formPayload.append('profileImage', selectedFile);
+            }
+
+            await doctorApi.put(`/updateDoctorDetails/${currentDoctorId}`, formPayload, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+
+            await fetchProfile(); // Refresh to get Cloudinary URL
+            setPreviewImg(null);
+            setSelectedFile(null);
             setEditMode(false);
             alert('Professional details updated successfully!');
         } catch (err) {
             setError('Update failed. Ensure all fields are valid.');
             console.error(err);
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -69,6 +117,8 @@ const DoctorProfile_doprof = ({ doctorId: propDoctorId = "UD102616" }) => {
             <p>Loading medical credentials...</p>
         </div>
     );
+
+    const avatarSrc = previewImg || profile?.profilePic || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=300';
 
     return (
         <div className="dpWrapper_doprof">
@@ -82,13 +132,33 @@ const DoctorProfile_doprof = ({ doctorId: propDoctorId = "UD102616" }) => {
 
             <div className="dpContainer_doprof">
                 <div className="dpSidebar_doprof">
+                    {/* Profile Photo with Upload */}
                     <div className="dpAvatarWrapper_doprof">
                         <img 
-                            src={profile?.profilePic || 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=300'} 
+                            src={avatarSrc}
                             alt="Doctor" 
                             className="dpAvatar_doprof"
                         />
-                        <button className="dpCamera_doprof"><Camera size={16} /></button>
+                        {/* Hidden file input — images only */}
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            onChange={handlePhotoChange}
+                        />
+                        <button
+                            className="dpCamera_doprof"
+                            onClick={handlePhotoClick}
+                            title="Change Profile Photo"
+                        >
+                            <Camera size={16} />
+                        </button>
+                        {previewImg && (
+                            <div className="dpPhotoHint_doprof">
+                                Photo selected — save to apply
+                            </div>
+                        )}
                     </div>
 
                     <div className="dpSidebarInfo_doprof">
@@ -134,9 +204,10 @@ const DoctorProfile_doprof = ({ doctorId: propDoctorId = "UD102616" }) => {
                                 </button>
                             ) : (
                                 <>
-                                    <button className="dpCancelBtn_doprof" onClick={() => setEditMode(false)}>Cancel</button>
-                                    <button className="dpSaveBtn_doprof" onClick={handleUpdate}>
-                                        <Save size={16} /> Save Changes
+                                    <button className="dpCancelBtn_doprof" onClick={() => { setEditMode(false); setPreviewImg(null); }}>Cancel</button>
+                                    <button className="dpSaveBtn_doprof" onClick={handleUpdate} disabled={saving}>
+                                        {saving ? <Loader2 size={16} className="dpSpinIcon_doprof" /> : <Save size={16} />}
+                                        {saving ? 'Saving...' : 'Save Changes'}
                                     </button>
                                 </>
                             )}
@@ -162,6 +233,10 @@ const DoctorProfile_doprof = ({ doctorId: propDoctorId = "UD102616" }) => {
                                             <option value="Neurology">Neurology</option>
                                             <option value="Pediatrics">Pediatrics</option>
                                             <option value="General Medicine">General Medicine</option>
+                                            <option value="Dermatology">Dermatology</option>
+                                            <option value="Orthopedics">Orthopedics</option>
+                                            <option value="Gynecology">Gynecology</option>
+                                            <option value="Psychiatry">Psychiatry</option>
                                         </select>
                                     ) : <div className="dpValue_doprof">{profile?.specialty}</div>}
                                 </div>
@@ -223,6 +298,8 @@ const DoctorProfile_doprof = ({ doctorId: propDoctorId = "UD102616" }) => {
                             </div>
                         )}
                     </div>
+
+                    {error && <div className="dpError_doprof"><Info size={16} /> {error}</div>}
                 </div>
             </div>
         </div>

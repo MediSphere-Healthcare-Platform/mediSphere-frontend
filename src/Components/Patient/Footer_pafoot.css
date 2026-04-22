@@ -1,15 +1,17 @@
+/* ── Patient Footer ─────────────────────────────────────── */
+
 .footer_pafoot {
-    background: var(--surface);
-    padding: 80px 60px 40px;
-    border-top: 1px solid var(--border-light);
-    color: var(--text-main);
+    background: #0b1628;
+    padding: 72px 60px 36px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    color: #f1f5f9;
 }
 
 .content_pafoot {
-    max-width: 1400px;
+    max-width: 1300px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr;
     gap: 60px;
 }
 
@@ -21,26 +23,26 @@
 
 .logo_pafoot {
     font-family: 'Outfit', sans-serif;
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 800;
-    color: var(--primary);
+    color: #f8fafc;
     letter-spacing: -0.03em;
 }
 
 .branding_pafoot p {
-    color: var(--text-muted);
-    font-size: 15px;
-    line-height: 1.6;
-    max-width: 320px;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 300px;
 }
 
 .section_pafoot h4 {
-    color: var(--text-main);
-    font-size: 14px;
+    color: #94a3b8;
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 25px;
-    font-weight: 800;
+    letter-spacing: 0.15em;
+    margin-bottom: 22px;
+    font-weight: 700;
 }
 
 .section_pafoot ul {
@@ -49,61 +51,68 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 13px;
 }
 
-.section_pafoot ul li, 
+.section_pafoot ul li,
 .section_pafoot ul li a {
-    color: var(--text-muted);
+    color: #64748b;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     display: flex;
     align-items: center;
     gap: 10px;
     transition: 0.2s;
+    text-decoration: none;
 }
 
 .section_pafoot ul li a:hover {
-    color: var(--primary);
-    padding-left: 5px;
+    color: #60a5fa;
+    padding-left: 4px;
 }
 
 .socials_pafoot {
     display: flex;
-    gap: 15px;
+    gap: 12px;
 }
 
-.socials_pafoot div {
+.socials_pafoot svg {
     width: 40px;
     height: 40px;
-    background: var(--bg-soft);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 10px;
-    border: 1px solid var(--border-light);
-    color: var(--text-muted);
+    color: #64748b;
     cursor: pointer;
     transition: 0.2s;
+    box-sizing: content-box;
 }
 
-.socials_pafoot div:hover {
-    background: var(--primary);
+.socials_pafoot svg:hover {
+    background: #2563eb;
     color: white;
-    border-color: var(--primary);
+    border-color: #2563eb;
     transform: translateY(-3px);
 }
 
 .bottom_pafoot {
-    margin-top: 80px;
-    padding-top: 30px;
-    border-top: 1px solid var(--border-light);
+    max-width: 1300px;
+    margin: 56px auto 0;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--text-light);
+    color: #475569;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500;
+}
+
+.bottom_pafoot svg {
+    color: #ef4444;
+    display: inline;
+    vertical-align: middle;
 }
 
 @media (max-width: 1024px) {
@@ -118,6 +127,11 @@
         grid-template-columns: 1fr;
     }
     .footer_pafoot {
-        padding: 60px 20px 30px;
+        padding: 56px 20px 28px;
+    }
+    .bottom_pafoot {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
     }
 }

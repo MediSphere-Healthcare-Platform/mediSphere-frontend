@@ -8,7 +8,7 @@ import {
 import api from '../../services/api';
 import './PatientProfile_paprofile.css';
 
-const PatientProfile_paprofile = ({ patientId: propPatientId = "P002" }) => {
+const PatientProfile_paprofile = ({ patientId: propPatientId }) => {
     const { patientId: urlPatientId } = useParams();
     const patientId = urlPatientId || propPatientId;
 
@@ -65,6 +65,14 @@ const PatientProfile_paprofile = ({ patientId: propPatientId = "P002" }) => {
             setError(`Update failed: ${msg}`);
         }
     };
+
+    if (!patientId) return (
+        <div className="loadingContainer_paprofile">
+            <AlertTriangle className="errorIcon_paprofile" size={40} color="#991b1b" />
+            <p>Access Denied: No Patient ID provided.</p>
+            <button onClick={() => window.history.back()} className="cancelBtn_paprofile" style={{ marginTop: '20px' }}>Go Back</button>
+        </div>
+    );
 
     if (loading) return (
         <div className="loadingContainer_paprofile">
