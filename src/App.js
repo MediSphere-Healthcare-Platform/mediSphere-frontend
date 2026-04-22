@@ -23,7 +23,6 @@ import DoctorNavbar_donv from './Components/Doctor/DoctorNavbar_donv';
 import DoctorDashboard_dodsh from './Components/Doctor/DoctorDashboard_dodsh';
 import DoctorProfile_doprof from './Components/Doctor/DoctorProfile_doprof';
 import DoctorAppointments_doappt from './Components/Doctor/DoctorAppointments_doappt';
-import DoctorSchedule_dosched from './Components/Doctor/DoctorSchedule_dosched';
 import PatientReportViewer_dorep from './Components/Doctor/PatientReportViewer_dorep';
 // Admin Components
 import AdminNavbar_admin from './Components/NavBar/AdminNavbar_admin';
@@ -93,7 +92,6 @@ function AppContent() {
           <Route path="/doctor/dashboard/:doctorId" element={<DoctorDashboard_dodsh />} />
           <Route path="/doctor/profile/:doctorId" element={<DoctorProfile_doprof />} />
           <Route path="/doctor/appointments/:doctorId" element={<DoctorAppointments_doappt />} />
-          <Route path="/doctor/schedule/:doctorId" element={<DoctorSchedule_dosched />} />
           <Route path="/doctor/reports/:doctorId" element={<PatientReportViewer_dorep />} />
           <Route path="/doctor/patients/:doctorId" element={<PatientReportViewer_dorep />} />
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { doctorApi } from '../../services/api';
 import { 
-    Users, Calendar, Clock, ClipboardList, CheckCircle, 
+    Users, Clock, ClipboardList, CheckCircle, 
     XCircle, ArrowRight, UserCheck, Activity, Award, FileText
 } from 'lucide-react';
 import './DoctorDashboard_dodsh.css';
@@ -51,7 +51,7 @@ const DoctorDashboard_dodsh = ({ doctorId: propDoctorId = "UD102616" }) => {
     useEffect(() => {
         const fetchDoctorInfo = async () => {
             try {
-                const response = await doctorApi.get(`/getDoctorById/${currentDoctorId}`);
+                const response = await doctorApi.get(`getDoctorById/${currentDoctorId}`);
                 setDoctorInfo(response.data.data);
             } catch (err) {
                 console.error('Error fetching dashboard doctor info:', err);
@@ -68,20 +68,26 @@ const DoctorDashboard_dodsh = ({ doctorId: propDoctorId = "UD102616" }) => {
         setLoading(true);
         try {
             // Fetch appointments
-            const appointRes = await doctorApi.get(`/appointments/allAppointmentsByDoctorId/${currentDoctorId}`);
-            const allAppointments = appointRes.data.data || [];
+            const appointRes = await doctorApi.get(`appointments/allAppointmentsByDoctorId/${currentDoctorId}`);
+            const resData = appointRes.data?.data !== undefined ? appointRes.data.data : appointRes.data;
+            const allAppointments = Array.isArray(resData) ? resData : (resData?.doctorAppointments || []);
             
             // Calculate stats dynamically
             const todayStr = new Date().toISOString().split('T')[0];
-            const uniquePatients = new Set(allAppointments.map(a => a.patientId)).size;
-            const pendingCount = allAppointments.filter(a => a.status === 'Pending').length;
-            const completedCount = allAppointments.filter(a => a.status === 'Completed').length;
-            const todayCount = allAppointments.filter(a => a.appointmentDate === todayStr).length;
+            const uniquePatients = new Set(allAppointments.map(a => a.patientId).filter(id => !!id)).size;
+            
+            const pendingCount = allAppointments.filter(a => 
+                a.status && a.status.toLowerCase() === 'pending'
+            ).length;
+            
+            const completedToday = allAppointments.filter(a => 
+                a.status && a.status.toLowerCase() === 'completed' && a.appointmentDate === todayStr
+            ).length;
 
             setStats({
                 totalAppointments: allAppointments.length,
                 pendingRequests: pendingCount,
-                completedToday: todayCount || completedCount,
+                completedToday: completedToday,
                 totalPatients: uniquePatients
             });
 
@@ -93,16 +99,17 @@ const DoctorDashboard_dodsh = ({ doctorId: propDoctorId = "UD102616" }) => {
         }
     };
 
-    const handleStatusChange = async (appointmentId, status) => {
+    const handleStatusChange = async (appointmentReferenceId, status) => {
         try {
-            await doctorApi.put('/appointments/appointmentStatusChange', {
-                appointmentId,
+            await doctorApi.put('appointments/appointmentStatusChange', {
+                appointmentReferenceId,
                 status
             });
             fetchDashboardData();
             alert(`Appointment ${status.toLowerCase()} successfully!`);
         } catch (err) {
             console.error('Status change failed:', err);
+            alert('Failed to update appointment status. Please try again.');
         }
     };
 
@@ -141,11 +148,6 @@ const DoctorDashboard_dodsh = ({ doctorId: propDoctorId = "UD102616" }) => {
                     <div className="statValue_dodsh">{stats.completedToday}</div>
                     <div className="statLabel_dodsh">Completed Today</div>
                 </div>
-                <div className="statCard_dodsh">
-                    <div className="statIcon_dodsh purple_dodsh"><Users /></div>
-                    <div className="statValue_dodsh">{stats.totalPatients}</div>
-                    <div className="statLabel_dodsh">Unique Patients</div>
-                </div>
             </div>
 
             <div className="mainGrid_dodsh">
@@ -172,10 +174,10 @@ const DoctorDashboard_dodsh = ({ doctorId: propDoctorId = "UD102616" }) => {
                                         </div>
                                     </div>
                                     <div className="appActions_dodsh">
-                                        {app.status === 'Pending' ? (
+                                        {app.status?.toUpperCase() === 'PENDING' ? (
                                             <>
-                                                <button onClick={() => handleStatusChange(app.appointmentId, 'Accepted')} className="acceptBtn_dodsh" title="Accept"><CheckCircle size={18} /></button>
-                                                <button onClick={() => handleStatusChange(app.appointmentId, 'Rejected')} className="rejectBtn_dodsh" title="Reject"><XCircle size={18} /></button>
+                                                <button onClick={() => handleStatusChange(app.appointmentReferenceId, 'APPROVED')} className="acceptBtn_dodsh" title="Accept"><CheckCircle size={18} /></button>
+                                                <button onClick={() => handleStatusChange(app.appointmentReferenceId, 'REJECTED')} className="rejectBtn_dodsh" title="Reject"><XCircle size={18} /></button>
                                             </>
                                         ) : (
                                             <span className={`statusSpan_dodsh ${app.status?.toLowerCase()}_dodsh`}>{app.status}</span>
@@ -200,10 +202,6 @@ const DoctorDashboard_dodsh = ({ doctorId: propDoctorId = "UD102616" }) => {
                     <div className="quickTools_dodsh">
                         <h3>Quick Clinical Tools</h3>
                         <div className="toolGrid_dodsh">
-                            <Link to={`/doctor/schedule/${currentDoctorId}`} className="toolItem_dodsh">
-                                <Calendar size={20} />
-                                <span>Schedule</span>
-                            </Link>
                             <Link to={`/doctor/reports/${currentDoctorId}`} className="toolItem_dodsh">
                                 <FileText size={20} />
                                 <span>Reports</span>
@@ -229,8 +227,13 @@ const DoctorDashboard_dodsh = ({ doctorId: propDoctorId = "UD102616" }) => {
                 </div>
                 <p style={{ fontSize: '12px', color: '#64748b', margin: 0 }}>
                     Connected to Doctor Service on <strong>port 8085</strong>. 
-                    Data fetched dynamically. Priority: URL > Session > Prop.
+                    Data fetched dynamically. Found <strong>{stats.totalAppointments}</strong> appointments in system.
                 </p>
+                {stats.totalAppointments === 0 && (
+                    <p style={{ fontSize: '11px', color: '#f43f5e', marginTop: '8px' }}>
+                        Notice: System returned 0 appointments for this ID. Check if appointments are linked to {currentDoctorId}.
+                    </p>
+                )}
             </div>
         </div>
     );

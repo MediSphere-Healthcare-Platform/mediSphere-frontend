@@ -50,9 +50,9 @@ const PatientReportViewer_dorep = ({ doctorId: propDoctorId = "UD102616" }) => {
     };
 
     const filteredReports = reports.filter(r => {
-        const matchesCategory = category === 'All' || r.category === category;
+        const matchesCategory = category === 'All' || r.reportType === category;
         const matchesSearch = (r.patientName || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
-                             (r.reportTitle || '').toLowerCase().includes(searchTerm.toLowerCase());
+                             (r.reportName || '').toLowerCase().includes(searchTerm.toLowerCase());
         return matchesCategory && matchesSearch;
     });
 
@@ -102,21 +102,25 @@ const PatientReportViewer_dorep = ({ doctorId: propDoctorId = "UD102616" }) => {
                                     </div>
                                     <div className="drvCardBody_dorep">
                                         <div className="drvMeta_dorep">
-                                            <span className="drvTag_dorep">{report.category}</span>
-                                            <span className="drvDate_dorep">{new Date(report.uploadedAt).toLocaleDateString()}</span>
+                                            <span className="drvTag_dorep">{report.reportType}</span>
+                                            <span className="drvDate_dorep">{report.uploadedAt ? new Date(report.uploadedAt).toLocaleDateString() : 'N/A'}</span>
                                         </div>
-                                        <h3>{report.reportTitle}</h3>
+                                        <h3>{report.reportName}</h3>
                                         <div className="drvPatient_dorep">
-                                            <User size={14} /> <span>{report.patientName}</span>
+                                            <User size={14} /> <span>{report.patientName || 'Unknown Patient'}</span>
                                         </div>
                                     </div>
                                     <div className="drvActions_dorep">
-                                        <a href={report.reportUrl} target="_blank" rel="noopener noreferrer" className="drvViewBtn_dorep" title="View Report">
-                                            <Eye size={18} />
-                                        </a>
-                                        <button className="drvDownloadBtn_dorep" title="Download">
-                                            <Download size={18} />
-                                        </button>
+                                        {report.fileUrl && (
+                                            <>
+                                                <a href={report.fileUrl} target="_blank" rel="noopener noreferrer" className="drvViewBtn_dorep" title="View Report">
+                                                    <Eye size={18} />
+                                                </a>
+                                                <a href={report.fileUrl} download={report.reportName} className="drvDownloadBtn_dorep" title="Download">
+                                                    <Download size={18} />
+                                                </a>
+                                            </>
+                                        )}
                                         <button className="drvMarkBtn_dorep" title="Mark as Reviewed">
                                             <CheckCircle2 size={18} />
                                         </button>

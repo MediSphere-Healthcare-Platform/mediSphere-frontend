@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { 
-    Calendar, History, FileText, Pill, Video, 
+import {
+    Calendar, History, FileText, Pill, Video,
     ChevronRight, ArrowUpRight, CheckCircle2, AlertCircle, Loader2,
     Database, Network
 } from 'lucide-react';
@@ -39,23 +39,23 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
     });
 
     // Current date for display
-    const today = new Date().toLocaleDateString('en-US', { 
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+    const today = new Date().toLocaleDateString('en-US', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
 
     useEffect(() => {
         console.log(`[Dashboard] Initializing for Patient ID: ${currentId}`);
-        
+
         const fetchPatientInfo = async () => {
             setStats(prev => ({ ...prev, loading: { ...prev.loading, patient: true }, error: null }));
             try {
-                const res = await api.get(`/getPatientById/${currentId}`);
+                const res = await api.get(`getPatientById/${currentId}`);
                 const finalData = res.data.data || res.data;
                 setDebugData(prev => ({ ...prev, rawPatient: res.data }));
-                setStats(prev => ({ 
-                    ...prev, 
-                    patient: finalData, 
-                    loading: { ...prev.loading, patient: false } 
+                setStats(prev => ({
+                    ...prev,
+                    patient: finalData,
+                    loading: { ...prev.loading, patient: false }
                 }));
             } catch (err) {
                 let errorMsg = "Could not load patient profile.";
@@ -64,9 +64,9 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
                 } else if (err.response?.status === 500) {
                     errorMsg = "Internal Server Error (500). The service might be misconfigured.";
                 }
-                
-                setStats(prev => ({ 
-                    ...prev, 
+
+                setStats(prev => ({
+                    ...prev,
                     loading: { ...prev.loading, patient: false },
                     error: errorMsg
                 }));
@@ -76,18 +76,19 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
         const fetchAppointments = async () => {
             setStats(prev => ({ ...prev, loading: { ...prev.loading, appointments: true } }));
             try {
-                const res = await api.get(`/appointments/allAppointmentsByPatientId/${currentId}`);
+                const res = await api.get(`appointments/allAppointmentsByPatientId/${currentId}`);
                 setDebugData(prev => ({ ...prev, rawAppointments: res.data }));
-                const appointmentData = res.data.data || res.data || [];
-                setStats(prev => ({ 
-                    ...prev, 
-                    appointments: Array.isArray(appointmentData) ? appointmentData : [],
-                    loading: { ...prev.loading, appointments: false } 
+                const resData = res.data?.data !== undefined ? res.data.data : res.data;
+                const appointmentData = Array.isArray(resData) ? resData : (resData?.patientAppointments || []);
+                setStats(prev => ({
+                    ...prev,
+                    appointments: appointmentData,
+                    loading: { ...prev.loading, appointments: false }
                 }));
             } catch (err) {
                 console.error("[Appointments Fetch Error]", err);
-                setStats(prev => ({ 
-                    ...prev, 
+                setStats(prev => ({
+                    ...prev,
                     loading: { ...prev.loading, appointments: false },
                     error: err.response?.status === 500 ? "Appointment service unavailable (Eureka link broken)." : prev.error
                 }));
@@ -97,18 +98,18 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
         const fetchReports = async () => {
             setStats(prev => ({ ...prev, loading: { ...prev.loading, reports: true } }));
             try {
-                const res = await api.get(`/getPatientReportsByPatientId/${currentId}`);
+                const res = await api.get(`getPatientReportsByPatientId/${currentId}`);
                 setDebugData(prev => ({ ...prev, rawReports: res.data }));
                 const reportsData = res.data.data || res.data || [];
-                setStats(prev => ({ 
-                    ...prev, 
+                setStats(prev => ({
+                    ...prev,
                     reports: Array.isArray(reportsData) ? reportsData : [],
-                    loading: { ...prev.loading, reports: false } 
+                    loading: { ...prev.loading, reports: false }
                 }));
             } catch (err) {
-                setStats(prev => ({ 
-                    ...prev, 
-                    loading: { ...prev.loading, reports: false } 
+                setStats(prev => ({
+                    ...prev,
+                    loading: { ...prev.loading, reports: false }
                 }));
             }
         };
@@ -117,18 +118,18 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
             setStats(prev => ({ ...prev, loading: { ...prev.loading, sessions: true } }));
             try {
                 // Endpoint defined in PatientController: /telemedicine/sessions/patient/{patientId}
-                const res = await api.get(`/telemedicine/sessions/patient/${currentId}`);
+                const res = await api.get(`telemedicine/sessions/patient/${currentId}`);
                 const sessionData = res.data.data || res.data || [];
-                setStats(prev => ({ 
-                    ...prev, 
+                setStats(prev => ({
+                    ...prev,
                     activeSessions: Array.isArray(sessionData) ? sessionData.filter(s => s.status === 'ACTIVE' || s.status === 'OPEN') : [],
-                    loading: { ...prev.loading, sessions: false } 
+                    loading: { ...prev.loading, sessions: false }
                 }));
             } catch (err) {
                 console.error("[Sessions Fetch Error]", err);
-                setStats(prev => ({ 
-                    ...prev, 
-                    loading: { ...prev.loading, sessions: false } 
+                setStats(prev => ({
+                    ...prev,
+                    loading: { ...prev.loading, sessions: false }
                 }));
             }
         };
@@ -150,27 +151,26 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
         );
     }
 
-    const upcomingAppointments = stats.appointments.filter(app => 
-        app.status !== 'Completed' && app.status !== 'Cancelled'
-    ).length;
 
-    const pastConsultations = stats.appointments.filter(app => 
-        app.status === 'Completed'
+    const pastConsultations = stats.appointments.filter(app =>
+        app.status && app.status.toLowerCase() === 'completed'
     ).length;
 
     return (
         <div className="container_padashboard">
             {/* Hero Section */}
-            <div className="hero_padashboard">
-                <div className="heroContent_padashboard">
-                    <div className="heroBadge_padashboard">
-                        <CheckCircle2 size={16} /> <span>All systems healthy</span>
+            <div className="hero_img">
+                <div className="hero_padashboard">
+                    <div className="heroContent_padashboard">
+                        <div className="heroBadge_padashboard">
+                            <CheckCircle2 size={16} /> <span>All systems healthy</span>
+                        </div>
+                        <h1>Welcome back, <span>{stats.patient?.firstName || "Patient"} {stats.patient?.lastName || ""}</span></h1>
+                        <p className="heroDate_padashboard">{today}</p>
+                        <p className="heroSub_padashboard">Manage your health records, book appointments, and consult with professionals — all in one place. Your health is our priority.</p>
                     </div>
-                    <h1>Welcome back, <span>{stats.patient?.firstName || "Patient"} {stats.patient?.lastName || ""}</span></h1>
-                    <p className="heroDate_padashboard">{today}</p>
-                    <p className="heroSub_padashboard">Manage your health records, book appointments, and consult with professionals — all in one place. Your health is our priority.</p>
+                    <div className="heroOverlay_padashboard"></div>
                 </div>
-                <div className="heroOverlay_padashboard"></div>
             </div>
 
             {stats.error && (
@@ -184,9 +184,9 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
                 <div className="statCard_padashboard">
                     <div className="statIcon_padashboard blue_padashboard"><Calendar /></div>
                     <div className="statValue_padashboard">
-                        {stats.loading.appointments ? "..." : upcomingAppointments.toString().padStart(2, '0')}
+                        {stats.loading.appointments ? "..." : stats.appointments.length.toString().padStart(2, '0')}
                     </div>
-                    <div className="statLabel_padashboard">Upcoming Appointments</div>
+                    <div className="statLabel_padashboard">Total Appointments</div>
                 </div>
                 <div className="statCard_padashboard">
                     <div className="statIcon_padashboard green_padashboard"><FileText /></div>
@@ -227,10 +227,10 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
                                             </div>
                                             <div>
                                                 <h3>Consultation with Dr. {session.doctorName || 'Specialist'}</h3>
-                                                <p>Started at {new Date(session.startTime || session.scheduledAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+                                                <p>Started at {new Date(session.startTime || session.scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                                             </div>
                                         </div>
-                                        <button 
+                                        <button
                                             className="joinSessionBtn_padashboard"
                                             onClick={() => window.open(session.roomUrl, '_blank')}
                                         >
@@ -309,28 +309,28 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
                     <div style={{ display: 'flex', gap: '10px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', background: '#fff', border: '1px solid #cbd5e1', borderRadius: '6px', padding: '2px 8px' }}>
                             <span style={{ fontSize: '11px', color: '#94a3b8', marginRight: '5px' }}>Test ID:</span>
-                            <input 
-                                value={idInput} 
+                            <input
+                                value={idInput}
                                 onChange={(e) => setIdInput(e.target.value)}
                                 style={{ border: 'none', width: '60px', fontSize: '12px', outline: 'none' }}
                                 placeholder="e.g. P002"
                             />
-                            <button 
+                            <button
                                 onClick={() => setCurrentId(idInput)}
                                 style={{ background: '#6366f1', color: '#fff', border: 'none', padding: '2px 8px', borderRadius: '4px', fontSize: '10px', marginLeft: '5px', cursor: 'pointer' }}
                             >
                                 Switch
                             </button>
                         </div>
-                        <button 
-                            onClick={() => setDebugData({...debugData, showDebug: !debugData.showDebug})}
+                        <button
+                            onClick={() => setDebugData({ ...debugData, showDebug: !debugData.showDebug })}
                             style={{ padding: '6px 12px', fontSize: '12px', borderRadius: '6px', cursor: 'pointer', background: '#fff', border: '1px solid #cbd5e1' }}
                         >
                             {debugData.showDebug ? 'Hide Details' : 'Show JSON'}
                         </button>
                     </div>
                 </div>
-                
+
                 {debugData.showDebug && (
                     <div className="debugBody_padashboard" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
                         <div className="debugCard_padashboard">

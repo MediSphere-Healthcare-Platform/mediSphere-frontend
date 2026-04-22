@@ -27,7 +27,7 @@ const Login = () => {
 
         try {
             // Step 1: Call auth service
-            const authRes = await authApi.post('/login', {
+            const authRes = await authApi.post('login', {
                 email: formData.email,
                 password: formData.password
             });
@@ -59,7 +59,7 @@ const Login = () => {
                 // For patients: msUserId = UP#### but API uses patientId = P###
                 // Resolve msUserId → patientId via getAllPatientForAdmin
                 try {
-                    const patientsRes = await patientApi.get('/getAllPatientForAdmin');
+                    const patientsRes = await patientApi.get('getAllPatientForAdmin');
                     const patients = patientsRes.data?.data || [];
                     const matchedPatient = patients.find(p => p.msUserId === msUserId);
 

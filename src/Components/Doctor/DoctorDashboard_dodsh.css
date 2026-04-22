@@ -245,7 +245,7 @@
     border-radius: 20px;
 }
 
-.accepted_dodsh { background: #f0fff4; color: #38a169; }
+.accepted_dodsh, .approved_dodsh { background: #f0fff4; color: #38a169; }
 .completed_dodsh { background: #ebf8ff; color: #3182ce; }
 
 /* Right Column Panels */

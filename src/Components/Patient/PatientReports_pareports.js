@@ -16,21 +16,39 @@ const PatientReports_pareports = ({ patientId: propPatientId = "P002" }) => {
         reportName: '',
         reportType: 'General',
         description: '',
-        doctorId: 'D001' // Mock doctor ID for now as it's required by backend
+        doctorId: '' 
     });
     const [file, setFile] = useState(null);
+    const [doctors, setDoctors] = useState([]);
 
     useEffect(() => {
         console.log(`[Reports] Fetching for Patient ID: ${patientId}`);
         fetchReports();
+        fetchDoctors();
     }, [patientId]);
+
+    const fetchDoctors = async () => {
+        try {
+            const response = await api.get('getAllDoctors');
+            const resData = response.data?.data || response.data || [];
+            setDoctors(Array.isArray(resData) ? resData : []);
+            
+            // Set default doctor if available
+            if (resData.length > 0 && !newReport.doctorId) {
+                setNewReport(prev => ({ ...prev, doctorId: resData[0].doctorId || resData[0].msUserId }));
+            }
+        } catch (err) {
+            console.error('[Reports] Error fetching doctors:', err);
+        }
+    };
 
     const fetchReports = async () => {
         setLoading(true);
         try {
-            const response = await api.get(`/getPatientReportsByPatientId/${patientId}`);
-            const finalData = response.data.data || response.data || [];
-            setReports(Array.isArray(finalData) ? finalData : []);
+            const response = await api.get(`getPatientReportsByPatientId/${patientId}`);
+            const resData = response.data?.data !== undefined ? response.data.data : response.data;
+            const finalData = Array.isArray(resData) ? resData : [];
+            setReports(finalData);
         } catch (err) {
             console.error('[Reports] Fetch Error:', err);
         } finally {
@@ -59,7 +77,7 @@ const PatientReports_pareports = ({ patientId: propPatientId = "P002" }) => {
             data.append('reportData', new Blob([JSON.stringify(reportData)], { type: 'application/json' }));
             data.append('file', file);
 
-            await api.post('/uploadMedicalReport', data, {
+            await api.post('uploadMedicalReport', data, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             
@@ -70,7 +88,7 @@ const PatientReports_pareports = ({ patientId: propPatientId = "P002" }) => {
                 reportName: '',
                 reportType: 'General',
                 description: '',
-                doctorId: 'D001'
+                doctorId: doctors.length > 0 ? (doctors[0].doctorId || doctors[0].msUserId) : ''
             });
             fetchReports();
         } catch (err) {
@@ -85,7 +103,7 @@ const PatientReports_pareports = ({ patientId: propPatientId = "P002" }) => {
     const deleteReport = async (reportId) => {
         if (!window.confirm('Are you sure you want to delete this report?')) return;
         try {
-            await api.delete(`/deleteMedicalReport/${reportId}`);
+            await api.delete(`deleteMedicalReport/${reportId}`);
             fetchReports();
         } catch (err) {
             console.error('Delete failed:', err);
@@ -165,6 +183,21 @@ const PatientReports_pareports = ({ patientId: propPatientId = "P002" }) => {
                                 />
                             </div>
                             <div className="inputGroup_pareports">
+                                <label>Target Doctor (Shared With)</label>
+                                <select
+                                    required
+                                    value={newReport.doctorId}
+                                    onChange={(e) => setNewReport({ ...newReport, doctorId: e.target.value })}
+                                >
+                                    <option value="">Select a Doctor</option>
+                                    {doctors.map(doc => (
+                                        <option key={doc.doctorId || doc.msUserId} value={doc.doctorId || doc.msUserId}>
+                                            Dr. {doc.firstName} {doc.lastName} ({doc.specialization || 'General'})
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="inputGroup_pareports">
                                 <label>Category (Report Type)</label>
                                 <select
                                     value={newReport.reportType}
@@ -188,8 +221,8 @@ const PatientReports_pareports = ({ patientId: propPatientId = "P002" }) => {
                                 <label>File Attachment</label>
                                 <div className="fileDropZone_pareports">
                                     <Upload size={24} />
-                                    <input type="file" required onChange={(e) => setFile(e.target.files[0])} />
-                                    <p>{file ? file.name : 'Select or drag file here'}</p>
+                                    <input type="file" accept="image/*" required onChange={(e) => setFile(e.target.files[0])} />
+                                    <p>{file ? file.name : 'Select or drag image here (JPG, PNG)'}</p>
                                 </div>
                             </div>
                             <button type="submit" className="submitBtn_pareports" disabled={uploading}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import {
     User, Mail, Phone, Calendar, MapPin, Edit2, Save, X, Camera,
@@ -18,6 +18,9 @@ const PatientProfile_paprofile = ({ patientId: propPatientId }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [activeSection, setActiveSection] = useState('personal');
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
+    const fileInputRef = useRef(null);
 
     // Decorative image URLs
     const headerBg = "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=1200";
@@ -31,7 +34,7 @@ const PatientProfile_paprofile = ({ patientId: propPatientId }) => {
     const fetchProfile = async () => {
         setLoading(true);
         try {
-            const response = await api.get(`/getPatientById/${patientId}`);
+            const response = await api.get(`getPatientById/${patientId}`);
             const finalData = response.data.data || response.data;
             setProfile(finalData);
             setFormData(finalData);
@@ -53,15 +56,58 @@ const PatientProfile_paprofile = ({ patientId: propPatientId }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            setPreviewUrl(URL.createObjectURL(file));
+        }
+    };
+
+    const triggerFileInput = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+
     const handleUpdate = async () => {
         try {
-            await api.put(`/updatePatientDetails/${patientId}`, formData);
-            setProfile(formData);
+            const data = new FormData();
+            
+            // Separate file from other data
+            if (selectedFile) {
+                data.append('profileImage', selectedFile);
+            }
+
+            // Create a blob for the JSON part to match @RequestPart on backend
+            const updateDto = {
+                dateOfBirth: formData.dateOfBirth,
+                gender: formData.gender,
+                phoneNumber: formData.phoneNumber,
+                address: formData.address,
+                bloodGroup: formData.bloodGroup,
+                allergies: formData.allergies,
+                chronicConditions: formData.chronicConditions
+            };
+            
+            data.append('patient', new Blob([JSON.stringify(updateDto)], { type: 'application/json' }));
+
+            const response = await api.put(`updatePatientDetails/${patientId}`, data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            const updatedData = response.data.data || response.data;
+            setProfile(updatedData);
+            setFormData(updatedData);
             setEditMode(false);
+            setSelectedFile(null);
+            setPreviewUrl(null);
             setError('');
             alert('Profile updated successfully!');
         } catch (err) {
-            const msg = err.response?.data?.message || 'Update failed.';
+            const msg = err.response?.data?.message || err.message || 'Update failed.';
             setError(`Update failed: ${msg}`);
         }
     };
@@ -96,12 +142,29 @@ const PatientProfile_paprofile = ({ patientId: propPatientId }) => {
                 {/* Left Sidebar - Profile Summary */}
                 <div className="sidebar_paprofile">
                     <div className="avatarWrapper_paprofile">
-                        <img
-                            src={profile?.profileImageUrl || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200'}
-                            alt="Profile"
-                            className="mainAvatar_paprofile"
+                        <div className="avatarCircle_paprofile">
+                            {previewUrl || profile?.profileImageUrl ? (
+                                <img
+                                    src={previewUrl || profile?.profileImageUrl}
+                                    alt="Profile"
+                                    className="mainAvatar_paprofile"
+                                />
+                            ) : (
+                                <User size={80} className="defaultAvatar_paprofile" />
+                            )}
+                        </div>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            style={{ display: 'none' }}
+                            accept="image/*"
                         />
-                        <button className="changePhotoBtn_paprofile" title="Change Photo">
+                        <button 
+                            className="changePhotoBtn_paprofile" 
+                            title="Change Photo"
+                            onClick={triggerFileInput}
+                        >
                             <Camera size={16} />
                         </button>
                     </div>

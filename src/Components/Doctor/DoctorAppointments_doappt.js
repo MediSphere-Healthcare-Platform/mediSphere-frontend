@@ -1,29 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { doctorApi } from '../../services/api';
 import { 
-    Calendar, Clock, User, Filter, Search, 
-    CheckCircle, XCircle, Info, MoreVertical, Video, AlertCircle
+    Search, Filter, Calendar, Clock, User, 
+    MessageSquare, CheckCircle, XCircle, MoreVertical,
+    Activity, Video, ChevronRight, FileText
 } from 'lucide-react';
 import './DoctorAppointments_doappt.css';
 
-const DoctorAppointments_doappt = ({ doctorId: propDoctorId = "UD102616" }) => {
+const DoctorAppointments_doappt = () => {
     const { doctorId: urlDoctorId } = useParams();
+    const currentDoctorId = urlDoctorId || sessionStorage.getItem('currentDoctorId') || "UD102616";
     
-    // ID Resolution Logic
-    const getActiveId = () => {
-        if (urlDoctorId) {
-            sessionStorage.setItem('currentDoctorId', urlDoctorId);
-            return urlDoctorId;
-        }
-        return sessionStorage.getItem('currentDoctorId') || propDoctorId;
-    };
-
-    const currentDoctorId = getActiveId();
-
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState('All');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('All');
 
     useEffect(() => {
         fetchAppointments();
@@ -32,8 +24,10 @@ const DoctorAppointments_doappt = ({ doctorId: propDoctorId = "UD102616" }) => {
     const fetchAppointments = async () => {
         setLoading(true);
         try {
-            const response = await doctorApi.get(`/appointments/allAppointmentsByDoctorId/${currentDoctorId}`);
-            setAppointments(response.data.data || []);
+            const response = await doctorApi.get(`appointments/allAppointmentsByDoctorId/${currentDoctorId}`);
+            const resData = response.data?.data !== undefined ? response.data.data : response.data;
+            const appointmentData = Array.isArray(resData) ? resData : (resData?.doctorAppointments || []);
+            setAppointments(appointmentData);
         } catch (err) {
             console.error('Error fetching appointments:', err);
         } finally {
@@ -41,113 +35,156 @@ const DoctorAppointments_doappt = ({ doctorId: propDoctorId = "UD102616" }) => {
         }
     };
 
-    const handleStatusUpdate = async (appointmentId, newStatus) => {
+    const handleStatusChange = async (appointmentReferenceId, status) => {
         try {
-            await doctorApi.put('/appointments/appointmentStatusChange', {
-                appointmentId,
-                status: newStatus
+            await doctorApi.put('appointments/appointmentStatusChange', {
+                appointmentReferenceId,
+                status
             });
-            fetchAppointments();
-            alert(`Appointment marked as ${newStatus}`);
+            fetchAppointments(); // Refresh list
+            alert(`Appointment marked as ${status} successfully.`);
         } catch (err) {
             console.error('Status update failed:', err);
+            alert('Failed to update status. Please try again.');
         }
     };
 
-    const handleCreateTelemedicineSession = async (appointment) => {
-        try {
-            const response = await doctorApi.post(`/telemedicine/sessions/from-appointment/${appointment.appointmentId}`);
-            alert('Telemedicine session created successfully!');
-            
-            if (response.data?.data?.roomUrl) {
-                window.open(response.data.data.roomUrl, '_blank');
-            }
-            fetchAppointments();
-        } catch (err) {
-            console.error('Failed to create session:', err);
-            alert('Creation failed. Ensure session doesn\'t already exist.');
-        }
-    };
-
-    const filteredAppointments = appointments.filter(app => 
-        filter === 'All' || app.status === filter
-    );
+    const filteredAppointments = appointments.filter(app => {
+        const matchesSearch = (app.patientName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                             (app.appointmentReferenceId || '').toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesStatus = statusFilter === 'All' || 
+                             (app.status && app.status.toLowerCase() === statusFilter.toLowerCase());
+        return matchesSearch && matchesStatus;
+    });
 
     return (
         <div className="daWrapper_doappt">
-            <div className="daHeader_doappt">
-                <h1>Clinical <span>Appointments</span></h1>
-                <p>Manage your patient consultations, review medical cases, and initiate telemedicine sessions.</p>
-            </div>
-
-            <div className="daControls_doappt">
-                <div className="daTabs_doappt">
-                    {['All', 'Pending', 'Accepted', 'Completed', 'Rejected'].map(status => (
-                        <button 
-                            key={status}
-                            className={`daTab_doappt ${filter === status ? 'active' : ''}`}
-                            onClick={() => setFilter(status)}
-                        >
-                            {status}
-                        </button>
-                    ))}
+            {/* Rich Hero Header */}
+            <header className="daHero_doappt">
+                <div className="daHeroBg_doappt"></div>
+                <div className="daHeroOverlay_doappt"></div>
+                <div className="daHeroContent_doappt">
+                    <div className="daBadge_doappt">
+                        <Activity size={14} /> <span>Clinical Workflow</span>
+                    </div>
+                    <h1>Appointment <span>Management</span></h1>
+                    <p>Review, manage, and coordinate your patient consultations with real-time status tracking.</p>
                 </div>
-            </div>
+            </header>
 
-            {loading ? (
-                <div className="daLoading_doappt">
-                    <div className="daSpinner_doappt"></div>
-                    <p>Fetching clinical records...</p>
+            <div className="daContainer_doappt">
+                {/* Control Panel - Glassmorphism */}
+                <div className="daControls_doappt">
+                    <div className="daSearch_doappt">
+                        <Search size={20} className="daSearchIcon_doappt" />
+                        <input 
+                            type="text" 
+                            placeholder="Search by patient name or reference ID..." 
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    
+                    <div className="daFilters_doappt">
+                        <div className="daFilterItem_doappt">
+                            <Filter size={18} />
+                            <select 
+                                value={statusFilter}
+                                onChange={(e) => setStatusFilter(e.target.value)}
+                            >
+                                <option value="All">All Statuses</option>
+                                <option value="Pending">Pending</option>
+                                <option value="APPROVED">Accepted</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-            ) : (
-                <div className="daGrid_doappt">
-                    {filteredAppointments.length > 0 ? (
-                        filteredAppointments.map((app) => (
-                            <div key={app.appointmentId} className="daCard_doappt">
+
+                {/* Appointment List */}
+                {loading ? (
+                    <div className="daLoading_doappt">
+                        <div className="daSpinner_doappt"></div>
+                        <p>Synchronizing your clinical schedule...</p>
+                    </div>
+                ) : filteredAppointments.length > 0 ? (
+                    <div className="daGrid_doappt">
+                        {filteredAppointments.map((app, index) => (
+                            <div className="daCard_doappt" key={app.appointmentReferenceId || index}>
                                 <div className="daCardHeader_doappt">
-                                    <div className="daPatientInfo_doappt">
-                                        <div className="daPatientIcon_doappt">{app.patientName?.charAt(0) || 'P'}</div>
-                                        <div>
-                                            <h3>{app.patientName}</h3>
-                                            <p className="daAppId_doappt">#{app.appointmentId}</p>
+                                    <div className="daPatientMeta_doappt">
+                                        <div className="daAvatar_doappt">
+                                            {app.patientName?.charAt(0) || 'P'}
+                                        </div>
+                                        <div className="daPatientText_doappt">
+                                            <h3>{app.patientName || 'Anonymous Patient'}</h3>
+                                            <span className="daRef_doappt">REF: {app.appointmentReferenceId}</span>
                                         </div>
                                     </div>
-                                    <span className={`daStatus_doappt ${app.status?.toLowerCase()}_doappt`}>{app.status}</span>
-                                </div>
-                                <div className="daCardBody_doappt">
-                                    <div className="daDetailItem_doappt"><Calendar size={16} /> {app.appointmentDate}</div>
-                                    <div className="daDetailItem_doappt"><Clock size={16} /> {app.appointmentTime}</div>
-                                    <div className="daReason_doappt">
-                                        <strong>Reason:</strong> {app.reason || 'General check-up'}
+                                    <div className={`daStatusTag_doappt ${app.status?.toLowerCase()}_doappt`}>
+                                        {app.status}
                                     </div>
                                 </div>
+
+                                <div className="daCardBody_doappt">
+                                    <div className="daDetail_doappt">
+                                        <Calendar size={16} />
+                                        <span>{app.appointmentDate}</span>
+                                    </div>
+                                    <div className="daDetail_doappt">
+                                        <Clock size={16} />
+                                        <span>{app.appointmentTime}</span>
+                                    </div>
+                                    <div className="daReasonBox_doappt">
+                                        <MessageSquare size={16} />
+                                        <p>{app.reason || 'No reason provided.'}</p>
+                                    </div>
+                                </div>
+
                                 <div className="daCardActions_doappt">
-                                    {app.status === 'Pending' && (
+                                    {app.status?.toUpperCase() === 'PENDING' ? (
                                         <>
-                                            <button onClick={() => handleStatusUpdate(app.appointmentId, 'Accepted')} className="daAcceptBtn_doappt">Accept</button>
-                                            <button onClick={() => handleStatusUpdate(app.appointmentId, 'Rejected')} className="daRejectBtn_doappt">Reject</button>
+                                            <button 
+                                                className="daBtnAccept_doappt"
+                                                onClick={() => handleStatusChange(app.appointmentReferenceId, 'APPROVED')}
+                                            >
+                                                <CheckCircle size={18} /> Accept
+                                            </button>
+                                            <button 
+                                                className="daBtnReject_doappt"
+                                                onClick={() => handleStatusChange(app.appointmentReferenceId, 'REJECTED')}
+                                            >
+                                                <XCircle size={18} /> Reject
+                                            </button>
                                         </>
-                                    )}
-                                    {app.status === 'Accepted' && (
-                                        <button 
-                                            onClick={() => handleCreateTelemedicineSession(app)} 
-                                            className="daTeleBtn_doappt"
-                                        >
-                                            <Video size={16} /> Create Session
+                                    ) : app.status?.toUpperCase() === 'APPROVED' ? (
+                                        <>
+                                            <Link to={`/doctor/consultation/${app.appointmentReferenceId}`} className="daBtnConsult_doappt">
+                                                <Video size={18} /> Start Session
+                                            </Link>
+                                        </>
+                                    ) : (
+                                        <button className="daBtnArchive_doappt" disabled>
+                                            <FileText size={18} /> View History
                                         </button>
                                     )}
-                                    <button className="daViewBtn_doappt">View Details</button>
                                 </div>
                             </div>
-                        ))
-                    ) : (
-                        <div className="daNoData_doappt">
-                            <AlertCircle size={40} />
-                            <p>No appointments found for this category.</p>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="daNoData_doappt">
+                        <div className="daNoDataIcon_doappt">
+                            <Calendar size={48} />
                         </div>
-                    )}
-                </div>
-            )}
+                        <h3>No consultations found</h3>
+                        <p>Adjust your filters or search term to find what you're looking for.</p>
+                        <button className="daResetBtn_doappt" onClick={() => { setSearchTerm(''); setStatusFilter('All'); }}>
+                            Clear All Filters
+                        </button>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

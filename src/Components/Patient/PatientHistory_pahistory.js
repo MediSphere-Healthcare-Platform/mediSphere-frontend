@@ -18,9 +18,10 @@ const PatientHistory_pahistory = ({ patientId: propPatientId = "P002" }) => {
 
     const fetchHistory = async () => {
         try {
-            const response = await api.get(`/appointments/allAppointmentsByPatientId/${patientId}`);
-            const finalData = response.data.data || response.data || [];
-            setAppointments(Array.isArray(finalData) ? finalData : []);
+            const response = await api.get(`appointments/allAppointmentsByPatientId/${patientId}`);
+            const resData = response.data?.data !== undefined ? response.data.data : response.data;
+            const finalData = Array.isArray(resData) ? resData : (resData?.patientAppointments || []);
+            setAppointments(finalData);
         } catch (err) {
             console.error('[History] Fetch Error:', err);
         } finally {
@@ -59,15 +60,18 @@ const PatientHistory_pahistory = ({ patientId: propPatientId = "P002" }) => {
                                 </div>
                                 <div className="eventContent_pahistory">
                                     <div className="eventHeader_pahistory">
-                                        <h3>Dr. {app.doctorName || 'General Specialist'}</h3>
+                                        <div>
+                                            <h3>Dr. {app.doctorName || 'General Specialist'}</h3>
+                                            <p className="refId_pahistory" style={{ fontSize: '12px', color: '#64748b' }}>Ref ID: {app.appointmentId || 'N/A'}</p>
+                                        </div>
                                         <span className={`status_pahistory ${app.status?.toLowerCase()}_pahistory`}>
                                             {getStatusIcon(app.status)} {app.status || 'Scheduled'}
                                         </span>
                                     </div>
                                     <div className="eventDetails_pahistory">
-                                        <p><Calendar size={14} /> {app.appointmentDate}</p>
-                                        <p><Clock size={14} /> {app.appointmentTime}</p>
-                                        <p><ClipboardList size={14} /> {app.reason || 'Routine Checkup'}</p>
+                                        <p><Calendar size={14} /> <strong>Date:</strong> {app.appointmentDate}</p>
+                                        <p><Clock size={14} /> <strong>Time:</strong> {app.appointmentTime}</p>
+                                        <p><ClipboardList size={14} /> <strong>Reason:</strong> {app.reason || 'Routine Checkup'}</p>
                                     </div>
                                     {app.status === 'Completed' && (
                                         <button className="viewPresBtn_pahistory">
