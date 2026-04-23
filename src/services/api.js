@@ -42,6 +42,30 @@ export const telemedicineApi = axios.create({
     headers: { 'Content-Type': 'application/json' }
 });
 
+// Instance for AI Symptom Check Service
+export const symptomApi = axios.create({
+    baseURL: 'http://127.0.0.1:8088/api/',
+    headers: { 'Content-Type': 'application/json' }
+});
+
+// Add Authorization interceptor for Symptom API
+symptomApi.interceptors.request.use((config) => {
+    try {
+        const stored = sessionStorage.getItem('medisphere_user');
+        if (stored) {
+            const user = JSON.parse(stored);
+            if (user.token) {
+                config.headers.Authorization = `Bearer ${user.token}`;
+            }
+        }
+    } catch (e) {
+        console.error("Failed to parse auth token", e);
+    }
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
+
 // Add Authorization interceptor specifically for Telemedicine
 telemedicineApi.interceptors.request.use((config) => {
     try {
@@ -88,6 +112,7 @@ addInterceptors(doctorApi, 'DoctorAPI');
 addInterceptors(authApi, 'AuthAPI');
 addInterceptors(adminApi, 'AdminAPI');
 addInterceptors(telemedicineApi, 'TelemedicineAPI');
+addInterceptors(symptomApi, 'SymptomAPI');
 
 // Exporting patientApi as default to maintain backward compatibility
 export default patientApi;

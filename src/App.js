@@ -39,6 +39,10 @@ import VideoRoom from './Components/telemedicine/VideoRoom';
 import PrescribeMedicine from './Components/telemedicine/PrescribeMedicine';
 import DoctorPrescriptions from './Components/telemedicine/DoctorPrescriptions';
 
+// AI Symptom Check Components
+import SymptomChecker from './Components/AIsymptomcheck/SymptomChecker';
+import SymptomHistory from './Components/AIsymptomcheck/SymptomHistory';
+
 import './App.css';
 
 // Inner App that has access to AuthContext
@@ -96,6 +100,8 @@ function AppContent() {
           <Route path="/prescriptions/:patientId" element={<PatientPrescriptions_paprescription />} />
           <Route path="/telemedicine/patient/:patientId" element={<PatientTelemedicine />} />
           <Route path="/telemedicine/room/:sessionId" element={<VideoRoom />} />
+          <Route path="/symptom-check/:patientId" element={<SymptomChecker />} />
+          <Route path="/symptom-history/:patientId" element={<SymptomHistory />} />
 
           {/* Doctor Routes — all use dynamic :doctorId from URL */}
           <Route path="/doctor/dashboard/:doctorId" element={<DoctorDashboard_dodsh />} />
