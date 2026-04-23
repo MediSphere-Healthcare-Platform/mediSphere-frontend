@@ -2,14 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { telemedicineApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
-import { PhoneOff, LogOut, Video } from 'lucide-react';
+import { PhoneOff, LogOut, Video, WifiOff } from 'lucide-react';
 import './VideoRoom.css';
 
 const VideoRoom = () => {
     const { sessionId } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
-    
+
     const [session, setSession] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -43,7 +43,6 @@ const VideoRoom = () => {
             initJitsi(sessionData);
             return;
         }
-
         const script = document.createElement("script");
         script.src = "https://meet.jit.si/external_api.js";
         script.async = true;
@@ -60,7 +59,7 @@ const VideoRoom = () => {
             width: "100%",
             height: "100%",
             parentNode: jitsiContainerRef.current,
-            // jwt: sessionData.jitsiToken, // Disabled since public meet.jit.si rejects custom local tokens
+            // jwt: sessionData.jitsiToken, // Disabled — public meet.jit.si rejects custom tokens
             userInfo: {
                 displayName: user?.name || (user?.role === 'DOCTOR' ? 'Doctor' : 'Patient')
             },
@@ -93,7 +92,6 @@ const VideoRoom = () => {
                 if (jitsiApiRef.current) {
                     jitsiApiRef.current.dispose();
                 }
-                // Redirect doctor to prescription page
                 navigate(`/doctor/prescribe/${sessionId}`);
             } catch (err) {
                 console.error("Error ending session:", err);
@@ -106,7 +104,6 @@ const VideoRoom = () => {
         if (jitsiApiRef.current) {
             jitsiApiRef.current.dispose();
         }
-        // Redirect patient to dashboard
         if (user?.role === 'PATIENT') {
             navigate(`/telemedicine/patient/${user.patientId}`);
         } else {
@@ -116,34 +113,67 @@ const VideoRoom = () => {
 
     return (
         <div className="video_room_container">
+            {/* Header bar */}
             <div className="video_room_header">
-                <h2><Video size={20} /> MediSphere Telemedicine Consultation</h2>
+                <div className="video_room_brand">
+                    <div className="video_room_logo">
+                        <Video size={18} />
+                    </div>
+                    <div>
+                        <h2>MediSphere</h2>
+                        <span className="video_room_subtitle">Telemedicine Consultation</span>
+                    </div>
+                    {!loading && !error && (
+                        <span className="live_badge">
+                            <span className="live_dot"></span> LIVE
+                        </span>
+                    )}
+                </div>
+
                 <div className="video_room_actions">
                     <button className="btn_leave_call" onClick={handleLeaveSession}>
-                        <LogOut size={16} /> Leave Room
+                        <LogOut size={15} /> Leave Room
                     </button>
                     {user?.role === 'DOCTOR' && (
                         <button className="btn_end_call" onClick={handleEndSession}>
-                            <PhoneOff size={16} /> End Session & Prescribe
+                            <PhoneOff size={15} /> End &amp; Prescribe
                         </button>
                     )}
                 </div>
             </div>
-            
-            {loading && !error && (
-                <div className="loading_room">
-                    <p>Connecting to secure video room...</p>
+
+            {/* Loading / Error overlay */}
+            {(loading || error) && (
+                <div className="video_room_overlay">
+                    <div className="video_room_overlay_card">
+                        {error ? (
+                            <>
+                                <div className="overlay_icon_wrap error_icon_wrap">
+                                    <WifiOff size={28} />
+                                </div>
+                                <h3>Connection Failed</h3>
+                                <p>{error}</p>
+                                <button className="btn_overlay_back" onClick={handleLeaveSession}>
+                                    <LogOut size={15} /> Go Back
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <div className="overlay_spinner"></div>
+                                <h3>Connecting to Secure Room</h3>
+                                <p>Setting up your encrypted video session&hellip;</p>
+                            </>
+                        )}
+                    </div>
                 </div>
             )}
-            
-            {error && (
-                <div className="loading_room">
-                    <p style={{ color: '#ef4444' }}>{error}</p>
-                    <button className="btn_leave_call" onClick={handleLeaveSession}>Go Back</button>
-                </div>
-            )}
-            
-            <div id="jitsi-container" ref={jitsiContainerRef} style={{ display: loading || error ? 'none' : 'block' }}></div>
+
+            {/* Jitsi embed */}
+            <div
+                id="jitsi-container"
+                ref={jitsiContainerRef}
+                style={{ display: loading || error ? 'none' : 'block' }}
+            ></div>
         </div>
     );
 };

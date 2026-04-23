@@ -115,14 +115,15 @@ const DoctorPrescriptions = () => {
             </div>
 
             {error && (
-                <div style={{ background: '#fff5f5', border: '1px solid #feb2b2', borderRadius: '8px', padding: '14px 18px', color: '#c53030', marginBottom: '20px' }}>
+                <div className="prescriptions_error_banner">
                     {error}
                 </div>
             )}
 
             {loading ? (
-                <div style={{ display: 'flex', justifyContent: 'center', padding: '60px' }}>
-                    <Loader2 size={36} style={{ color: '#3b82f6' }} className="animate-spin" />
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '80px 20px', gap: '14px', color: '#94a3b8' }}>
+                    <Loader2 size={36} style={{ color: '#3b82f6', animation: 'pres_spin 0.9s linear infinite' }} />
+                    <span style={{ fontSize: '0.93rem' }}>Loading prescriptions...</span>
                 </div>
             ) : prescriptions.length === 0 ? (
                 <div className="empty_state">

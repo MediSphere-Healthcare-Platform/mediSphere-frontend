@@ -1,142 +1,476 @@
+
 .container_tele_doctor {
-    padding: 30px;
-    max-width: 1200px;
+    padding: 60px;
+    max-width: 1400px;
     margin: 0 auto;
-    font-family: 'Inter', sans-serif;
-    color: #334155;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
 }
 
+/* ── Hero ─────────────────────────────────────────────── */
 .hero_tele_doctor {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    border-radius: 16px;
-    padding: 40px;
+    background: linear-gradient(135deg, #064e3b 0%, #059669 55%, #34d399 100%);
+    border-radius: 28px;
+    padding: 56px 60px;
     color: white;
-    margin-bottom: 30px;
-    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(16, 185, 129, 0.28);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 32px;
+}
+
+.hero_tele_doctor::before {
+    content: '';
+    position: absolute;
+    top: -70px;
+    right: -70px;
+    width: 320px;
+    height: 320px;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.hero_tele_doctor::after {
+    content: '';
+    position: absolute;
+    bottom: -90px;
+    left: 38%;
+    width: 220px;
+    height: 220px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.hero_tele_doctor_content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero_tele_doctor_badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+    color: white;
+    padding: 6px 15px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
 }
 
 .hero_tele_doctor h1 {
-    margin: 0 0 10px 0;
-    font-size: 2.5rem;
+    margin: 0 0 12px 0;
+    font-size: 2.75rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
 }
 
 .hero_tele_doctor p {
     margin: 0;
-    font-size: 1.1rem;
-    opacity: 0.9;
+    font-size: 1.05rem;
+    opacity: 0.85;
+    max-width: 460px;
+    line-height: 1.65;
 }
 
-.card_tele_doctor {
-    background: white;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e2e8f0;
-    margin-bottom: 30px;
-    overflow-x: auto;
-}
-
-.card_tele_doctor h3 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    color: #1e293b;
-    font-size: 1.25rem;
+/* Hero stats panel */
+.hero_tele_doctor_stats {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.13);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 20px;
+    padding: 22px 28px;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    flex-wrap: wrap;
 }
 
+.hero_stat_doctor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.hero_stat_doctor_num {
+    font-size: 2.1rem;
+    font-weight: 800;
+    font-family: 'Outfit', sans-serif;
+    line-height: 1;
+}
+
+.stat_num_amber  { color: #fde68a; }
+.stat_num_blue   { color: #bfdbfe; }
+.stat_num_green  { color: #a7f3d0; }
+.stat_num_gray   { color: rgba(255,255,255,0.75); }
+
+.hero_stat_doctor_label {
+    font-size: 0.72rem;
+    opacity: 0.82;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.hero_stat_doctor_divider {
+    width: 1px;
+    height: 38px;
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* ── Cards ───────────────────────────────────────────── */
+.card_tele_doctor {
+    background: var(--surface, #ffffff);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.055);
+    border: 1px solid var(--border-light, #e2e8f0);
+    transition: box-shadow 0.3s ease;
+}
+
+.card_tele_doctor:hover {
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.09);
+}
+
+.card_tele_doctor_header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+}
+
+.card_header_icon_doc {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.pending_icon_doc  { background: #fef3c7; color: #d97706; }
+.sessions_icon_doc { background: #eff6ff; color: #2563eb; }
+
+.card_header_text_doc {
+    flex: 1;
+    min-width: 0;
+}
+
+.card_header_text_doc h3 {
+    margin: 0 0 4px 0;
+    color: #1e293b;
+    font-size: 1.2rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+}
+
+.card_header_text_doc p {
+    margin: 0;
+    font-size: 0.84rem;
+    color: var(--text-muted, #64748b);
+}
+
+.pending_count_badge_doc {
+    background: #fef3c7;
+    color: #d97706;
+    padding: 5px 13px;
+    border-radius: 100px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* ── Filter controls ─────────────────────────────────── */
+.filter_controls_tele_doc {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+.filter_select_tele_doc {
+    padding: 8px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.84rem;
+    color: #334155;
+    background: #f8fafc;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter_select_tele_doc:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.search_input_doc {
+    min-width: 180px;
+}
+
+/* ── Tables ──────────────────────────────────────────── */
 .table_tele_doctor {
     width: 100%;
     border-collapse: collapse;
 }
 
-.table_tele_doctor th,
-.table_tele_doctor td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #f1f5f9;
-}
-
 .table_tele_doctor th {
+    padding: 11px 16px;
+    text-align: left;
     background: #f8fafc;
     font-weight: 600;
     color: #64748b;
     text-transform: uppercase;
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid #e2e8f0;
 }
 
-.btn_tele_action {
+.table_tele_doctor th:first-child { border-radius: 10px 0 0 10px; }
+.table_tele_doctor th:last-child  { border-radius: 0 10px 10px 0; }
+
+.table_tele_doctor td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.9rem;
+    color: #334155;
+}
+
+.table_tele_doctor tbody tr {
+    transition: background 0.15s;
+}
+
+.table_tele_doctor tbody tr:hover {
+    background: #f8fafc;
+}
+
+.table_tele_doctor tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table_person_cell_doc {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.table_avatar_doc {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    color: #065f46;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.82rem;
+    flex-shrink: 0;
+}
+
+.table_date_cell_doc {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #64748b;
+    font-size: 0.88rem;
+}
+
+.reason_cell_doc {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.no_reason_doc {
+    color: #94a3b8;
+    font-style: italic;
+}
+
+/* ── Action buttons ──────────────────────────────────── */
+.action_btn_group_doc {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn_tele_doc {
     border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    margin-right: 8px;
-    transition: background 0.2s;
+    font-size: 0.82rem;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
 }
 
-.btn_tele_accept {
+.btn_tele_accept_doc {
     background: #dbeafe;
-    color: #2563eb;
+    color: #1d4ed8;
 }
-
-.btn_tele_accept:hover {
+.btn_tele_accept_doc:hover {
     background: #bfdbfe;
+    transform: translateY(-1px);
 }
 
-.btn_tele_reject {
+.btn_tele_reject_doc {
     background: #fee2e2;
     color: #dc2626;
 }
-
-.btn_tele_reject:hover {
+.btn_tele_reject_doc:hover {
     background: #fecaca;
+    transform: translateY(-1px);
 }
 
-.btn_tele_start {
-    background: #10b981;
+.btn_tele_start_doc {
+    background: linear-gradient(135deg, #10b981, #059669);
     color: white;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.28);
+}
+.btn_tele_start_doc:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
 }
 
-.btn_tele_start:hover {
-    background: #059669;
+.btn_tele_prescribe_doc {
+    background: #eff6ff;
+    color: #2563eb;
+}
+.btn_tele_prescribe_doc:hover {
+    background: #dbeafe;
+    transform: translateY(-1px);
 }
 
-/* Status badges (shared across telemedicine pages) */
-.status_badge {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
+/* ── Status badges ───────────────────────────────────── */
+.status_badge_doc {
+    padding: 5px 12px;
+    border-radius: 100px;
+    font-size: 0.73rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.status_doc_pending_approval { background: #fef3c7; color: #d97706; }
+.status_doc_scheduled        { background: #dbeafe; color: #2563eb; }
+.status_doc_active           { background: #dcfce7; color: #16a34a; }
+.status_doc_completed        { background: #f1f5f9; color: #475569; }
+.status_doc_cancelled        { background: #fee2e2; color: #dc2626; }
+
+/* ── Loading / Empty states ─────────────────────────── */
+.tele_doc_loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 20px;
+    gap: 14px;
+    color: #94a3b8;
+}
+
+.tele_doc_loading p {
+    margin: 0;
+    font-size: 0.93rem;
+}
+
+.tele_doc_empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 20px;
+    text-align: center;
+    color: #94a3b8;
+}
+
+.tele_doc_empty svg {
+    opacity: 0.3;
+    margin-bottom: 18px;
+}
+
+.tele_doc_empty h4 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: #64748b;
+    font-family: 'Outfit', sans-serif;
     font-weight: 600;
 }
 
-.status_pending_approval { background: #fef3c7; color: #d97706; }
-.status_scheduled { background: #dbeafe; color: #2563eb; }
-.status_active { background: #dcfce7; color: #16a34a; }
-.status_completed { background: #f1f5f9; color: #64748b; }
-.status_cancelled { background: #fee2e2; color: #dc2626; }
-
-/* Filter controls */
-.filter_select_tele {
-    padding: 7px 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 0.875rem;
-    color: #334155;
-    background: white;
-    cursor: pointer;
-    transition: border-color 0.2s;
+.tele_doc_empty p {
+    margin: 0;
+    font-size: 0.88rem;
 }
 
-.filter_select_tele:focus {
-    outline: none;
-    border-color: #10b981;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+/* ── Spin animation ──────────────────────────────────── */
+@keyframes doc_spin_anim {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
 }
 
+.doc_spin {
+    animation: doc_spin_anim 0.9s linear infinite;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+    .container_tele_doctor {
+        padding: 20px;
+        gap: 20px;
+    }
+    .hero_tele_doctor {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 36px 28px;
+    }
+    .hero_tele_doctor h1 {
+        font-size: 2rem;
+    }
+    .hero_tele_doctor_stats {
+        width: 100%;
+        justify-content: space-around;
+        gap: 12px;
+    }
+    .card_tele_doctor {
+        padding: 22px;
+        border-radius: 18px;
+    }
+    .card_tele_doctor_header {
+        flex-wrap: wrap;
+    }
+    .filter_controls_tele_doc {
+        margin-left: 0;
+        width: 100%;
+    }
+}
