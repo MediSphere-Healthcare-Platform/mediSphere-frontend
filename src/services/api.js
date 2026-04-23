@@ -9,6 +9,9 @@ const DOCTOR_BASE_URL = 'http://127.0.0.1:8085/doctor/api/v1/';
 // Auth Service Base URL
 const AUTH_BASE_URL = 'http://127.0.0.1:8083/api/v1/auth/';
 
+// Telemedicine Service Base URL
+const TELEMEDICINE_BASE_URL = 'http://127.0.0.1:8086/api/';
+
 // Instance for Patient Service
 export const patientApi = axios.create({
     baseURL: PATIENT_BASE_URL,
@@ -31,6 +34,30 @@ export const authApi = axios.create({
 export const adminApi = axios.create({
     baseURL: 'http://127.0.0.1:8089/api/v1/admin/',
     headers: { 'Content-Type': 'application/json' }
+});
+
+// Instance for Telemedicine Service
+export const telemedicineApi = axios.create({
+    baseURL: TELEMEDICINE_BASE_URL,
+    headers: { 'Content-Type': 'application/json' }
+});
+
+// Add Authorization interceptor specifically for Telemedicine
+telemedicineApi.interceptors.request.use((config) => {
+    try {
+        const stored = sessionStorage.getItem('medisphere_user');
+        if (stored) {
+            const user = JSON.parse(stored);
+            if (user.token) {
+                config.headers.Authorization = `Bearer ${user.token}`;
+            }
+        }
+    } catch (e) {
+        console.error("Failed to parse auth token", e);
+    }
+    return config;
+}, (error) => {
+    return Promise.reject(error);
 });
 
 // Helper for generic interceptors
@@ -60,6 +87,7 @@ addInterceptors(patientApi, 'PatientAPI');
 addInterceptors(doctorApi, 'DoctorAPI');
 addInterceptors(authApi, 'AuthAPI');
 addInterceptors(adminApi, 'AdminAPI');
+addInterceptors(telemedicineApi, 'TelemedicineAPI');
 
 // Exporting patientApi as default to maintain backward compatibility
 export default patientApi;

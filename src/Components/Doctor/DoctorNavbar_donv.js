@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, NavLink, useNavigate, useParams, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, FileText, ClipboardList, UserCircle, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, FileText, ClipboardList, UserCircle, LogOut, Video, Pill } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './DoctorNavbar_donv.css';
 
@@ -51,6 +51,12 @@ const DoctorNavbar_donv = () => {
                 </NavLink>
                 <NavLink to={`/doctor/reports/${doctorId}`} className={({ isActive }) => isActive ? 'link_donv active' : 'link_donv'}>
                     <FileText size={18} /> Reports
+                </NavLink>
+                <NavLink to={`/doctor/telemedicine/${doctorId}`} className={({ isActive }) => isActive ? 'link_donv active' : 'link_donv'}>
+                    <Video size={18} /> Telemedicine
+                </NavLink>
+                <NavLink to={`/doctor/prescriptions/${doctorId}`} className={({ isActive }) => isActive ? 'link_donv active' : 'link_donv'}>
+                    <Pill size={18} /> Prescriptions
                 </NavLink>
             </div>
 

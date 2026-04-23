@@ -1,0 +1,350 @@
+.container_docprescriptions {
+    padding: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+}
+
+.hero_docprescriptions {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+    border-radius: 16px;
+    padding: 35px 40px;
+    color: white;
+    margin-bottom: 30px;
+}
+
+.hero_docprescriptions h1 {
+    margin: 0 0 6px 0;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.hero_docprescriptions p {
+    margin: 0;
+    opacity: 0.8;
+    font-size: 0.95rem;
+}
+
+.prescriptions_grid {
+    display: grid;
+    gap: 20px;
+}
+
+.pres_card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+}
+
+.pres_card:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.pres_card_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px 24px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.pres_card_title h3 {
+    margin: 0 0 6px 0;
+    font-size: 1.1rem;
+    color: #1e293b;
+}
+
+.pres_meta_row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.pres_meta_item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.82rem;
+    color: #64748b;
+}
+
+.pres_id_badge {
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.5px;
+}
+
+.pres_card_actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn_pres_edit {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn_pres_delete {
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.pres_card_body {
+    padding: 20px 24px;
+}
+
+.med_table_wrap {
+    overflow-x: auto;
+    margin-bottom: 14px;
+}
+
+.med_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.med_table th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.med_table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+}
+
+.pres_instructions {
+    background: #f8fafc;
+    border-left: 3px solid #3b82f6;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.88rem;
+    color: #475569;
+}
+
+/* Edit Modal */
+.modal_overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal_box {
+    background: white;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 30px;
+}
+
+.modal_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.modal_header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn_modal_close {
+    background: #f1f5f9;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form_group_modal {
+    margin-bottom: 18px;
+}
+
+.form_group_modal label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #475569;
+    font-size: 0.9rem;
+}
+
+.form_group_modal input,
+.form_group_modal textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+.form_group_modal input:focus,
+.form_group_modal textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.edit_med_section {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 18px;
+    border: 1px solid #e2e8f0;
+}
+
+.edit_med_section h4 {
+    margin: 0 0 12px 0;
+    font-size: 0.95rem;
+    color: #334155;
+}
+
+.edit_med_row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: 8px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.edit_med_row input {
+    padding: 8px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.btn_add_med_modal {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.btn_remove_med_modal {
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.modal_footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding-top: 14px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.btn_save_modal {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn_cancel_modal {
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.empty_state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #94a3b8;
+}
+
+.empty_state svg {
+    margin-bottom: 16px;
+    opacity: 0.4;
+}
+
+@media (max-width: 768px) {
+    .edit_med_row {
+        grid-template-columns: 1fr;
+    }
+    .pres_card_header {
+        flex-direction: column;
+        gap: 12px;
+    }
+}

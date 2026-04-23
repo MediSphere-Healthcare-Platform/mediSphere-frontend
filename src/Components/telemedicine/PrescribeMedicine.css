@@ -1,0 +1,144 @@
+.container_prescribe {
+    padding: 30px;
+    max-width: 800px;
+    margin: 40px auto;
+    font-family: 'Inter', sans-serif;
+    color: #334155;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.header_prescribe {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.header_prescribe h2 {
+    margin: 0 0 5px 0;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header_prescribe p {
+    margin: 0;
+    color: #64748b;
+}
+
+.form_group_prescribe {
+    margin-bottom: 20px;
+}
+
+.form_group_prescribe label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.form_group_prescribe input,
+.form_group_prescribe textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.form_group_prescribe input:focus,
+.form_group_prescribe textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.medications_section {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border: 1px solid #e2e8f0;
+}
+
+.medications_section h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: #334155;
+}
+
+.medication_item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+.medication_item input {
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.btn_remove_med {
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn_add_med {
+    background: #dbeafe;
+    color: #2563eb;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.btn_submit_prescribe {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.05rem;
+    transition: background 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn_submit_prescribe:hover {
+    background: #059669;
+}
+
+@media (max-width: 768px) {
+    .medication_item {
+        grid-template-columns: 1fr;
+        background: white;
+        padding: 15px;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+    }
+}

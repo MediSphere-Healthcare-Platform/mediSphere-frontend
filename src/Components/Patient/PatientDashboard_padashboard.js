@@ -5,7 +5,7 @@ import {
     ChevronRight, ArrowUpRight, CheckCircle2, AlertCircle, Loader2,
     Database, Network
 } from 'lucide-react';
-import api from '../../services/api';
+import api, { telemedicineApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import './PatientDashboard_padashboard.css';
 
@@ -117,8 +117,8 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
         const fetchActiveSessions = async () => {
             setStats(prev => ({ ...prev, loading: { ...prev.loading, sessions: true } }));
             try {
-                // Endpoint defined in PatientController: /telemedicine/sessions/patient/{patientId}
-                const res = await api.get(`telemedicine/sessions/patient/${currentId}`);
+                // Endpoint defined in Telemedicine service: /api/sessions/patient/{patientId}
+                const res = await telemedicineApi.get(`sessions/patient/${currentId}`);
                 const sessionData = res.data.data || res.data || [];
                 setStats(prev => ({
                     ...prev,

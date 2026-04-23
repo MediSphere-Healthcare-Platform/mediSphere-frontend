@@ -32,6 +32,13 @@ import DoctorReports_admin from './Components/Admin/DoctorReports_admin';
 import AdminLogin from './Components/Admin/AdminLogin';
 import Splash from './Components/Splash/Splash';
 
+// Telemedicine Components
+import PatientTelemedicine from './Components/telemedicine/PatientTelemedicine';
+import DoctorTelemedicine from './Components/telemedicine/DoctorTelemedicine';
+import VideoRoom from './Components/telemedicine/VideoRoom';
+import PrescribeMedicine from './Components/telemedicine/PrescribeMedicine';
+import DoctorPrescriptions from './Components/telemedicine/DoctorPrescriptions';
+
 import './App.css';
 
 // Inner App that has access to AuthContext
@@ -87,6 +94,8 @@ function AppContent() {
           <Route path="/history/:patientId" element={<PatientHistory_pahistory />} />
           <Route path="/reports/:patientId" element={<PatientReports_pareports />} />
           <Route path="/prescriptions/:patientId" element={<PatientPrescriptions_paprescription />} />
+          <Route path="/telemedicine/patient/:patientId" element={<PatientTelemedicine />} />
+          <Route path="/telemedicine/room/:sessionId" element={<VideoRoom />} />
 
           {/* Doctor Routes — all use dynamic :doctorId from URL */}
           <Route path="/doctor/dashboard/:doctorId" element={<DoctorDashboard_dodsh />} />
@@ -94,6 +103,9 @@ function AppContent() {
           <Route path="/doctor/appointments/:doctorId" element={<DoctorAppointments_doappt />} />
           <Route path="/doctor/reports/:doctorId" element={<PatientReportViewer_dorep />} />
           <Route path="/doctor/patients/:doctorId" element={<PatientReportViewer_dorep />} />
+          <Route path="/doctor/telemedicine/:doctorId" element={<DoctorTelemedicine />} />
+          <Route path="/doctor/prescribe/:sessionId" element={<PrescribeMedicine />} />
+          <Route path="/doctor/prescriptions/:doctorId" element={<DoctorPrescriptions />} />
 
           {/* Admin Routes */}
           <Route path="/admin/dashboard" element={<AdminDashboard_admin />} />

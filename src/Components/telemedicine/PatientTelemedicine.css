@@ -1,0 +1,184 @@
+.container_tele_patient {
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+    color: #334155;
+}
+
+.hero_tele_patient {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border-radius: 16px;
+    padding: 40px;
+    color: white;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+}
+
+.hero_tele_patient h1 {
+    margin: 0 0 10px 0;
+    font-size: 2.5rem;
+}
+
+.hero_tele_patient p {
+    margin: 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.grid_tele_patient {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+}
+
+.card_tele_patient {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+}
+
+.card_tele_patient h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #1e293b;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.formGroup_tele {
+    margin-bottom: 15px;
+}
+
+.formGroup_tele label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.formGroup_tele select,
+.formGroup_tele input,
+.formGroup_tele textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: inherit;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.formGroup_tele select:focus,
+.formGroup_tele input:focus,
+.formGroup_tele textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.btn_tele_primary {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn_tele_primary:hover {
+    background: #2563eb;
+}
+
+.btn_tele_primary:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+
+.table_tele {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table_tele th,
+.table_tele td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.table_tele th {
+    background: #f8fafc;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+}
+
+.status_badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status_pending_approval { background: #fef3c7; color: #d97706; }
+.status_scheduled { background: #dbeafe; color: #2563eb; }
+.status_active { background: #dcfce3; color: #16a34a; }
+.status_completed { background: #f1f5f9; color: #64748b; }
+.status_cancelled { background: #fee2e2; color: #dc2626; }
+
+.btn_join_tele {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background 0.2s;
+}
+
+.btn_join_tele:hover {
+    background: #059669;
+}
+
+@media (max-width: 768px) {
+    .grid_tele_patient {
+        grid-template-columns: 1fr;
+    }
+}
+
+.filter_select_tele {
+    padding: 7px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    color: #334155;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.filter_select_tele:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}

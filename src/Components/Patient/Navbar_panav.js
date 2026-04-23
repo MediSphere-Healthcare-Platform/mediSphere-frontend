@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, NavLink, useNavigate, useParams, useLocation } from 'react-router-dom';
-import { Home, User, Calendar, History, FileText, Pill, LogOut, ArrowRight } from 'lucide-react';
+import { Home, User, Calendar, History, FileText, Pill, LogOut, ArrowRight, Video } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './Navbar_panav.css';
 
@@ -49,6 +49,9 @@ const Navbar_panav = () => {
                     </NavLink>
                     <NavLink to={`/prescriptions/${patientId}`} className={({ isActive }) => isActive ? 'link_panav link_active_panav' : 'link_panav'}>
                         <Pill size={17} /> Prescriptions
+                    </NavLink>
+                    <NavLink to={`/telemedicine/patient/${patientId}`} className={({ isActive }) => isActive ? 'link_panav link_active_panav' : 'link_panav'}>
+                        <Video size={17} /> Telemedicine
                     </NavLink>
                 </div>
             )}
