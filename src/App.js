@@ -13,6 +13,9 @@ import PatientBooking_paAppoinmant from './Components/Patient/PatientBooking_paA
 import PatientHistory_pahistory from './Components/Patient/PatientHistory_pahistory';
 import PatientReports_pareports from './Components/Patient/PatientReports_pareports';
 import PatientPrescriptions_paprescription from './Components/Patient/PatientPrescriptions_paprescription';
+import PatientPayment from './Components/Payment/PatientPayment';
+import PaymentSuccess from './Components/Payment/PaymentSuccess';
+
 
 // Auth Components
 import Login from './Components/Login/Login';
@@ -98,6 +101,8 @@ function AppContent() {
           <Route path="/history/:patientId" element={<PatientHistory_pahistory />} />
           <Route path="/reports/:patientId" element={<PatientReports_pareports />} />
           <Route path="/prescriptions/:patientId" element={<PatientPrescriptions_paprescription />} />
+          <Route path="/payment/:appointmentId" element={<PatientPayment />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/telemedicine/patient/:patientId" element={<PatientTelemedicine />} />
           <Route path="/telemedicine/room/:sessionId" element={<VideoRoom />} />
           <Route path="/symptom-check/:patientId" element={<SymptomChecker />} />
