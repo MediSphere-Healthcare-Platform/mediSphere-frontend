@@ -1,0 +1,491 @@
+
+.container_tele_patient {
+    padding: 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+/* ── Hero ─────────────────────────────────────────────── */
+.hero_tele_patient {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 55%, #0ea5e9 100%);
+    border-radius: 28px;
+    padding: 56px 60px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(37, 99, 235, 0.28);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 32px;
+}
+
+.hero_tele_patient::before {
+    content: '';
+    position: absolute;
+    top: -70px;
+    right: -70px;
+    width: 320px;
+    height: 320px;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.hero_tele_patient::after {
+    content: '';
+    position: absolute;
+    bottom: -90px;
+    left: 42%;
+    width: 220px;
+    height: 220px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.hero_tele_content {
+    position: relative;
+    z-index: 1;
+}
+
+.hero_tele_badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(12px);
+    color: white;
+    padding: 6px 15px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.hero_tele_content h1 {
+    margin: 0 0 12px 0;
+    font-size: 2.75rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+}
+
+.hero_tele_content p {
+    margin: 0;
+    font-size: 1.05rem;
+    opacity: 0.85;
+    max-width: 440px;
+    line-height: 1.65;
+}
+
+/* Hero stats panel */
+.hero_tele_stats {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    background: rgba(255, 255, 255, 0.13);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 20px;
+    padding: 22px 30px;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+}
+
+.hero_stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.hero_stat_num {
+    font-size: 2.1rem;
+    font-weight: 800;
+    font-family: 'Outfit', sans-serif;
+    line-height: 1;
+}
+
+.hero_stat_label {
+    font-size: 0.72rem;
+    opacity: 0.82;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.hero_stat_divider {
+    width: 1px;
+    height: 38px;
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* ── Grid layout ─────────────────────────────────────── */
+.grid_tele_patient {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 28px;
+    align-items: start;
+}
+
+/* ── Cards ───────────────────────────────────────────── */
+.card_tele_patient {
+    background: var(--surface, #ffffff);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.055);
+    border: 1px solid var(--border-light, #e2e8f0);
+    transition: box-shadow 0.3s ease;
+}
+
+.card_tele_patient:hover {
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.09);
+}
+
+.card_tele_section_header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+}
+
+.card_tele_section_header h3 {
+    margin: 0 0 4px 0;
+    color: #1e293b;
+    font-size: 1.2rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+}
+
+.card_tele_section_header p {
+    margin: 0;
+    font-size: 0.84rem;
+    color: var(--text-muted, #64748b);
+}
+
+.card_tele_icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.card_tele_icon.blue   { background: #eff6ff; color: #2563eb; }
+.card_tele_icon.purple { background: #f5f3ff; color: #7c3aed; }
+.card_tele_icon.green  { background: #f0fdf4; color: #16a34a; }
+
+/* ── Form controls ───────────────────────────────────── */
+.formGroup_tele {
+    margin-bottom: 18px;
+}
+
+.formGroup_tele label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+.formGroup_tele select,
+.formGroup_tele input,
+.formGroup_tele textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    box-sizing: border-box;
+    color: #1e293b;
+    background: #f8fafc;
+}
+
+.formGroup_tele select:focus,
+.formGroup_tele input:focus,
+.formGroup_tele textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+/* ── Primary CTA ─────────────────────────────────────── */
+.btn_tele_primary {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border: none;
+    padding: 13px 22px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+}
+
+.btn_tele_primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.btn_tele_primary:disabled {
+    background: linear-gradient(135deg, #94a3b8, #94a3b8);
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ── Filter bar ──────────────────────────────────────── */
+.filter_controls_tele {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+.filter_select_tele {
+    padding: 8px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.84rem;
+    color: #334155;
+    background: #f8fafc;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter_select_tele:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* ── Sessions table ──────────────────────────────────── */
+.table_tele {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table_tele th {
+    padding: 11px 16px;
+    text-align: left;
+    background: #f8fafc;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.table_tele th:first-child { border-radius: 10px 0 0 10px; }
+.table_tele th:last-child  { border-radius: 0 10px 10px 0; }
+
+.table_tele td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.9rem;
+    color: #334155;
+}
+
+.table_tele tbody tr {
+    transition: background 0.15s;
+}
+
+.table_tele tbody tr:hover {
+    background: #f8fafc;
+}
+
+.table_tele tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table_tele_person_cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.table_tele_avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.82rem;
+    flex-shrink: 0;
+}
+
+.blue_avatar  { background: #dbeafe; color: #1d4ed8; }
+.green_avatar { background: #d1fae5; color: #065f46; }
+
+.table_tele_date_cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #64748b;
+    font-size: 0.88rem;
+}
+
+/* ── Status badges ───────────────────────────────────── */
+.status_badge {
+    padding: 5px 12px;
+    border-radius: 100px;
+    font-size: 0.73rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.status_pending_approval { background: #fef3c7; color: #d97706; }
+.status_scheduled        { background: #dbeafe; color: #2563eb; }
+.status_active           { background: #dcfce7; color: #16a34a; }
+.status_completed        { background: #f1f5f9; color: #475569; }
+.status_cancelled        { background: #fee2e2; color: #dc2626; }
+
+/* ── Join button ─────────────────────────────────────── */
+.btn_join_tele {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border: none;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.84rem;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.28);
+}
+
+.btn_join_tele:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+}
+
+/* ── Loading / Empty states ─────────────────────────── */
+.tele_loading_state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 20px;
+    gap: 14px;
+    color: #94a3b8;
+}
+
+.tele_loading_state p {
+    margin: 0;
+    font-size: 0.93rem;
+}
+
+.tele_empty_state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 20px;
+    text-align: center;
+    color: #94a3b8;
+}
+
+.tele_empty_state svg {
+    opacity: 0.3;
+    margin-bottom: 18px;
+}
+
+.tele_empty_state h4 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: #64748b;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+}
+
+.tele_empty_state p {
+    margin: 0;
+    font-size: 0.88rem;
+}
+
+/* ── Spin animation ──────────────────────────────────── */
+@keyframes tele_spin_anim {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+.tele_spin {
+    animation: tele_spin_anim 0.9s linear infinite;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 1200px) {
+    .grid_tele_patient {
+        grid-template-columns: 1fr;
+    }
+    .container_tele_patient {
+        padding: 36px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container_tele_patient {
+        padding: 20px;
+        gap: 20px;
+    }
+    .hero_tele_patient {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 36px 28px;
+    }
+    .hero_tele_content h1 {
+        font-size: 2rem;
+    }
+    .hero_tele_stats {
+        width: 100%;
+        justify-content: space-around;
+    }
+    .card_tele_patient {
+        padding: 22px;
+        border-radius: 18px;
+    }
+    .card_tele_section_header {
+        flex-wrap: wrap;
+    }
+    .filter_controls_tele {
+        margin-left: 0;
+        width: 100%;
+    }
+}

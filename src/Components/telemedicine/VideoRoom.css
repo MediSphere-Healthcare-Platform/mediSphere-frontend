@@ -1,0 +1,240 @@
+
+.video_room_container {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    background: #070d1a;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+}
+
+/* ── Header ──────────────────────────────────────────── */
+.video_room_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 28px;
+    background: rgba(10, 17, 34, 0.98);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    z-index: 100;
+    gap: 16px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.video_room_brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.video_room_logo {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
+.video_room_brand h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.video_room_subtitle {
+    display: block;
+    font-size: 0.72rem;
+    color: #64748b;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-top: 1px;
+}
+
+/* ── LIVE badge ──────────────────────────────────────── */
+.live_badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.28);
+    padding: 5px 11px;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+}
+
+.live_dot {
+    width: 7px;
+    height: 7px;
+    background: #ef4444;
+    border-radius: 50%;
+    animation: live_pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes live_pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.45; transform: scale(0.75); }
+}
+
+/* ── Action buttons ──────────────────────────────────── */
+.video_room_actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn_leave_call {
+    background: rgba(255, 255, 255, 0.07);
+    color: #cbd5e1;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 9px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.86rem;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+}
+
+.btn_leave_call:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.btn_end_call {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.86rem;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+}
+
+.btn_end_call:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.45);
+}
+
+/* ── Jitsi embed ─────────────────────────────────────── */
+#jitsi-container {
+    flex-grow: 1;
+    width: 100%;
+    min-height: 0;
+}
+
+/* ── Loading / Error overlay ─────────────────────────── */
+.video_room_overlay {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, #0d1829 0%, #070d1a 100%);
+    padding: 40px;
+}
+
+.video_room_overlay_card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 360px;
+    gap: 0;
+}
+
+/* Spinner */
+.overlay_spinner {
+    width: 56px;
+    height: 56px;
+    border: 3px solid rgba(59, 130, 246, 0.15);
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: overlay_spin 0.85s linear infinite;
+    margin-bottom: 28px;
+}
+
+@keyframes overlay_spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* Error icon */
+.overlay_icon_wrap {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.error_icon_wrap {
+    background: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.video_room_overlay_card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.3rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    color: #e2e8f0;
+}
+
+.video_room_overlay_card p {
+    margin: 0 0 28px 0;
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+.btn_overlay_back {
+    background: rgba(255, 255, 255, 0.07);
+    color: #cbd5e1;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+}
+
+.btn_overlay_back:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+}

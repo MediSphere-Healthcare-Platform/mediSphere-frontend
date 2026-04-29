@@ -13,6 +13,9 @@ import PatientBooking_paAppoinmant from './Components/Patient/PatientBooking_paA
 import PatientHistory_pahistory from './Components/Patient/PatientHistory_pahistory';
 import PatientReports_pareports from './Components/Patient/PatientReports_pareports';
 import PatientPrescriptions_paprescription from './Components/Patient/PatientPrescriptions_paprescription';
+import PatientPayment from './Components/Payment/PatientPayment';
+import PaymentSuccess from './Components/Payment/PaymentSuccess';
+
 
 // Auth Components
 import Login from './Components/Login/Login';
@@ -31,6 +34,17 @@ import PendingApprovals_admin from './Components/Admin/PendingApprovals_admin';
 import DoctorReports_admin from './Components/Admin/DoctorReports_admin';
 import AdminLogin from './Components/Admin/AdminLogin';
 import Splash from './Components/Splash/Splash';
+
+// Telemedicine Components
+import PatientTelemedicine from './Components/telemedicine/PatientTelemedicine';
+import DoctorTelemedicine from './Components/telemedicine/DoctorTelemedicine';
+import VideoRoom from './Components/telemedicine/VideoRoom';
+import PrescribeMedicine from './Components/telemedicine/PrescribeMedicine';
+import DoctorPrescriptions from './Components/telemedicine/DoctorPrescriptions';
+
+// AI Symptom Check Components
+import SymptomChecker from './Components/AIsymptomcheck/SymptomChecker';
+import SymptomHistory from './Components/AIsymptomcheck/SymptomHistory';
 
 import './App.css';
 
@@ -87,6 +101,12 @@ function AppContent() {
           <Route path="/history/:patientId" element={<PatientHistory_pahistory />} />
           <Route path="/reports/:patientId" element={<PatientReports_pareports />} />
           <Route path="/prescriptions/:patientId" element={<PatientPrescriptions_paprescription />} />
+          <Route path="/payment/:appointmentId" element={<PatientPayment />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/telemedicine/patient/:patientId" element={<PatientTelemedicine />} />
+          <Route path="/telemedicine/room/:sessionId" element={<VideoRoom />} />
+          <Route path="/symptom-check/:patientId" element={<SymptomChecker />} />
+          <Route path="/symptom-history/:patientId" element={<SymptomHistory />} />
 
           {/* Doctor Routes — all use dynamic :doctorId from URL */}
           <Route path="/doctor/dashboard/:doctorId" element={<DoctorDashboard_dodsh />} />
@@ -94,6 +114,9 @@ function AppContent() {
           <Route path="/doctor/appointments/:doctorId" element={<DoctorAppointments_doappt />} />
           <Route path="/doctor/reports/:doctorId" element={<PatientReportViewer_dorep />} />
           <Route path="/doctor/patients/:doctorId" element={<PatientReportViewer_dorep />} />
+          <Route path="/doctor/telemedicine/:doctorId" element={<DoctorTelemedicine />} />
+          <Route path="/doctor/prescribe/:sessionId" element={<PrescribeMedicine />} />
+          <Route path="/doctor/prescriptions/:doctorId" element={<DoctorPrescriptions />} />
 
           {/* Admin Routes */}
           <Route path="/admin/dashboard" element={<AdminDashboard_admin />} />

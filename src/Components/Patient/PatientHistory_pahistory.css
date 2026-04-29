@@ -194,10 +194,36 @@
 }
 
 .viewPresBtn_pahistory:hover {
-  background: #edf2f7;
-  color: #2d3748;
+  background-color: #f1f5f9;
+  color: #2563eb;
 }
 
+.makePaymentBtn_pahistory {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.makePaymentBtn_pahistory:hover {
+    background-color: #059669;
+    transform: translateY(-1px);
+}
+
+.requestVideoBtn_pahistory:hover {
+    background-color: #2563eb !important;
+}
+
+/* Responsive adjustments */
 .noData_pahistory {
   text-align: center;
   padding: 40px;

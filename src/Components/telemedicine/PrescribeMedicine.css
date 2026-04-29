@@ -1,0 +1,361 @@
+
+.container_prescribe {
+    padding: 60px;
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+/* ── Hero ─────────────────────────────────────────────── */
+.hero_prescribe {
+    background: linear-gradient(135deg, #064e3b 0%, #059669 55%, #34d399 100%);
+    border-radius: 24px;
+    padding: 44px 50px;
+    color: white;
+    display: flex;
+    align-items: flex-start;
+    gap: 22px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 16px 50px rgba(16, 185, 129, 0.25);
+}
+
+.hero_prescribe::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 220px;
+    height: 220px;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.hero_prescribe_icon_wrap {
+    width: 52px;
+    height: 52px;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1;
+    margin-top: 4px;
+}
+
+.hero_prescribe > div:last-child {
+    position: relative;
+    z-index: 1;
+}
+
+.hero_prescribe_badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.18);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.hero_prescribe h1 {
+    margin: 0 0 8px 0;
+    font-size: 2rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+}
+
+.hero_prescribe p {
+    margin: 0 0 14px 0;
+    opacity: 0.82;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 440px;
+}
+
+.hero_prescribe_session_id {
+    font-size: 0.78rem;
+    opacity: 0.7;
+    font-weight: 500;
+}
+
+.hero_prescribe_session_id span {
+    font-family: 'Courier New', monospace;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 0.76rem;
+}
+
+/* ── Form wrapper ────────────────────────────────────── */
+.prescribe_form {
+    background: white;
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ── Form groups ─────────────────────────────────────── */
+.form_group_prescribe {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form_group_prescribe label {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+.required_star {
+    color: #ef4444;
+    margin-left: 2px;
+}
+
+.form_group_prescribe input,
+.form_group_prescribe textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    background: #f8fafc;
+    color: #1e293b;
+    transition: all 0.2s;
+    resize: vertical;
+}
+
+.form_group_prescribe input:focus,
+.form_group_prescribe textarea:focus {
+    outline: none;
+    border-color: #10b981;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* ── Medications section ─────────────────────────────── */
+.medications_section {
+    background: #f8fafc;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.medications_section_header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.med_section_icon {
+    width: 38px;
+    height: 38px;
+    background: #eff6ff;
+    color: #2563eb;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.medications_section_header h3 {
+    margin: 0 0 4px 0;
+    font-size: 1rem;
+    color: #1e293b;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+}
+
+.medications_section_header p {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #64748b;
+}
+
+/* Column label row */
+.med_col_labels {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 36px;
+    gap: 8px;
+    padding: 0 2px;
+}
+
+.med_col_labels span {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* Medication row */
+.medication_item {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 36px;
+    gap: 8px;
+    align-items: center;
+}
+
+.medication_item input {
+    padding: 10px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9px;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    background: white;
+    color: #1e293b;
+    transition: all 0.2s;
+}
+
+.medication_item input:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.btn_remove_med {
+    width: 36px;
+    height: 36px;
+    background: #fff5f5;
+    color: #dc2626;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    transition: background 0.2s;
+}
+
+.btn_remove_med:hover {
+    background: #fee2e2;
+}
+
+.btn_add_med {
+    background: #eff6ff;
+    color: #2563eb;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 9px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-family: 'Inter', sans-serif;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    transition: background 0.2s;
+}
+
+.btn_add_med:hover {
+    background: #dbeafe;
+}
+
+/* ── Submit button ───────────────────────────────────── */
+.btn_submit_prescribe {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border: none;
+    padding: 15px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.btn_submit_prescribe:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.btn_submit_prescribe:disabled {
+    background: linear-gradient(135deg, #94a3b8, #94a3b8);
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ── Spin animation ──────────────────────────────────── */
+@keyframes prescribe_spin_anim {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+.prescribe_spin {
+    animation: prescribe_spin_anim 0.9s linear infinite;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+    .container_prescribe {
+        padding: 20px;
+        gap: 20px;
+    }
+    .hero_prescribe {
+        flex-direction: column;
+        gap: 16px;
+        padding: 32px 24px;
+    }
+    .hero_prescribe h1 {
+        font-size: 1.6rem;
+    }
+    .prescribe_form {
+        padding: 24px;
+        gap: 20px;
+    }
+    .medication_item,
+    .med_col_labels {
+        grid-template-columns: 1fr;
+    }
+    .med_col_labels {
+        display: none;
+    }
+    .medication_item {
+        background: white;
+        padding: 14px;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+    }
+    .btn_remove_med {
+        width: 100%;
+        height: 36px;
+        border-radius: 8px;
+    }
+}
