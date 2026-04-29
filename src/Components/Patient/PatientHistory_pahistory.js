@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, Clock, ChevronRight, Activity, ClipboardList, CheckCircle2, XCircle, Video } from 'lucide-react';
-import api from '../../services/api';
+import api, { doctorApi } from '../../services/api';
 import './PatientHistory_pahistory.css';
 
 const PatientHistory_pahistory = ({ patientId: propPatientId = "P002" }) => {
@@ -20,8 +20,24 @@ const PatientHistory_pahistory = ({ patientId: propPatientId = "P002" }) => {
         try {
             const response = await api.get(`appointments/allAppointmentsByPatientId/${patientId}`);
             const resData = response.data?.data !== undefined ? response.data.data : response.data;
-            const finalData = Array.isArray(resData) ? resData : (resData?.patientAppointments || []);
-            setAppointments(finalData);
+            const appointmentData = Array.isArray(resData) ? resData : (resData?.patientAppointments || []);
+            
+            const appointmentsWithDoctors = await Promise.all(appointmentData.map(async (app) => {
+                if (!app.doctorName && app.doctorId) {
+                    try {
+                        const doctorRes = await doctorApi.get(`getDoctorById/${app.doctorId}`);
+                        const doctorData = doctorRes.data?.data;
+                        if (doctorData && doctorData.firstName) {
+                            app.doctorName = `${doctorData.firstName} ${doctorData.lastName || ''}`.trim();
+                        }
+                    } catch (e) {
+                        console.error(`Failed to fetch info for doctor ${app.doctorId}:`, e);
+                    }
+                }
+                return app;
+            }));
+
+            setAppointments(appointmentsWithDoctors);
         } catch (err) {
             console.error('[History] Fetch Error:', err);
         } finally {
