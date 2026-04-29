@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { doctorApi } from '../../services/api';
+import { doctorApi, patientApi } from '../../services/api';
 import { 
     Search, Filter, Calendar, Clock, User, 
     MessageSquare, CheckCircle, XCircle, MoreVertical,
@@ -27,7 +27,23 @@ const DoctorAppointments_doappt = () => {
             const response = await doctorApi.get(`appointments/allAppointmentsByDoctorId/${currentDoctorId}`);
             const resData = response.data?.data !== undefined ? response.data.data : response.data;
             const appointmentData = Array.isArray(resData) ? resData : (resData?.doctorAppointments || []);
-            setAppointments(appointmentData);
+            
+            const appointmentsWithNames = await Promise.all(appointmentData.map(async (app) => {
+                if (!app.patientName && app.patientId) {
+                    try {
+                        const patientRes = await patientApi.get(`getPatientById/${app.patientId}`);
+                        const patientData = patientRes.data?.data;
+                        if (patientData && patientData.firstName) {
+                            app.patientName = `${patientData.firstName} ${patientData.lastName || ''}`.trim();
+                        }
+                    } catch (e) {
+                        console.error(`Failed to fetch info for patient ${app.patientId}:`, e);
+                    }
+                }
+                return app;
+            }));
+
+            setAppointments(appointmentsWithNames);
         } catch (err) {
             console.error('Error fetching appointments:', err);
         } finally {
