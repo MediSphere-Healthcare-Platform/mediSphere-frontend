@@ -12,6 +12,9 @@ const AUTH_BASE_URL = 'http://127.0.0.1:8083/api/v1/auth/';
 // Telemedicine Service Base URL
 const TELEMEDICINE_BASE_URL = 'http://127.0.0.1:8086/api/';
 
+// Payment Service Base URL
+const PAYMENT_BASE_URL = 'http://127.0.0.1:8082/api/v1/';
+
 // Instance for Patient Service
 export const patientApi = axios.create({
     baseURL: PATIENT_BASE_URL,
@@ -39,6 +42,12 @@ export const adminApi = axios.create({
 // Instance for Telemedicine Service
 export const telemedicineApi = axios.create({
     baseURL: TELEMEDICINE_BASE_URL,
+    headers: { 'Content-Type': 'application/json' }
+});
+
+// Instance for Payment Service
+export const paymentApi = axios.create({
+    baseURL: PAYMENT_BASE_URL,
     headers: { 'Content-Type': 'application/json' }
 });
 
@@ -113,6 +122,7 @@ addInterceptors(authApi, 'AuthAPI');
 addInterceptors(adminApi, 'AdminAPI');
 addInterceptors(telemedicineApi, 'TelemedicineAPI');
 addInterceptors(symptomApi, 'SymptomAPI');
+addInterceptors(paymentApi, 'PaymentAPI');
 
 // Exporting patientApi as default to maintain backward compatibility
 export default patientApi;
