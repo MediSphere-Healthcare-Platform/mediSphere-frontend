@@ -50,9 +50,7 @@ const Navbar_panav = () => {
                     <NavLink to={`/prescriptions/${patientId}`} className={({ isActive }) => isActive ? 'link_panav link_active_panav' : 'link_panav'}>
                         <Pill size={17} /> Prescriptions
                     </NavLink>
-                    <NavLink to={`/telemedicine/patient/${patientId}`} className={({ isActive }) => isActive ? 'link_panav link_active_panav' : 'link_panav'}>
-                        <Video size={17} /> Telemedicine
-                    </NavLink>
+
                     <NavLink to={`/symptom-check/${patientId}`} className={({ isActive }) => isActive ? 'link_panav link_active_panav' : 'link_panav'}>
                         <Brain size={17} /> AI Check
                     </NavLink>

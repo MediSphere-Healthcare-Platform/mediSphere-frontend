@@ -105,7 +105,7 @@ const PatientHistory_pahistory = ({ patientId: propPatientId = "P002" }) => {
                                                 <span className="paymentCompleteBadge_pahistory" style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#16a34a', background: '#dcfce7', padding: '6px 12px', borderRadius: '20px', fontSize: '0.85rem', fontWeight: '500' }}>
                                                     <CheckCircle2 size={14} /> Payment Complete
                                                 </span>
-                                                <Link to={`/telemedicine/patient/${patientId}`} className="requestVideoBtn_pahistory" style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#3b82f6', color: 'white', padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', fontSize: '0.9rem', fontWeight: '500', transition: 'background 0.2s' }}>
+                                                <Link to={`/telemedicine/patient/${patientId}`} state={{ doctorId: app.doctorId, doctorName: app.doctorName, date: app.appointmentDate, time: app.appointmentTime, reason: app.reason || 'Routine Checkup' }} className="requestVideoBtn_pahistory" style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#3b82f6', color: 'white', padding: '8px 16px', borderRadius: '8px', textDecoration: 'none', fontSize: '0.9rem', fontWeight: '500', transition: 'background 0.2s' }}>
                                                     Request Video consultation <Video size={16} />
                                                 </Link>
                                             </div>

@@ -1,21 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { telemedicineApi } from '../../services/api';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { telemedicineApi, doctorApi } from '../../services/api';
 import { Video, Calendar, Clock, Loader2 } from 'lucide-react';
 import './PatientTelemedicine.css';
 
 const PatientTelemedicine = () => {
     const { patientId } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+    const state = location.state || {};
 
     const [doctors, setDoctors] = useState([]);
     const [sessions, setSessions] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const [selectedDoctor, setSelectedDoctor] = useState('');
-    const [preferredDate, setPreferredDate] = useState('');
-    const [reason, setReason] = useState('');
+    const getInitialDate = () => {
+        if (state.date && state.time) {
+            const timeFormatted = state.time.substring(0, 5); 
+            return `${state.date}T${timeFormatted}`;
+        }
+        return '';
+    };
+
+    const [selectedDoctor, setSelectedDoctor] = useState(state.doctorId || '');
+    const [preferredDate, setPreferredDate] = useState(getInitialDate());
+    const [reason, setReason] = useState(state.reason || '');
     const [requesting, setRequesting] = useState(false);
+    
+    const [doctorNameFallback, setDoctorNameFallback] = useState(state.doctorName || '');
+
+    useEffect(() => {
+        if (state.doctorId && !state.doctorName) {
+            doctorApi.get(`getDoctorById/${state.doctorId}`)
+                .then(res => {
+                    const data = res.data?.data;
+                    if (data && data.firstName) {
+                        setDoctorNameFallback(`${data.firstName} ${data.lastName || ''}`.trim());
+                    }
+                })
+                .catch(err => console.error("Error fetching doctor fallback:", err));
+        }
+    }, [state.doctorId, state.doctorName]);
 
     const [statusFilter, setStatusFilter] = useState('ALL');
     const [sortOrder, setSortOrder] = useState('desc');
@@ -38,7 +63,25 @@ const PatientTelemedicine = () => {
         try {
             setLoading(true);
             const res = await telemedicineApi.get(`/sessions/patient/${patientId}`);
-            setSessions(res.data || []);
+            let sessionData = res.data || [];
+            
+            // Fetch missing doctor names
+            sessionData = await Promise.all(sessionData.map(async (session) => {
+                if (!session.doctorName && session.doctorId) {
+                    try {
+                        const doctorRes = await doctorApi.get(`getDoctorById/${session.doctorId}`);
+                        const doctorData = doctorRes.data?.data;
+                        if (doctorData && doctorData.firstName) {
+                            session.doctorName = `${doctorData.firstName} ${doctorData.lastName || ''}`.trim();
+                        }
+                    } catch (e) {
+                        console.error(`Failed to fetch info for doctor ${session.doctorId}:`, e);
+                    }
+                }
+                return session;
+            }));
+            
+            setSessions(sessionData);
         } catch (err) {
             console.error("Error fetching sessions:", err);
         } finally {
@@ -52,10 +95,15 @@ const PatientTelemedicine = () => {
 
         setRequesting(true);
         try {
-            await telemedicineApi.post('/sessions/request', {
+            // Ensure seconds are included for Java LocalDateTime parsing
+            const preferredAtFormatted = preferredDate.length === 16
+                ? preferredDate + ':00'
+                : preferredDate;
+
+            await telemedicineApi.post(`/sessions/request?patientUserId=${patientId}`, {
                 patientId: patientId,
                 doctorId: selectedDoctor,
-                preferredAt: preferredDate,
+                preferredAt: preferredAtFormatted,
                 reason: reason
             });
             alert('Video session requested successfully!');
@@ -65,7 +113,8 @@ const PatientTelemedicine = () => {
             fetchSessions();
         } catch (err) {
             console.error("Error requesting session:", err);
-            alert('Failed to request session. ' + (err.response?.data?.message || ''));
+            const msg = err.response?.data?.message || err.response?.data || '';
+            alert('Failed to request session. ' + msg);
         } finally {
             setRequesting(false);
         }
@@ -103,28 +152,31 @@ const PatientTelemedicine = () => {
 
     return (
         <div className="container_tele_patient">
-            <div className="hero_tele_patient">
-                <div className="hero_tele_content">
-                    <div className="hero_tele_badge">
-                        <Video size={13} /> Virtual Care
+            <div className="hero_img_tele">
+                <div className="hero_tele_patient">
+                    <div className="hero_tele_overlay"></div>
+                    <div className="hero_tele_content">
+                        <div className="hero_tele_badge">
+                            <Video size={13} /> Virtual Care
+                        </div>
+                        <h1>Telemedicine Consultations</h1>
+                        <p>Connect with your doctor from the comfort of your home via secure video.</p>
                     </div>
-                    <h1>Telemedicine Consultations</h1>
-                    <p>Connect with your doctor from the comfort of your home via secure video.</p>
-                </div>
-                <div className="hero_tele_stats">
-                    <div className="hero_stat">
-                        <span className="hero_stat_num">{stats.total}</span>
-                        <span className="hero_stat_label">Total Sessions</span>
-                    </div>
-                    <div className="hero_stat_divider"></div>
-                    <div className="hero_stat">
-                        <span className="hero_stat_num">{stats.scheduled}</span>
-                        <span className="hero_stat_label">Scheduled</span>
-                    </div>
-                    <div className="hero_stat_divider"></div>
-                    <div className="hero_stat">
-                        <span className="hero_stat_num">{stats.completed}</span>
-                        <span className="hero_stat_label">Completed</span>
+                    <div className="hero_tele_stats">
+                        <div className="hero_stat">
+                            <span className="hero_stat_num">{stats.total}</span>
+                            <span className="hero_stat_label">Total Sessions</span>
+                        </div>
+                        <div className="hero_stat_divider"></div>
+                        <div className="hero_stat">
+                            <span className="hero_stat_num">{stats.scheduled}</span>
+                            <span className="hero_stat_label">Scheduled</span>
+                        </div>
+                        <div className="hero_stat_divider"></div>
+                        <div className="hero_stat">
+                            <span className="hero_stat_num">{stats.completed}</span>
+                            <span className="hero_stat_label">Completed</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -146,8 +198,14 @@ const PatientTelemedicine = () => {
                                 value={selectedDoctor}
                                 onChange={(e) => setSelectedDoctor(e.target.value)}
                                 required
+                                disabled
                             >
                                 <option value="">— Choose a Doctor —</option>
+                                {state.doctorId && !doctors.some(d => d.doctorId === state.doctorId) && (
+                                    <option value={state.doctorId}>
+                                        Dr. {doctorNameFallback || 'General Specialist'}
+                                    </option>
+                                )}
                                 {doctors.map(doc => (
                                     <option key={doc.doctorId} value={doc.doctorId}>
                                         Dr. {doc.firstName} {doc.lastName} — {doc.specialty}
@@ -162,6 +220,7 @@ const PatientTelemedicine = () => {
                                 value={preferredDate}
                                 onChange={(e) => setPreferredDate(e.target.value)}
                                 required
+                                disabled
                             />
                         </div>
                         <div className="formGroup_tele">
@@ -171,6 +230,7 @@ const PatientTelemedicine = () => {
                                 placeholder="Describe your symptoms briefly..."
                                 value={reason}
                                 onChange={(e) => setReason(e.target.value)}
+                                disabled
                             ></textarea>
                         </div>
                         <button
