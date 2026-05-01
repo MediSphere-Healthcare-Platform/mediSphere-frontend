@@ -84,9 +84,9 @@ const Registration = () => {
                 formPayload.append('phone', formData.phone);
                 formPayload.append('licenceImage', licenceFile);
 
-                const res = await adminApi({
+                const res = await authApi({
                     method: 'post',
-                    url: '/doctors/pending',
+                    url: '/register/doctor',
                     data: formPayload,
                     headers: { 'Content-Type': undefined }
                 });
