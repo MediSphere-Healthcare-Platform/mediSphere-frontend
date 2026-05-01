@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
-import { doctorApi } from '../../services/api';
+import { directDoctorApi } from '../../services/api';
 import { 
     Users, Clock, ClipboardList, CheckCircle, 
     XCircle, ArrowRight, UserCheck, Activity, Award, FileText
@@ -51,7 +51,7 @@ const DoctorDashboard_dodsh = ({ doctorId: propDoctorId = "UD102616" }) => {
     useEffect(() => {
         const fetchDoctorInfo = async () => {
             try {
-                const response = await doctorApi.get(`getDoctorById/${currentDoctorId}`);
+                const response = await directDoctorApi.get(`getDoctorById/${currentDoctorId}`);
                 setDoctorInfo(response.data.data);
             } catch (err) {
                 console.error('Error fetching dashboard doctor info:', err);
@@ -68,7 +68,7 @@ const DoctorDashboard_dodsh = ({ doctorId: propDoctorId = "UD102616" }) => {
         setLoading(true);
         try {
             // Fetch appointments
-            const appointRes = await doctorApi.get(`appointments/allAppointmentsByDoctorId/${currentDoctorId}`);
+            const appointRes = await directDoctorApi.get(`appointments/allAppointmentsByDoctorId/${currentDoctorId}`);
             const resData = appointRes.data?.data !== undefined ? appointRes.data.data : appointRes.data;
             const allAppointments = Array.isArray(resData) ? resData : (resData?.doctorAppointments || []);
             
@@ -101,7 +101,7 @@ const DoctorDashboard_dodsh = ({ doctorId: propDoctorId = "UD102616" }) => {
 
     const handleStatusChange = async (appointmentReferenceId, status) => {
         try {
-            await doctorApi.put('appointments/appointmentStatusChange', {
+            await directDoctorApi.put('appointments/appointmentStatusChange', {
                 appointmentReferenceId,
                 status
             });

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { doctorApi, patientApi } from '../../services/api';
+import { directDoctorApi, directPatientApi } from '../../services/api';
 import { 
     Search, Filter, Calendar, Clock, User, 
     MessageSquare, CheckCircle, XCircle, MoreVertical,
@@ -24,14 +24,14 @@ const DoctorAppointments_doappt = () => {
     const fetchAppointments = async () => {
         setLoading(true);
         try {
-            const response = await doctorApi.get(`appointments/allAppointmentsByDoctorId/${currentDoctorId}`);
+            const response = await directDoctorApi.get(`appointments/allAppointmentsByDoctorId/${currentDoctorId}`);
             const resData = response.data?.data !== undefined ? response.data.data : response.data;
             const appointmentData = Array.isArray(resData) ? resData : (resData?.doctorAppointments || []);
             
             const appointmentsWithNames = await Promise.all(appointmentData.map(async (app) => {
                 if (!app.patientName && app.patientId) {
                     try {
-                        const patientRes = await patientApi.get(`getPatientById/${app.patientId}`);
+                        const patientRes = await directPatientApi.get(`getPatientById/${app.patientId}`);
                         const patientData = patientRes.data?.data;
                         if (patientData && patientData.firstName) {
                             app.patientName = `${patientData.firstName} ${patientData.lastName || ''}`.trim();
@@ -53,7 +53,7 @@ const DoctorAppointments_doappt = () => {
 
     const handleStatusChange = async (appointmentReferenceId, status) => {
         try {
-            await doctorApi.put('appointments/appointmentStatusChange', {
+            await directDoctorApi.put('appointments/appointmentStatusChange', {
                 appointmentReferenceId,
                 status
             });

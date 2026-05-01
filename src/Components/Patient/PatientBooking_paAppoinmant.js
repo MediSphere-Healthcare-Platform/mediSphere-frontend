@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Search, Calendar, Clock, User, Award, ArrowRight, ShieldCheck, X } from 'lucide-react';
-import api from '../../services/api';
+import { directPatientApi, directDoctorApi } from '../../services/api';
 import './PatientBooking_paAppoinmant.css';
 
 const PatientBooking_paAppoinmant = ({ patientId: propPatientId = "P002" }) => {
@@ -28,7 +28,7 @@ const PatientBooking_paAppoinmant = ({ patientId: propPatientId = "P002" }) => {
 
     const fetchPatientData = async () => {
         try {
-            const response = await api.get(`getPatientById/${patientId}`);
+            const response = await directPatientApi.get(`getPatientById/${patientId}`);
             const data = response.data.data || response.data;
             setBookingData(prev => ({ ...prev, msUserId: data.msUserId }));
         } catch (err) {
@@ -40,7 +40,7 @@ const PatientBooking_paAppoinmant = ({ patientId: propPatientId = "P002" }) => {
 
     const fetchDoctors = async () => {
         try {
-            const response = await api.get('getAllDoctors');
+            const response = await directDoctorApi.get('getAllDoctors');
             const finalData = response.data.data || response.data || [];
             setDoctors(Array.isArray(finalData) ? finalData : []);
         } catch (err) {
@@ -62,7 +62,7 @@ const PatientBooking_paAppoinmant = ({ patientId: propPatientId = "P002" }) => {
                 reason: bookingData.comments
             };
 
-            await api.post('appointments/bookAppointment', payload);
+            await directPatientApi.post('appointments/bookAppointment', payload);
             alert('Appointment booked successfully!');
             setShowModal(false);
         } catch (err) {

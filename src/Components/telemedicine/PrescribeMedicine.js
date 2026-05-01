@@ -42,7 +42,7 @@ const PrescribeMedicine = () => {
 
         setSubmitting(true);
         try {
-            await telemedicineApi.post('/prescriptions', {
+            await telemedicineApi.post('prescriptions', {
                 sessionId: sessionId,
                 diagnosis: diagnosis,
                 instructions: instructions,

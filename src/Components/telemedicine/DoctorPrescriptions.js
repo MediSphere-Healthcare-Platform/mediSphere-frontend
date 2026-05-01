@@ -26,7 +26,7 @@ const DoctorPrescriptions = () => {
         setLoading(true);
         setError('');
         try {
-            const res = await telemedicineApi.get(`/prescriptions/doctor/${doctorId}`);
+            const res = await telemedicineApi.get(`prescriptions/doctor/${doctorId}`);
             setPrescriptions(res.data || []);
         } catch (err) {
             console.error('[DoctorPrescriptions] fetch error:', err);
@@ -44,7 +44,7 @@ const DoctorPrescriptions = () => {
     const handleDelete = async (prescriptionId) => {
         if (!window.confirm('Are you sure you want to permanently delete this prescription?')) return;
         try {
-            await telemedicineApi.delete(`/prescriptions/${prescriptionId}`);
+            await telemedicineApi.delete(`prescriptions/${prescriptionId}`);
             setPrescriptions(prev => prev.filter(p => p.prescriptionId !== prescriptionId));
         } catch (err) {
             alert('Failed to delete prescription. ' + (err.response?.data?.message || ''));
@@ -90,7 +90,7 @@ const DoctorPrescriptions = () => {
 
         setSaving(true);
         try {
-            const res = await telemedicineApi.put(`/prescriptions/${editTarget.prescriptionId}`, {
+            const res = await telemedicineApi.put(`prescriptions/${editTarget.prescriptionId}`, {
                 diagnosis: editForm.diagnosis.trim(),
                 medications: validMeds,
                 instructions: editForm.instructions.trim()

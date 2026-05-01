@@ -19,7 +19,7 @@ const VideoRoom = () => {
     useEffect(() => {
         const fetchSession = async () => {
             try {
-                const res = await telemedicineApi.get(`/sessions/${sessionId}`);
+                const res = await telemedicineApi.get(`sessions/${sessionId}`);
                 setSession(res.data);
                 loadJitsiScript(res.data);
             } catch (err) {
@@ -88,7 +88,7 @@ const VideoRoom = () => {
     const handleEndSession = async () => {
         if (window.confirm("Are you sure you want to end this session for everyone?")) {
             try {
-                await telemedicineApi.put(`/sessions/${sessionId}/end`);
+                await telemedicineApi.put(`sessions/${sessionId}/end`);
                 if (jitsiApiRef.current) {
                     jitsiApiRef.current.dispose();
                 }

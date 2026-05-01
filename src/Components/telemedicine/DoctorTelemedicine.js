@@ -24,8 +24,8 @@ const DoctorTelemedicine = () => {
         setLoading(true);
         try {
             const [pendingRes, allRes] = await Promise.all([
-                telemedicineApi.get(`/sessions/doctor/${doctorId}/pending`),
-                telemedicineApi.get(`/sessions/doctor/${doctorId}`)
+                telemedicineApi.get(`sessions/doctor/${doctorId}/pending`),
+                telemedicineApi.get(`sessions/doctor/${doctorId}`)
             ]);
             setPendingSessions(pendingRes.data || []);
             setAllSessions(allRes.data || []);
@@ -38,7 +38,7 @@ const DoctorTelemedicine = () => {
 
     const handleAccept = async (sessionId) => {
         try {
-            await telemedicineApi.put(`/sessions/${sessionId}/accept`);
+            await telemedicineApi.put(`sessions/${sessionId}/accept`);
             fetchSessions();
         } catch (err) {
             console.error("Error accepting session:", err);
@@ -48,7 +48,7 @@ const DoctorTelemedicine = () => {
 
     const handleReject = async (sessionId) => {
         try {
-            await telemedicineApi.put(`/sessions/${sessionId}/reject`);
+            await telemedicineApi.put(`sessions/${sessionId}/reject`);
             fetchSessions();
         } catch (err) {
             console.error("Error rejecting session:", err);
@@ -58,7 +58,7 @@ const DoctorTelemedicine = () => {
 
     const handleStartSession = async (sessionId) => {
         try {
-            await telemedicineApi.put(`/sessions/${sessionId}/start`);
+            await telemedicineApi.put(`sessions/${sessionId}/start`);
             navigate(`/telemedicine/room/${sessionId}`);
         } catch (err) {
             console.error("Error starting session:", err);

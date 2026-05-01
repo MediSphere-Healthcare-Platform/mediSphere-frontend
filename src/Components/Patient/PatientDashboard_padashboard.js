@@ -5,7 +5,7 @@ import {
     ChevronRight, ArrowUpRight, CheckCircle2, AlertCircle, Loader2,
     Database, Network
 } from 'lucide-react';
-import api, { telemedicineApi } from '../../services/api';
+import api, { directPatientApi, telemedicineApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import './PatientDashboard_padashboard.css';
 
@@ -49,7 +49,7 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
         const fetchPatientInfo = async () => {
             setStats(prev => ({ ...prev, loading: { ...prev.loading, patient: true }, error: null }));
             try {
-                const res = await api.get(`getPatientById/${currentId}`);
+                const res = await directPatientApi.get(`getPatientById/${currentId}`);
                 const finalData = res.data.data || res.data;
                 setDebugData(prev => ({ ...prev, rawPatient: res.data }));
                 setStats(prev => ({
@@ -76,7 +76,7 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
         const fetchAppointments = async () => {
             setStats(prev => ({ ...prev, loading: { ...prev.loading, appointments: true } }));
             try {
-                const res = await api.get(`appointments/allAppointmentsByPatientId/${currentId}`);
+                const res = await directPatientApi.get(`appointments/allAppointmentsByPatientId/${currentId}`);
                 setDebugData(prev => ({ ...prev, rawAppointments: res.data }));
                 const resData = res.data?.data !== undefined ? res.data.data : res.data;
                 const appointmentData = Array.isArray(resData) ? resData : (resData?.patientAppointments || []);
@@ -98,7 +98,7 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
         const fetchReports = async () => {
             setStats(prev => ({ ...prev, loading: { ...prev.loading, reports: true } }));
             try {
-                const res = await api.get(`getPatientReportsByPatientId/${currentId}`);
+                const res = await directPatientApi.get(`getPatientReportsByPatientId/${currentId}`);
                 setDebugData(prev => ({ ...prev, rawReports: res.data }));
                 const reportsData = res.data.data || res.data || [];
                 setStats(prev => ({

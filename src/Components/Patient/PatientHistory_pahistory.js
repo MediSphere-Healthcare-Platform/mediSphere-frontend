@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, Clock, ChevronRight, Activity, ClipboardList, CheckCircle2, XCircle, Video } from 'lucide-react';
-import api, { doctorApi } from '../../services/api';
+import { directPatientApi, directDoctorApi } from '../../services/api';
 import './PatientHistory_pahistory.css';
 
 const PatientHistory_pahistory = ({ patientId: propPatientId = "P002" }) => {
@@ -18,14 +18,14 @@ const PatientHistory_pahistory = ({ patientId: propPatientId = "P002" }) => {
 
     const fetchHistory = async () => {
         try {
-            const response = await api.get(`appointments/allAppointmentsByPatientId/${patientId}`);
+            const response = await directPatientApi.get(`appointments/allAppointmentsByPatientId/${patientId}`);
             const resData = response.data?.data !== undefined ? response.data.data : response.data;
             const appointmentData = Array.isArray(resData) ? resData : (resData?.patientAppointments || []);
             
             const appointmentsWithDoctors = await Promise.all(appointmentData.map(async (app) => {
                 if (!app.doctorName && app.doctorId) {
                     try {
-                        const doctorRes = await doctorApi.get(`getDoctorById/${app.doctorId}`);
+                        const doctorRes = await directDoctorApi.get(`getDoctorById/${app.doctorId}`);
                         const doctorData = doctorRes.data?.data;
                         if (doctorData && doctorData.firstName) {
                             app.doctorName = `${doctorData.firstName} ${doctorData.lastName || ''}`.trim();

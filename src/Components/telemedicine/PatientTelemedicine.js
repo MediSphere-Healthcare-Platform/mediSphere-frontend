@@ -52,7 +52,7 @@ const PatientTelemedicine = () => {
 
     const fetchDoctors = async () => {
         try {
-            const res = await telemedicineApi.get('/doctors');
+            const res = await telemedicineApi.get('doctors');
             setDoctors(res.data?.data || res.data || []);
         } catch (err) {
             console.error("Error fetching doctors:", err);
@@ -62,7 +62,7 @@ const PatientTelemedicine = () => {
     const fetchSessions = async () => {
         try {
             setLoading(true);
-            const res = await telemedicineApi.get(`/sessions/patient/${patientId}`);
+            const res = await telemedicineApi.get(`sessions/patient/${patientId}`);
             let sessionData = res.data || [];
             
             // Fetch missing doctor names
@@ -100,7 +100,7 @@ const PatientTelemedicine = () => {
                 ? preferredDate + ':00'
                 : preferredDate;
 
-            await telemedicineApi.post(`/sessions/request?patientUserId=${patientId}`, {
+            await telemedicineApi.post(`sessions/request?patientUserId=${patientId}`, {
                 patientId: patientId,
                 doctorId: selectedDoctor,
                 preferredAt: preferredAtFormatted,
@@ -122,7 +122,7 @@ const PatientTelemedicine = () => {
 
     const handleJoinSession = async (sessionId) => {
         try {
-            await telemedicineApi.put(`/sessions/${sessionId}/start`);
+            await telemedicineApi.put(`sessions/${sessionId}/start`);
             navigate(`/telemedicine/room/${sessionId}`);
         } catch (err) {
             console.error("Error starting session:", err);

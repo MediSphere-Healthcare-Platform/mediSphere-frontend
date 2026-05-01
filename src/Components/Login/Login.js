@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AtSign, Lock, ArrowRight, Shield, AlertCircle, Loader2 } from 'lucide-react';
-import { authApi, patientApi } from '../../services/api';
+import axios from 'axios';
+import { authApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import './Login.css';
 
@@ -44,13 +45,28 @@ const Login = () => {
 
             if (role === 'DOCTOR') {
                 // For doctors: msUserId IS the doctorId (UD#### format)
+                // Optionally try to fetch real name from doctor service directly (non-blocking)
+                let doctorName = `Dr. (ID: ${msUserId})`;
+                try {
+                    const drRes = await axios.get(`http://localhost:8085/doctor/api/v1/getDoctorById/${msUserId}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    const drData = drRes.data?.data;
+                    if (drData?.firstName) {
+                        doctorName = `Dr. ${drData.firstName} ${drData.lastName || ''}`.trim();
+                    }
+                } catch (e) {
+                    // Non-critical: doctor service unavailable, continue with placeholder name
+                    console.warn('[Login] Could not fetch doctor name, using placeholder:', e.message);
+                }
+
                 const userData = {
                     token,
                     role,
                     msUserId,
                     doctorId: msUserId,
                     email: formData.email,
-                    name: `Dr. (ID: ${msUserId})`
+                    name: doctorName
                 };
                 login(userData);
                 navigate(`/doctor/dashboard/${msUserId}`);
@@ -59,7 +75,10 @@ const Login = () => {
                 // For patients: msUserId = UP#### but API uses patientId = P###
                 // Resolve msUserId → patientId via getAllPatientForAdmin
                 try {
-                    const patientsRes = await patientApi.get('getAllPatientForAdmin');
+                    // Call patient service directly (bypassing gateway to avoid token validation issues)
+                    const patientsRes = await axios.get('http://localhost:8084/patient/api/v1/getAllPatientForAdmin', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
                     const patients = patientsRes.data?.data || [];
                     const matchedPatient = patients.find(p => p.msUserId === msUserId);
 

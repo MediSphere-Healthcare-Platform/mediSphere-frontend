@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { FileText, Upload, Download, Trash2, Plus, AlertCircle, FilePlus, Eye, Loader2 } from 'lucide-react';
-import api from '../../services/api';
+import { directPatientApi, directDoctorApi } from '../../services/api';
 import './PatientReports_pareports.css';
 
 const PatientReports_pareports = ({ patientId: propPatientId = "P002" }) => {
@@ -29,7 +29,7 @@ const PatientReports_pareports = ({ patientId: propPatientId = "P002" }) => {
 
     const fetchDoctors = async () => {
         try {
-            const response = await api.get('getAllDoctors');
+            const response = await directDoctorApi.get('getAllDoctors');
             const resData = response.data?.data || response.data || [];
             setDoctors(Array.isArray(resData) ? resData : []);
             
@@ -45,7 +45,7 @@ const PatientReports_pareports = ({ patientId: propPatientId = "P002" }) => {
     const fetchReports = async () => {
         setLoading(true);
         try {
-            const response = await api.get(`getPatientReportsByPatientId/${patientId}`);
+            const response = await directPatientApi.get(`getPatientReportsByPatientId/${patientId}`);
             const resData = response.data?.data !== undefined ? response.data.data : response.data;
             const finalData = Array.isArray(resData) ? resData : [];
             setReports(finalData);
@@ -77,7 +77,7 @@ const PatientReports_pareports = ({ patientId: propPatientId = "P002" }) => {
             data.append('reportData', new Blob([JSON.stringify(reportData)], { type: 'application/json' }));
             data.append('file', file);
 
-            await api.post('uploadMedicalReport', data, {
+            await directPatientApi.post('uploadMedicalReport', data, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
             
@@ -103,7 +103,7 @@ const PatientReports_pareports = ({ patientId: propPatientId = "P002" }) => {
     const deleteReport = async (reportId) => {
         if (!window.confirm('Are you sure you want to delete this report?')) return;
         try {
-            await api.delete(`deleteMedicalReport/${reportId}`);
+            await directPatientApi.delete(`deleteMedicalReport/${reportId}`);
             fetchReports();
         } catch (err) {
             console.error('Delete failed:', err);

@@ -5,7 +5,7 @@ import {
     Shield, Activity, Heart, Info, ChevronRight, CheckCircle, Loader2,
     AlertTriangle, Clipboard
 } from 'lucide-react';
-import api from '../../services/api';
+import { directPatientApi } from '../../services/api';
 import './PatientProfile_paprofile.css';
 
 const PatientProfile_paprofile = ({ patientId: propPatientId }) => {
@@ -34,7 +34,7 @@ const PatientProfile_paprofile = ({ patientId: propPatientId }) => {
     const fetchProfile = async () => {
         setLoading(true);
         try {
-            const response = await api.get(`getPatientById/${patientId}`);
+            const response = await directPatientApi.get(`getPatientById/${patientId}`);
             const finalData = response.data.data || response.data;
             setProfile(finalData);
             setFormData(finalData);
@@ -92,7 +92,7 @@ const PatientProfile_paprofile = ({ patientId: propPatientId }) => {
             
             data.append('patient', new Blob([JSON.stringify(updateDto)], { type: 'application/json' }));
 
-            const response = await api.put(`updatePatientDetails/${patientId}`, data, {
+            const response = await directPatientApi.put(`updatePatientDetails/${patientId}`, data, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

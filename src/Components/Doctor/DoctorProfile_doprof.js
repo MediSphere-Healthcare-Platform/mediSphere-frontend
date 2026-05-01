@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { doctorApi } from '../../services/api';
+import { directDoctorApi } from '../../services/api';
 import { 
     User, Mail, Phone, Award, Shield, MapPin, 
     Edit2, Save, X, Camera, Globe, Briefcase, Info, 
@@ -41,7 +41,7 @@ const DoctorProfile_doprof = ({ doctorId: propDoctorId = "UD102616" }) => {
 
     const fetchProfile = async () => {
         try {
-            const response = await doctorApi.get(`getDoctorById/${currentDoctorId}`);
+            const response = await directDoctorApi.get(`getDoctorById/${currentDoctorId}`);
             const data = response.data.data;
             setProfile(data);
             setFormData(data);
@@ -90,7 +90,7 @@ const DoctorProfile_doprof = ({ doctorId: propDoctorId = "UD102616" }) => {
                 formPayload.append('profileImage', selectedFile);
             }
 
-            await doctorApi.put(`updateDoctorDetails/${currentDoctorId}`, formPayload, {
+            await directDoctorApi.put(`updateDoctorDetails/${currentDoctorId}`, formPayload, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
 

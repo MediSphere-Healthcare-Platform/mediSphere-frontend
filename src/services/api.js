@@ -1,32 +1,50 @@
 import axios from 'axios';
 
-// Patient Service Base URL
-const PATIENT_BASE_URL = 'http://127.0.0.1:8084/patient/api/v1/';
+// API Gateway Base URL
+const GATEWAY_BASE_URL = 'http://127.0.0.1:8080/api/';
 
-// Doctor Service Base URL
-const DOCTOR_BASE_URL = 'http://127.0.0.1:8085/doctor/api/v1/';
+// Patient Service Base URL (Mapped through gateway)
+const PATIENT_BASE_URL = `${GATEWAY_BASE_URL}patients/`;
 
-// Auth Service Base URL
-const AUTH_BASE_URL = 'http://127.0.0.1:8083/api/v1/auth/';
+// Patient Service Direct URL (bypasses gateway - used for authenticated patient calls)
+const PATIENT_DIRECT_URL = 'http://localhost:8084/patient/api/v1/';
 
-// Telemedicine Service Base URL
-const TELEMEDICINE_BASE_URL = 'http://127.0.0.1:8086/api/';
+// Doctor Service Base URL (Mapped through gateway)
+const DOCTOR_BASE_URL = `${GATEWAY_BASE_URL}doctors/`;
 
-// Payment Service Base URL
-const PAYMENT_BASE_URL = 'http://127.0.0.1:8082/api/v1/';
+// Doctor Service Direct URL (bypasses gateway)
+const DOCTOR_DIRECT_URL = 'http://localhost:8085/doctor/api/v1/';
 
-// Appointment Service Base URL
-const APPOINTMENT_BASE_URL = 'http://127.0.0.1:8081/api/v1/';
+// Auth Service Base URL (Directly bypassing gateway due to routing restrictions)
+const AUTH_BASE_URL = 'http://localhost:8083/api/v1/auth/';
 
-// Instance for Patient Service
+// Admin Service Base URL (Mapped through gateway)
+const ADMIN_BASE_URL = `${GATEWAY_BASE_URL}admin/`;
+
+// Other services use the general Gateway API prefix
+const GENERAL_API_URL = GATEWAY_BASE_URL;
+
+// Instance for Patient Service (via gateway - legacy)
 export const patientApi = axios.create({
     baseURL: PATIENT_BASE_URL,
     headers: { 'Content-Type': 'application/json' }
 });
 
-// Instance for Doctor Service
+// Instance for Patient Service (DIRECT - bypasses gateway for authenticated calls)
+export const directPatientApi = axios.create({
+    baseURL: PATIENT_DIRECT_URL,
+    headers: { 'Content-Type': 'application/json' }
+});
+
+// Instance for Doctor Service (via gateway - legacy)
 export const doctorApi = axios.create({
     baseURL: DOCTOR_BASE_URL,
+    headers: { 'Content-Type': 'application/json' }
+});
+
+// Instance for Doctor Service (DIRECT - bypasses gateway)
+export const directDoctorApi = axios.create({
+    baseURL: DOCTOR_DIRECT_URL,
     headers: { 'Content-Type': 'application/json' }
 });
 
@@ -38,72 +56,55 @@ export const authApi = axios.create({
 
 // Instance for Admin Service
 export const adminApi = axios.create({
-    baseURL: 'http://127.0.0.1:8089/api/v1/admin/',
+    baseURL: ADMIN_BASE_URL,
     headers: { 'Content-Type': 'application/json' }
 });
 
 // Instance for Telemedicine Service
 export const telemedicineApi = axios.create({
-    baseURL: TELEMEDICINE_BASE_URL,
+    baseURL: GENERAL_API_URL,
     headers: { 'Content-Type': 'application/json' }
 });
 
 // Instance for Payment Service
 export const paymentApi = axios.create({
-    baseURL: PAYMENT_BASE_URL,
+    baseURL: GENERAL_API_URL,
     headers: { 'Content-Type': 'application/json' }
 });
 
 // Instance for Appointment Service
 export const appointmentApi = axios.create({
-    baseURL: APPOINTMENT_BASE_URL,
+    baseURL: GENERAL_API_URL,
     headers: { 'Content-Type': 'application/json' }
 });
 
 // Instance for AI Symptom Check Service
 export const symptomApi = axios.create({
-    baseURL: 'http://127.0.0.1:8088/api/',
+    baseURL: GENERAL_API_URL,
     headers: { 'Content-Type': 'application/json' }
 });
 
-// Add Authorization interceptor for Symptom API
-symptomApi.interceptors.request.use((config) => {
-    try {
-        const stored = sessionStorage.getItem('medisphere_user');
-        if (stored) {
-            const user = JSON.parse(stored);
-            if (user.token) {
-                config.headers.Authorization = `Bearer ${user.token}`;
-            }
-        }
-    } catch (e) {
-        console.error("Failed to parse auth token", e);
-    }
-    return config;
-}, (error) => {
-    return Promise.reject(error);
-});
-
-// Add Authorization interceptor specifically for Telemedicine
-telemedicineApi.interceptors.request.use((config) => {
-    try {
-        const stored = sessionStorage.getItem('medisphere_user');
-        if (stored) {
-            const user = JSON.parse(stored);
-            if (user.token) {
-                config.headers.Authorization = `Bearer ${user.token}`;
-            }
-        }
-    } catch (e) {
-        console.error("Failed to parse auth token", e);
-    }
-    return config;
-}, (error) => {
-    return Promise.reject(error);
-});
+// Reusable Authorization interceptor is now part of addInterceptors
 
 // Helper for generic interceptors
 const addInterceptors = (instance, name) => {
+    instance.interceptors.request.use((config) => {
+        try {
+            const stored = sessionStorage.getItem('medisphere_user');
+            if (stored) {
+                const user = JSON.parse(stored);
+                if (user.token) {
+                    config.headers.Authorization = `Bearer ${user.token}`;
+                }
+            }
+        } catch (e) {
+            console.error(`[${name} Error] Failed to parse auth token`, e);
+        }
+        return config;
+    }, (error) => {
+        return Promise.reject(error);
+    });
+
     instance.interceptors.response.use(
         (response) => {
             console.log(`[${name} Success] ${response.config.method.toUpperCase()} ${response.config.url}:`, response.data);
@@ -126,7 +127,9 @@ const addInterceptors = (instance, name) => {
 };
 
 addInterceptors(patientApi, 'PatientAPI');
+addInterceptors(directPatientApi, 'DirectPatientAPI');
 addInterceptors(doctorApi, 'DoctorAPI');
+addInterceptors(directDoctorApi, 'DirectDoctorAPI');
 addInterceptors(authApi, 'AuthAPI');
 addInterceptors(adminApi, 'AdminAPI');
 addInterceptors(telemedicineApi, 'TelemedicineAPI');

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { doctorApi } from '../../services/api';
+import { directDoctorApi } from '../../services/api';
 import { 
     FileText, Search, Filter, Eye, Download, 
     Calendar, User, AlertCircle, Bookmark, CheckCircle2
@@ -35,7 +35,7 @@ const PatientReportViewer_dorep = ({ doctorId: propDoctorId = "UD102616" }) => {
     const fetchReports = async () => {
         try {
             // Calling a likely patientClient endpoint found in DoctorController
-            const response = await doctorApi.get(`/getMedicalReportsByDoctorId/${currentDoctorId}`);
+            const response = await directDoctorApi.get(`/getMedicalReportsByDoctorId/${currentDoctorId}`);
             setReports(response.data.data || []);
         } catch (err) {
             console.error('Error fetching reports:', err);

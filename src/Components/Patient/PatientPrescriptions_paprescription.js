@@ -13,7 +13,7 @@ const PatientPrescriptions_paprescription = () => {
     useEffect(() => {
         const fetchPrescriptions = async () => {
             try {
-                const res = await telemedicineApi.get(`/prescriptions/patient/${patientId}`);
+                const res = await telemedicineApi.get(`prescriptions/patient/${patientId}`);
                 setPrescriptions(res.data || []);
             } catch (err) {
                 console.error('[Prescriptions] Fetch error:', err);
