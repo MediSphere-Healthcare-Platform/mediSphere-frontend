@@ -1,32 +1,40 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle2, Loader2 } from 'lucide-react';
+import { paymentApi, appointmentApi } from '../../services/api';
 import './PaymentSuccess.css';
 
 const PaymentSuccess = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Find patientId from sessionStorage
-        let patientId = "P002"; // Fallback
-        const storedUser = sessionStorage.getItem('medisphere_user');
-        if (storedUser) {
-            try {
-                const parsedUser = JSON.parse(storedUser);
-                if (parsedUser.patientId) {
-                    patientId = parsedUser.patientId;
-                }
-            } catch (e) {
-                console.error("Failed to parse user session", e);
+        const queryParams = new URLSearchParams(window.location.search);
+        const orderId = queryParams.get('order_id');
+
+        const processPaymentSuccess = async () => {
+            if (!orderId) {
+                navigate('/');
+                return;
             }
-        }
 
-        // Wait a few seconds to let user read the success message, then redirect back to history
-        const timer = setTimeout(() => {
-            navigate(`/history/${patientId}`);
-        }, 3000);
+            try {
+                const detailsRes = await paymentApi.get(`payment/details/${orderId}`);
+                const paymentData = detailsRes.data?.data;
 
-        return () => clearTimeout(timer);
+                if (!paymentData) throw new Error("Transaction not found");
+
+                await paymentApi.post(`payment/simulate-success/${orderId}`);
+
+                setTimeout(() => {
+                    navigate(`/history/${paymentData.patientId}`);
+                }, 3000);
+            } catch (err) {
+                console.error("Success processing error:", err);
+                navigate('/');
+            }
+        };
+
+        processPaymentSuccess();
     }, [navigate]);
 
     return (
@@ -34,7 +42,7 @@ const PaymentSuccess = () => {
             <div className="payment-success-card">
                 <CheckCircle2 size={80} className="success-icon" />
                 <h1>Payment Successful!</h1>
-                <p>Your payment has been processed. The appointment status is being updated.</p>
+                <p>Your payment has been processed. We are updating your appointment status now.</p>
                 
                 <div className="redirect-info">
                     <Loader2 size={20} className="spinner-small" />

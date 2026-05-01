@@ -1,122 +1,172 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { paymentApi, patientApi } from '../../services/api';
-import { Loader2, CreditCard, ShieldCheck } from 'lucide-react';
+import { paymentApi, patientApi, appointmentApi } from '../../services/api';
+import { Loader2, CreditCard, ShieldCheck, User, Receipt, ArrowRight, AlertCircle } from 'lucide-react';
 import './PatientPayment.css';
 
 const PatientPayment = () => {
     const { appointmentId } = useParams();
     const navigate = useNavigate();
+    
     const [loading, setLoading] = useState(true);
+    const [verifying, setVerifying] = useState(false);
     const [error, setError] = useState(null);
+    const [isConfirmed, setIsConfirmed] = useState(false);
+
+    // Dynamic Data
+    const [appointmentData, setAppointmentData] = useState(null);
+    const [patientData, setPatientData] = useState(null);
+    const [doctorCharge, setDoctorCharge] = useState(null);
+    const [isPaid, setIsPaid] = useState(false);
+    const [history, setHistory] = useState([]);
+    const [showHistory, setShowHistory] = useState(false);
+    const [loadingHistory, setLoadingHistory] = useState(false);
 
     useEffect(() => {
-        const initiatePaymentFlow = async () => {
+        const loadPaymentDetails = async () => {
             try {
-                // Get patientId from session storage or use a default if missing
-                const storedUser = sessionStorage.getItem('medisphere_user');
-                let patientId = "P002"; // Fallback
-                let msUserId = null;
+                setLoading(true);
+                // 1. Fetch Appointment Details to get patientId and doctorId
+                const appoinmentRes = await appointmentApi.get(`appointments/trackStatus/${appointmentId}`);
+                const appData = appoinmentRes.data?.data;
                 
-                if (storedUser) {
-                    const parsedUser = JSON.parse(storedUser);
-                    if (parsedUser.patientId) patientId = parsedUser.patientId;
-                    if (parsedUser.msUserId) msUserId = parsedUser.msUserId;
+                if (!appData || !appData.doctorId || !appData.patientId) {
+                    throw new Error("Could not retrieve appointment details.");
+                }
+                setAppointmentData(appData);
+
+                // Check if already paid
+                if (appData.status === 'PAID' || appData.status === 'Success') {
+                    setIsPaid(true);
                 }
 
-                // Call the payment service to initiate payment
-                // We use a default amount of 2500 LKR for consultations.
-                const paymentReq = {
-                    patientId: patientId,
-                    appointmentReferenceId: appointmentId,
-                    msUserId: msUserId || 3, // fallback msUserId
-                    amount: "2500.00",
-                    currency: "LKR"
-                };
-
-                const res = await paymentApi.post('payment/initiate', paymentReq);
-                const payData = res.data?.data;
-
-                if (!payData) {
-                    throw new Error("Failed to receive payment gateway data.");
+                // 2. Fetch Patient Details
+                const patientRes = await patientApi.get(`getPatientById/${appData.patientId}`);
+                if (!patientRes.data?.data) {
+                    throw new Error("Could not retrieve patient details.");
                 }
+                setPatientData(patientRes.data.data);
 
-                // Dynamically construct and submit the form to PayHere sandbox
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'https://sandbox.payhere.lk/pay/checkout';
-
-                // Append all required PayHere parameters
-                const params = {
-                    merchant_id: payData.merchantId || payData.merchant_id,
-                    return_url: payData.returnUrl || payData.return_url,
-                    cancel_url: payData.cancelUrl || payData.cancel_url,
-                    notify_url: payData.notifyUrl || payData.notify_url,
-                    first_name: payData.firstName || payData.first_name || '',
-                    last_name: payData.lastName || payData.last_name || '',
-                    email: payData.email || 'patient@medisphere.com',
-                    phone: payData.phone || '0771234567',
-                    address: payData.address || 'Colombo',
-                    city: 'Colombo',
-                    country: 'Sri Lanka',
-                    order_id: payData.paymentRefId,
-                    items: payData.items,
-                    currency: payData.currency,
-                    amount: payData.amount,
-                    hash: payData.hash
-                };
-
-                for (const key in params) {
-                    const hiddenField = document.createElement('input');
-                    hiddenField.type = 'hidden';
-                    hiddenField.name = key;
-                    hiddenField.value = params[key];
-                    form.appendChild(hiddenField);
+                // 3. Fetch Doctor Charges
+                const chargeRes = await paymentApi.get(`payment/doctor-charge/${appData.doctorId}`);
+                if (!chargeRes.data?.data) {
+                    throw new Error("Could not retrieve doctor charge details.");
                 }
+                setDoctorCharge(chargeRes.data.data);
 
-                document.body.appendChild(form);
-                
-                // Keep the form around but don't auto-submit if we want to show a debug UI, 
-                // but the prompt says to redirect. Let's auto submit but keep a fallback.
-                setTimeout(() => {
-                    form.submit();
-                }, 3000);
-
+                setLoading(false);
             } catch (err) {
-                console.error('Payment initiation error:', err);
-                setError(err.message || 'An error occurred while initiating the payment.');
+                console.error('Data loading error:', err);
+                setError(err.response?.data?.description || err.message || 'An error occurred while loading payment details.');
                 setLoading(false);
             }
         };
 
-        initiatePaymentFlow();
+        if (appointmentId) {
+            loadPaymentDetails();
+        }
     }, [appointmentId]);
 
-    const simulatePaymentSuccess = async () => {
+    const handleConfirmAndPay = async () => {
+        if (isPaid) return;
         try {
-            // Get patientId from session storage or use a default if missing
-            const storedUser = sessionStorage.getItem('medisphere_user');
-            let msUserId = 3;
-            if (storedUser) {
-                const parsedUser = JSON.parse(storedUser);
-                if (parsedUser.msUserId) msUserId = parsedUser.msUserId;
+            setVerifying(true);
+            
+            // Initiate the payment process in backend
+            const paymentReq = {
+                patientId: patientData.patientId,
+                appointmentReferenceId: appointmentId,
+                msUserId: patientData.msUserId || 3, // fallback 
+                amount: doctorCharge.price,
+                currency: doctorCharge.currency || "LKR"
+            };
+
+            const res = await paymentApi.post('payment/initiate', paymentReq);
+            const payData = res.data?.data;
+
+            if (!payData) {
+                throw new Error("Failed to receive payment gateway data.");
             }
 
-            // We can directly call the webhook manually to simulate PayHere's server-to-server call
-            // But we don't have the exact paymentRefId here because it's inside the effect.
-            // Let's just redirect to success, though backend won't know. 
-            // Better yet, just redirect to success page for UI testing.
-            navigate('/payment-success');
-        } catch (error) {
-            console.error(error);
+            // PayHere Redirect Logic
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'https://sandbox.payhere.lk/pay/checkout';
+
+            const params = {
+                merchant_id: payData.merchant_id,
+                return_url: payData.return_url,
+                cancel_url: payData.cancel_url,
+                notify_url: payData.notify_url,
+                first_name: payData.first_name,
+                last_name: payData.last_name,
+                email: payData.email,
+                phone: payData.phone,
+                address: payData.address || 'N/A',
+                city: 'Colombo',
+                country: 'Sri Lanka',
+                order_id: payData.order_id,
+                items: payData.items,
+                currency: payData.currency,
+                amount: payData.amount,
+                hash: payData.hash
+            };
+
+            for (const key in params) {
+                const hiddenField = document.createElement('input');
+                hiddenField.type = 'hidden';
+                hiddenField.name = key;
+                hiddenField.value = params[key];
+                form.appendChild(hiddenField);
+            }
+
+            document.body.appendChild(form);
+            setIsConfirmed(true);
+            
+            // Brief delay for UX then submit
+            setTimeout(() => {
+                form.submit();
+            }, 1500);
+
+        } catch (err) {
+            console.error('Payment processing error:', err);
+            setError(err.message || 'Payment initiation failed.');
+            setVerifying(false);
         }
     };
+
+    const fetchHistory = async () => {
+        try {
+            setLoadingHistory(true);
+            const res = await paymentApi.get('payment/history');
+            if (res.data?.data) {
+                // Filter history for this appointment just in case, 
+                // but the endpoint returns all history for now
+                setHistory(res.data.data);
+            }
+            setShowHistory(true);
+            setLoadingHistory(false);
+        } catch (err) {
+            console.error('History fetch error:', err);
+            setLoadingHistory(false);
+        }
+    }
+
+    if (loading) {
+        return (
+            <div className="payment-loading-container">
+                <Loader2 className="spinner" size={48} />
+                <p>Loading transaction details...</p>
+            </div>
+        );
+    }
 
     if (error) {
         return (
             <div className="payment-error-container">
                 <div className="payment-error-card">
-                    <h2 className="error-title">Payment Initialization Failed</h2>
+                    <AlertCircle size={48} color="#ef4444" />
+                    <h2 className="error-title">Unable to Proceed</h2>
                     <p>{error}</p>
                     <button onClick={() => navigate(-1)} className="back-button">Go Back</button>
                 </div>
@@ -124,23 +174,118 @@ const PatientPayment = () => {
         );
     }
 
-    return (
-        <div className="payment-loading-container">
-            <div className="payment-loading-content">
-                <div className="icon-group">
-                    <CreditCard size={48} className="text-primary icon-bounce" />
-                    <ShieldCheck size={32} className="text-success icon-secured" />
+    if (isConfirmed || verifying) {
+        return (
+            <div className="payment-loading-container">
+                <div className="payment-loading-content">
+                    <div className="icon-group">
+                        <CreditCard size={48} className="text-primary icon-bounce" />
+                        <ShieldCheck size={32} className="text-success icon-secured" />
+                    </div>
+                    <h2>{isConfirmed ? "Redirecting to Gateway" : "Securing Your Transaction"}</h2>
+                    <p>Please wait while we securely connect you to PayHere...</p>
+                    <Loader2 className="spinner" size={40} />
                 </div>
-                <h2>Securing Your Transaction</h2>
-                <p>Please wait while we securely redirect you to the payment gateway...</p>
-                <Loader2 className="spinner" size={40} />
-                
-                <div style={{ marginTop: '20px', padding: '15px', background: '#fffbeb', border: '1px solid #fef3c7', borderRadius: '8px', fontSize: '0.9rem', color: '#b45309' }}>
-                    <strong>Developer Note:</strong> If PayHere shows "Unauthorized payment request", it means your localhost domain is not whitelisted in the PayHere Merchant Dashboard.
-                    <br/><br/>
-                    <button onClick={simulatePaymentSuccess} style={{ background: '#f59e0b', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '6px', cursor: 'pointer' }}>
-                        Simulate Payment Success (Local Dev Bypass)
-                    </button>
+            </div>
+        );
+    }
+
+    return (
+        <div className="payment-page-wrapper">
+            <div className="verification-container">
+                <div className="verification-card">
+                    <div className="verification-header">
+                        <Receipt size={32} className="header-icon" />
+                        <div>
+                            <h1>Confirm Payment</h1>
+                            <p>Reference: {appointmentId}</p>
+                        </div>
+                    </div>
+
+                    <div className="verification-body">
+                        <div className="info-section">
+                            <h3><User size={18} /> Patient Details</h3>
+                            <div className="info-grid">
+                                <div className="info-item">
+                                    <label>Full Name</label>
+                                    <span>{patientData?.firstName} {patientData?.lastName}</span>
+                                </div>
+                                <div className="info-item">
+                                    <label>Email Address</label>
+                                    <span>{patientData?.email}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="info-section">
+                            <h3><CreditCard size={18} /> Appointment Details</h3>
+                            <div className="info-grid">
+                                <div className="info-item">
+                                    <label>Doctor</label>
+                                    <span>{appointmentData?.doctorName}</span>
+                                </div>
+                                <div className="info-item">
+                                    <label>Date & Time</label>
+                                    <span>{appointmentData?.appointmentDate} at {appointmentData?.appointmentTime}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="payment-summary">
+                            <div className="summary-row">
+                                <span>Consultation Fee</span>
+                                <span>{doctorCharge?.currency} {parseFloat(doctorCharge?.price).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                            </div>
+                            <div className="summary-row total">
+                                <span>Total Amount</span>
+                                <span>{doctorCharge?.currency} {parseFloat(doctorCharge?.price).toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="verification-footer">
+                        <button className="cancel-btn" onClick={() => navigate(-1)}>Cancel</button>
+                        
+                        {isPaid ? (
+                            <button className="paid-btn">
+                                <ShieldCheck size={20} /> PAID
+                            </button>
+                        ) : (
+                            <button className="pay-btn" onClick={handleConfirmAndPay} disabled={verifying}>
+                                {verifying ? "Processing..." : "Confirm & Pay"} <ArrowRight size={18} />
+                            </button>
+                        )}
+                    </div>
+
+                    {isPaid && (
+                        <button className="history-btn" onClick={fetchHistory} disabled={loadingHistory}>
+                            {loadingHistory ? <Loader2 size={18} className="spin" /> : <Receipt size={18} />} 
+                            View Payment History
+                        </button>
+                    )}
+
+                    {showHistory && history.length > 0 && (
+                        <div className="history-section">
+                            <h3 className="history-title"><Receipt size={18} /> Recent Transactions</h3>
+                            <div className="history-list">
+                                {history.map((item, index) => (
+                                    <div key={index} className="history-item">
+                                        <div className="history-item-info">
+                                            <label>{item.paymentReferenceId}</label>
+                                            <span>{item.status}</span>
+                                        </div>
+                                        <div className="history-item-amount">
+                                            LKR {parseFloat(item.amount || item.payhereAmount).toFixed(2)}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="secure-badge">
+                        <ShieldCheck size={14} /> Secured by PayHere Sandbox
+                    </div>
                 </div>
             </div>
         </div>

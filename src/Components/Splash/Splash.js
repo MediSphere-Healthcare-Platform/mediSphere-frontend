@@ -86,7 +86,7 @@ const Splash = () => {
                 {/* Hero Image */}
                 <div className="hero-image-floater_splash reveal_splash" ref={addToRefs}>
                     <img
-                        src="https://images.unsplash.com/photo-1666214280557-f1b5022eb634?auto=format&fit=crop&w=900&q=80"
+                        src="https://storage.googleapis.com/techsauce-prod/uploads/2017/11/23845136_10159566681750371_648817360_n.jpg"
                         alt="Modern healthcare professional"
                         className="hero-img_splash"
                     />
