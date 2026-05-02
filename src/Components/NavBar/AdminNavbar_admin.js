@@ -10,7 +10,7 @@ const AdminNavbar_admin = () => {
 
     const handleLogout = () => {
         logout();
-        navigate('/login');
+        navigate('/admin/login');
     };
 
     return (

@@ -7,7 +7,8 @@ import './Admin_admin.css';
 const AdminDashboard_admin = () => {
     const [stats, setStats] = useState({
         pending: 0,
-        total: 0
+        total: 0,
+        approved: 0
     });
     const [loading, setLoading] = useState(true);
 
@@ -21,7 +22,8 @@ const AdminDashboard_admin = () => {
                 
                 setStats({
                     pending: pendingRes.data.data?.length || 0,
-                    total: reportRes.data.data?.length || 0
+                    total: reportRes.data.data?.total || 0,
+                    approved: reportRes.data.data?.approved || 0
                 });
             } catch (error) {
                 console.error('Failed to fetch stats:', error);
@@ -63,15 +65,16 @@ const AdminDashboard_admin = () => {
                     <ChevronRight className="statArrow_admin" size={20} color="#94a3b8" style={{ marginLeft: 'auto' }} />
                 </Link>
 
-                <div className="statCard_admin" style={{ cursor: 'default' }}>
+                <Link to="/admin/reports" className="statCard_admin">
                     <div className="statIconContainer_admin statIconContainer_blue_admin">
-                        <TrendingUp size={24} />
+                        <Activity size={24} />
                     </div>
                     <div className="statInfo_admin">
-                        <h3>Platform Growth</h3>
-                        <p>+12%</p>
+                        <h3>Approved Doctors</h3>
+                        <p>{loading ? '...' : stats.approved}</p>
                     </div>
-                </div>
+                    <ChevronRight className="statArrow_admin" size={20} color="#94a3b8" style={{ marginLeft: 'auto' }} />
+                </Link>
             </div>
 
             <div className="card_admin">
