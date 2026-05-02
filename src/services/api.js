@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // API Gateway Base URL
-const GATEWAY_BASE_URL = 'http://127.0.0.1:8080/api/';
+const GATEWAY_BASE_URL = 'http://localhost:8080/api/';
 
 // Patient Service Base URL (Mapped through gateway)
 const PATIENT_BASE_URL = `${GATEWAY_BASE_URL}patients/`;

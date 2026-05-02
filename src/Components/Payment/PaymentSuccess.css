@@ -62,3 +62,18 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+.spinner-large {
+    animation: spin 1s linear infinite;
+    color: #3b82f6;
+    margin-bottom: 1.5rem;
+}
+
+.manual-redirect-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.manual-redirect-btn:active {
+    transform: translateY(0);
+}

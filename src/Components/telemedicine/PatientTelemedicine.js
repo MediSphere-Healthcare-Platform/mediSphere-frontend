@@ -27,6 +27,8 @@ const PatientTelemedicine = () => {
     const [reason, setReason] = useState(state.reason || '');
     const [requesting, setRequesting] = useState(false);
     
+    const [showForm, setShowForm] = useState(!!state.doctorId); // Show form if redirecting from Book
+    
     const [doctorNameFallback, setDoctorNameFallback] = useState(state.doctorName || '');
 
     useEffect(() => {
@@ -100,20 +102,28 @@ const PatientTelemedicine = () => {
                 ? preferredDate + ':00'
                 : preferredDate;
 
-            await telemedicineApi.post(`sessions/request?patientUserId=${patientId}`, {
+            console.log("Requesting session:", {
+                patientId,
+                doctorId: selectedDoctor,
+                preferredAt: preferredAtFormatted
+            });
+
+            const res = await telemedicineApi.post(`sessions/request?patientUserId=${patientId}`, {
                 patientId: patientId,
                 doctorId: selectedDoctor,
                 preferredAt: preferredAtFormatted,
                 reason: reason
             });
+            console.log("Session request successful:", res.data);
             alert('Video session requested successfully!');
             setSelectedDoctor('');
             setPreferredDate('');
             setReason('');
             fetchSessions();
+            setShowForm(false); // Hide form after success
         } catch (err) {
-            console.error("Error requesting session:", err);
-            const msg = err.response?.data?.message || err.response?.data || '';
+            console.error("Error requesting session detailed:", err);
+            const msg = err.response?.data?.message || err.response?.data?.error || err.message || '';
             alert('Failed to request session. ' + msg);
         } finally {
             setRequesting(false);
@@ -145,9 +155,7 @@ const PatientTelemedicine = () => {
         });
 
     const stats = {
-        total: sessions.length,
-        scheduled: sessions.filter(s => s.status === 'SCHEDULED').length,
-        completed: sessions.filter(s => s.status === 'COMPLETED').length,
+        total: doctors.length,
     };
 
     return (
@@ -159,36 +167,20 @@ const PatientTelemedicine = () => {
                         <div className="hero_tele_badge">
                             <Video size={13} /> Virtual Care
                         </div>
-                        <h1>Telemedicine Consultations</h1>
-                        <p>Connect with your doctor from the comfort of your home via secure video.</p>
-                    </div>
-                    <div className="hero_tele_stats">
-                        <div className="hero_stat">
-                            <span className="hero_stat_num">{stats.total}</span>
-                            <span className="hero_stat_label">Total Sessions</span>
-                        </div>
-                        <div className="hero_stat_divider"></div>
-                        <div className="hero_stat">
-                            <span className="hero_stat_num">{stats.scheduled}</span>
-                            <span className="hero_stat_label">Scheduled</span>
-                        </div>
-                        <div className="hero_stat_divider"></div>
-                        <div className="hero_stat">
-                            <span className="hero_stat_num">{stats.completed}</span>
-                            <span className="hero_stat_label">Completed</span>
-                        </div>
+                        <h1>Request Video Session</h1>
+                        <p>Schedule a new video consultation with our expert medical team.</p>
                     </div>
                 </div>
             </div>
 
-            <div className="grid_tele_patient">
+            <div className="request_form_container">
                 {/* Request Form */}
-                <div className="card_tele_patient">
+                <div className="card_tele_patient request_card_centered">
                     <div className="card_tele_section_header">
                         <div className="card_tele_icon blue"><Video size={18} /></div>
                         <div>
-                            <h3>Request a Session</h3>
-                            <p>Schedule a new video consultation</p>
+                            <h3>Book a Consultation</h3>
+                            <p>Enter details below to request a session</p>
                         </div>
                     </div>
                     <form onSubmit={handleRequestSession}>
@@ -198,7 +190,7 @@ const PatientTelemedicine = () => {
                                 value={selectedDoctor}
                                 onChange={(e) => setSelectedDoctor(e.target.value)}
                                 required
-                                disabled
+                                disabled={!!state.doctorId}
                             >
                                 <option value="">— Choose a Doctor —</option>
                                 {state.doctorId && !doctors.some(d => d.doctorId === state.doctorId) && (
@@ -220,7 +212,7 @@ const PatientTelemedicine = () => {
                                 value={preferredDate}
                                 onChange={(e) => setPreferredDate(e.target.value)}
                                 required
-                                disabled
+                                disabled={!!state.doctorId && !!state.date}
                             />
                         </div>
                         <div className="formGroup_tele">
@@ -230,116 +222,29 @@ const PatientTelemedicine = () => {
                                 placeholder="Describe your symptoms briefly..."
                                 value={reason}
                                 onChange={(e) => setReason(e.target.value)}
-                                disabled
+                                disabled={!!state.reason}
                             ></textarea>
                         </div>
-                        <button
-                            type="submit"
-                            className="btn_tele_primary"
-                            disabled={requesting || !selectedDoctor || !preferredDate}
-                        >
-                            {requesting
-                                ? <><Loader2 size={16} className="tele_spin" /> Submitting...</>
-                                : <><Video size={16} /> Request Video Session</>
-                            }
-                        </button>
+                        <div className="form_actions_tele">
+                            <button
+                                type="button"
+                                className="btn_tele_secondary"
+                                onClick={() => navigate(`/telemedicine/sessions/${patientId}`)}
+                            >
+                                Back to My Sessions
+                            </button>
+                            <button
+                                type="submit"
+                                className="btn_tele_primary"
+                                disabled={requesting || !selectedDoctor || !preferredDate}
+                            >
+                                {requesting
+                                    ? <><Loader2 size={16} className="tele_spin" /> Submitting...</>
+                                    : <><Video size={16} /> Request Video Session</>
+                                }
+                            </button>
+                        </div>
                     </form>
-                </div>
-
-                {/* Sessions Table */}
-                <div className="card_tele_patient">
-                    <div className="card_tele_section_header">
-                        <div className="card_tele_icon purple"><Calendar size={18} /></div>
-                        <div style={{ flex: 1 }}>
-                            <h3>My Sessions</h3>
-                            <p>View and manage your consultations</p>
-                        </div>
-                        <div className="filter_controls_tele">
-                            <select
-                                value={statusFilter}
-                                onChange={e => setStatusFilter(e.target.value)}
-                                className="filter_select_tele"
-                            >
-                                {STATUS_OPTIONS.map(s => (
-                                    <option key={s} value={s}>
-                                        {s === 'ALL' ? 'All Statuses' : s.replace(/_/g, ' ')}
-                                    </option>
-                                ))}
-                            </select>
-                            <select
-                                value={sortOrder}
-                                onChange={e => setSortOrder(e.target.value)}
-                                className="filter_select_tele"
-                            >
-                                <option value="desc">Newest First</option>
-                                <option value="asc">Oldest First</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div style={{ overflowX: 'auto' }}>
-                        {loading ? (
-                            <div className="tele_loading_state">
-                                <Loader2 size={32} className="tele_spin" />
-                                <p>Loading your sessions...</p>
-                            </div>
-                        ) : filteredSessions.length === 0 ? (
-                            <div className="tele_empty_state">
-                                <Calendar size={48} />
-                                <h4>{sessions.length === 0 ? 'No sessions yet' : 'No matching sessions'}</h4>
-                                <p>{sessions.length === 0
-                                    ? 'Request your first video consultation above.'
-                                    : 'Try adjusting the filter.'}
-                                </p>
-                            </div>
-                        ) : (
-                            <table className="table_tele">
-                                <thead>
-                                    <tr>
-                                        <th>Doctor</th>
-                                        <th>Date &amp; Time</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredSessions.map(session => (
-                                        <tr key={session.sessionId}>
-                                            <td>
-                                                <div className="table_tele_person_cell">
-                                                    <div className="table_tele_avatar blue_avatar">
-                                                        {(session.doctorName || 'D').charAt(0).toUpperCase()}
-                                                    </div>
-                                                    {session.doctorName || session.doctorId}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="table_tele_date_cell">
-                                                    <Clock size={13} />
-                                                    {new Date(session.scheduledAt || session.preferredAt).toLocaleString()}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span className={`status_badge status_${(session.status || '').toLowerCase()}`}>
-                                                    {session.status?.replace(/_/g, ' ')}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                {(session.status === 'SCHEDULED' || session.status === 'ACTIVE') && (
-                                                    <button
-                                                        className="btn_join_tele"
-                                                        onClick={() => handleJoinSession(session.sessionId)}
-                                                    >
-                                                        <Video size={14} /> Join Room
-                                                    </button>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        )}
-                    </div>
                 </div>
             </div>
         </div>

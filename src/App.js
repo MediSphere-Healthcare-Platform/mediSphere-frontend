@@ -41,6 +41,7 @@ import DoctorTelemedicine from './Components/telemedicine/DoctorTelemedicine';
 import VideoRoom from './Components/telemedicine/VideoRoom';
 import PrescribeMedicine from './Components/telemedicine/PrescribeMedicine';
 import DoctorPrescriptions from './Components/telemedicine/DoctorPrescriptions';
+import PatientSessions from './Components/telemedicine/PatientSessions';
 
 // AI Symptom Check Components
 import SymptomChecker from './Components/AIsymptomcheck/SymptomChecker';
@@ -103,7 +104,8 @@ function AppContent() {
           <Route path="/prescriptions/:patientId" element={<PatientPrescriptions_paprescription />} />
           <Route path="/payment/:appointmentId" element={<PatientPayment />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path="/telemedicine/patient/:patientId" element={<PatientTelemedicine />} />
+          <Route path="/telemedicine/request/:patientId" element={<PatientTelemedicine />} />
+          <Route path="/telemedicine/sessions/:patientId" element={<PatientSessions />} />
           <Route path="/telemedicine/room/:sessionId" element={<VideoRoom />} />
           <Route path="/symptom-check/:patientId" element={<SymptomChecker />} />
           <Route path="/symptom-history/:patientId" element={<SymptomHistory />} />
