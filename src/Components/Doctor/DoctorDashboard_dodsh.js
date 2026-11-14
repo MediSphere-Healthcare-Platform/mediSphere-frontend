@@ -226,7 +226,7 @@ const DoctorDashboard_dodsh = ({ doctorId: propDoctorId = "UD102616" }) => {
                     </div>
                 </div>
                 <p style={{ fontSize: '12px', color: '#64748b', margin: 0 }}>
-                    Connected to Doctor Service on <strong>port 8085</strong>. 
+                    Connected via API Gateway on <strong>port 8080</strong>. 
                     Data fetched dynamically. Found <strong>{stats.totalAppointments}</strong> appointments in system.
                 </p>
                 {stats.totalAppointments === 0 && (

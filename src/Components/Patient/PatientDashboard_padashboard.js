@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import {
-    Calendar, History, FileText, Pill, Video,
+    Calendar, History, FileText, Pill, Video, ExternalLink,
     ChevronRight, ArrowUpRight, CheckCircle2, AlertCircle, Loader2,
     Database, Network
 } from 'lucide-react';
-import api from '../../services/api';
+import api, { telemedicineApi } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import './PatientDashboard_padashboard.css';
 
 const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
     const { patientId: urlPatientId } = useParams();
+    const navigate = useNavigate();
     const { user } = useAuth();
     // Priority: URL param > auth context > prop fallback
     const resolvedId = urlPatientId || user?.patientId || propPatientId || '';
@@ -116,28 +117,51 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
 
         const fetchActiveSessions = async () => {
             setStats(prev => ({ ...prev, loading: { ...prev.loading, sessions: true } }));
+            let foundSessions = [];
+
+            // 1. Fetch from Telemedicine service via API Gateway / direct 8086
             try {
-                // Endpoint defined in PatientController: /telemedicine/sessions/patient/{patientId}
-                const res = await api.get(`telemedicine/sessions/patient/${currentId}`);
-                const sessionData = res.data.data || res.data || [];
-                setStats(prev => ({
-                    ...prev,
-                    activeSessions: Array.isArray(sessionData) ? sessionData.filter(s => s.status === 'ACTIVE' || s.status === 'OPEN') : [],
-                    loading: { ...prev.loading, sessions: false }
-                }));
+                const res = await telemedicineApi.get(`patient/${currentId}`);
+                const data = res.data?.data || res.data || [];
+                if (Array.isArray(data)) {
+                    foundSessions = data.filter(s => s.status === 'ACTIVE' || s.status === 'SCHEDULED' || s.status === 'OPEN');
+                }
             } catch (err) {
-                console.error("[Sessions Fetch Error]", err);
-                setStats(prev => ({
-                    ...prev,
-                    loading: { ...prev.loading, sessions: false }
-                }));
+                // Microservice route might be offline or empty
             }
+
+            // 2. Sync from live Doctor sessions started in localStorage
+            try {
+                const storedSessions = JSON.parse(localStorage.getItem('medisphere_active_sessions') || '{}');
+                Object.values(storedSessions).forEach(s => {
+                    if (s && s.status === 'ACTIVE') {
+                        // Include if assigned to this patient or if patientId is empty during testing
+                        if (!s.patientId || s.patientId === currentId) {
+                            if (!foundSessions.some(f => f.appointmentReferenceId === s.appointmentReferenceId || f.roomName === s.roomName)) {
+                                foundSessions.push(s);
+                            }
+                        }
+                    }
+                });
+            } catch (e) {
+                console.warn('[Session Sync Error]', e);
+            }
+
+            setStats(prev => ({
+                ...prev,
+                activeSessions: foundSessions,
+                loading: { ...prev.loading, sessions: false }
+            }));
         };
 
         fetchPatientInfo();
         fetchAppointments();
         fetchReports();
         fetchActiveSessions();
+
+        // Auto-refresh active sessions every 6 seconds so incoming doctor calls appear live
+        const intervalId = setInterval(fetchActiveSessions, 6000);
+        return () => clearInterval(intervalId);
     }, [currentId]);
 
     const isLoading = stats.loading.patient;
@@ -159,7 +183,7 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
     return (
         <div className="container_padashboard">
             {/* Hero Section */}
-            <div className="hero_img">
+            <div className="hero_img" style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/heroimg.png)` }}>
                 <div className="hero_padashboard">
                     <div className="heroContent_padashboard">
                         <div className="heroBadge_padashboard">
@@ -230,12 +254,26 @@ const PatientDashboard_padashboard = ({ patientId: propPatientId }) => {
                                                 <p>Started at {new Date(session.startTime || session.scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                                             </div>
                                         </div>
-                                        <button
-                                            className="joinSessionBtn_padashboard"
-                                            onClick={() => window.open(session.roomUrl, '_blank')}
-                                        >
-                                            Join Consultation
-                                        </button>
+                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                            <button
+                                                className="joinSessionBtn_padashboard"
+                                                onClick={() => {
+                                                    const targetRef = session.appointmentReferenceId || session.sessionId;
+                                                    navigate(`/patient/consultation/${targetRef}`, { state: { session } });
+                                                }}
+                                                style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                                            >
+                                                <Video size={16} /> Join Consultation
+                                            </button>
+                                            <button
+                                                className="joinSessionBtn_padashboard"
+                                                style={{ background: '#334155', padding: '10px 14px' }}
+                                                onClick={() => window.open(session.roomUrl, '_blank')}
+                                                title="Open video in a new browser tab"
+                                            >
+                                                <ExternalLink size={16} />
+                                            </button>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

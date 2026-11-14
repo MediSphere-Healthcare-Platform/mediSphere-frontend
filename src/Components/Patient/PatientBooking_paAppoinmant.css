@@ -11,7 +11,7 @@
 
 /* Splash-Style Hero Section */
 .hero_img_booking {
-  background-image: url("https://wallpapercave.com/wp/Ex9MlTC.jpg");
+  background-image: url("https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=1920&q=80");
   background-size: cover;
   background-position: center;
   width: 100vw;
@@ -232,11 +232,11 @@
 .modal_paAppoinmant {
   background: white;
   width: 95%;
-  max-width: 700px;
+  max-width: 640px;
   max-height: 90vh;
-  overflow: hidden;
-  padding: 40px;
-  border-radius: 40px;
+  overflow-y: auto;
+  padding: 32px;
+  border-radius: 28px;
   box-shadow: 0 40px 100px rgba(0, 0, 0, 0.2);
   animation: modalSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -354,6 +354,348 @@
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
+}
+
+/* Payment Modal Enhancements */
+.paymentSummary_paAppoinmant {
+  background: var(--bg-soft);
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-light);
+}
+
+.paymentSummaryRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--text-muted);
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.08);
+}
+
+.paymentSummaryRow:last-child {
+  border-bottom: none;
+}
+
+.paymentSummaryRow strong {
+  color: var(--text-main);
+}
+
+.paymentAmountBox_paAppoinmant {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border: 1px solid #bfdbfe;
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 25px;
+}
+
+.paymentAmountBox_paAppoinmant span {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e40af;
+}
+
+.paymentAmountBox_paAppoinmant h3 {
+  font-size: 24px;
+  font-weight: 900;
+  color: #1d4ed8;
+  margin: 0;
+}
+
+.paymentOptions_paAppoinmant {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.paymentOptionBtn_paAppoinmant {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px 20px;
+  background: white;
+  border: 2px solid var(--border-light);
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.paymentOptionBtn_paAppoinmant:hover {
+  border-color: var(--primary);
+  background: #f8faff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.12);
+}
+
+.paymentOptionBtn_paAppoinmant.primary_pay {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+}
+
+.paymentOptionBtn_paAppoinmant.primary_pay:hover {
+  background: #1d4ed8;
+}
+
+.paymentOptionBtn_paAppoinmant.sim_pay {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.paymentOptionBtn_paAppoinmant.sim_pay:hover {
+  background: #dcfce7;
+  border-color: #22c55e;
+}
+
+.paymentSuccessBox_paAppoinmant {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.paySuccessIcon_paAppoinmant {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #16a34a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+}
+
+.paymentSuccessBox_paAppoinmant h3 {
+  font-size: 24px;
+  font-weight: 800;
+  color: #15803d;
+  margin-bottom: 10px;
+}
+
+.paymentSuccessBox_paAppoinmant p {
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.payBadgePaid {
+  display: inline-block;
+  background: #dcfce7;
+  color: #15803d;
+  font-weight: 800;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  border: 1px solid #86efac;
+}
+
+/* Realistic 3D Card Preview */
+.cardPreviewBox {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #1d4ed8 100%);
+  border-radius: 20px;
+  padding: 22px 24px;
+  color: white;
+  margin-bottom: 20px;
+  box-shadow: 0 15px 35px rgba(30, 58, 138, 0.28);
+  position: relative;
+  overflow: hidden;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.cardPreviewBox::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+}
+
+.cardTopRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cardChip {
+  width: 44px;
+  height: 32px;
+  background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%);
+  border-radius: 6px;
+  border: 1px solid #d97706;
+}
+
+.cardBrandName {
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 0.1em;
+  font-style: italic;
+  font-family: system-ui, sans-serif;
+}
+
+.cardNumberDisplay {
+  font-size: 20px;
+  letter-spacing: 0.15em;
+  margin-bottom: 18px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cardBottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-family: system-ui, sans-serif;
+}
+
+.cardHolderDisplay small,
+.cardExpiresDisplay small {
+  display: block;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+  margin-bottom: 2px;
+}
+
+.cardHolderDisplay span,
+.cardExpiresDisplay span {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Card Inputs */
+.cardFormGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.cardInputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cardInputWrapper label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cardInputWrapper input {
+  padding: 13px 16px;
+  background: var(--bg-soft);
+  border: 1.5px solid var(--border-light);
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-main);
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.cardInputWrapper input:focus {
+  border-color: var(--primary);
+  background: white;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.cardRowDual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.sandboxPill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f0fdf4;
+  border: 1px dashed #86efac;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #166534;
+  margin-bottom: 16px;
+}
+
+.sandboxAutoFillBtn {
+  background: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sandboxAutoFillBtn:hover {
+  background: #15803d;
+}
+
+.payTabsNav {
+  display: flex;
+  border-bottom: 2px solid var(--border-light);
+  margin-bottom: 20px;
+  gap: 8px;
+}
+
+.payTabBtn {
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.payTabBtn.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.securityNote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 14px;
 }
 
 @media (max-width: 768px) {

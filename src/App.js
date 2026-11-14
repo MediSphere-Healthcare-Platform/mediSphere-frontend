@@ -13,6 +13,7 @@ import PatientBooking_paAppoinmant from './Components/Patient/PatientBooking_paA
 import PatientHistory_pahistory from './Components/Patient/PatientHistory_pahistory';
 import PatientReports_pareports from './Components/Patient/PatientReports_pareports';
 import PatientPrescriptions_paprescription from './Components/Patient/PatientPrescriptions_paprescription';
+import PatientConsultation_paconsult from './Components/Patient/PatientConsultation_paconsult';
 
 // Auth Components
 import Login from './Components/Login/Login';
@@ -24,6 +25,7 @@ import DoctorDashboard_dodsh from './Components/Doctor/DoctorDashboard_dodsh';
 import DoctorProfile_doprof from './Components/Doctor/DoctorProfile_doprof';
 import DoctorAppointments_doappt from './Components/Doctor/DoctorAppointments_doappt';
 import PatientReportViewer_dorep from './Components/Doctor/PatientReportViewer_dorep';
+import DoctorConsultation_docon from './Components/Doctor/DoctorConsultation_docon';
 // Admin Components
 import AdminNavbar_admin from './Components/NavBar/AdminNavbar_admin';
 import AdminDashboard_admin from './Components/Admin/AdminDashboard_admin';
@@ -87,6 +89,8 @@ function AppContent() {
           <Route path="/history/:patientId" element={<PatientHistory_pahistory />} />
           <Route path="/reports/:patientId" element={<PatientReports_pareports />} />
           <Route path="/prescriptions/:patientId" element={<PatientPrescriptions_paprescription />} />
+          <Route path="/patient/consultation/:appointmentReferenceId" element={<PatientConsultation_paconsult />} />
+          <Route path="/consultation/:appointmentReferenceId" element={<PatientConsultation_paconsult />} />
 
           {/* Doctor Routes — all use dynamic :doctorId from URL */}
           <Route path="/doctor/dashboard/:doctorId" element={<DoctorDashboard_dodsh />} />
@@ -94,6 +98,8 @@ function AppContent() {
           <Route path="/doctor/appointments/:doctorId" element={<DoctorAppointments_doappt />} />
           <Route path="/doctor/reports/:doctorId" element={<PatientReportViewer_dorep />} />
           <Route path="/doctor/patients/:doctorId" element={<PatientReportViewer_dorep />} />
+          <Route path="/doctor/consultation/:appointmentReferenceId" element={<DoctorConsultation_docon />} />
+          <Route path="/doctor/session/:referenceId" element={<DoctorConsultation_docon />} />
 
           {/* Admin Routes */}
           <Route path="/admin/dashboard" element={<AdminDashboard_admin />} />

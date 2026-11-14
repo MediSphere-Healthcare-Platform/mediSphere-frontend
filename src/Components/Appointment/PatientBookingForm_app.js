@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { X, Calendar, Clock, MessageSquare, Send } from 'lucide-react';
+import { patientApi } from '../../services/api';
 import './PatientBookingForm_app.css';
 
 const PatientBookingForm_app = ({ doctor, patientId, existingAppointment = null, onClose, onSuccess }) => {
@@ -23,7 +23,7 @@ const PatientBookingForm_app = ({ doctor, patientId, existingAppointment = null,
                     appointmentTime: formData.appointmentTime,
                     reason: formData.reason
                 };
-                await axios.put('http://localhost:8084/patient/api/v1/updateAppointment', payload);
+                await patientApi.put('updateAppointment', payload);
                 alert('Appointment updated successfully!');
             } else {
                 const payload = {
@@ -34,7 +34,7 @@ const PatientBookingForm_app = ({ doctor, patientId, existingAppointment = null,
                     appointmentTime: formData.appointmentTime,
                     reason: formData.reason
                 };
-                await axios.post('http://localhost:8084/patient/api/v1/appointments/bookAppointment', payload);
+                await patientApi.post('appointments/bookAppointment', payload);
                 alert('Appointment booked successfully!');
             }
             onSuccess();

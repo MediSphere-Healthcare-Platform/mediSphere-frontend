@@ -103,9 +103,7 @@ const Registration = () => {
             if (err.response?.data?.message) {
                 setError(err.response.data.message);
             } else if (err.request) {
-                const serviceName = role === 'patient' ? 'Auth' : 'Admin';
-                const port = role === 'patient' ? '8083' : '8089';
-                setError(`Could not connect to ${serviceName} service. Please ensure it is running on port ${port}.`);
+                setError('Could not connect to API Gateway. Please ensure it is running on port 8080.');
             } else {
                 setError('Registration failed. Please try again.');
             }

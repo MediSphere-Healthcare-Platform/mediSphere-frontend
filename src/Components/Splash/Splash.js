@@ -38,7 +38,7 @@ const Splash = () => {
 
             {/* ─── HERO SECTION ─────────────────────────────────── */}
             <section className="hero_splash">
-                <div className="hero-bg-image_splash"></div>
+                <div className="hero-bg-image_splash" style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/heroimg.png)` }}></div>
                 <div className="hero-overlay_splash"></div>
 
                 {/* Floating particles */}
@@ -86,9 +86,10 @@ const Splash = () => {
                 {/* Hero Image */}
                 <div className="hero-image-floater_splash reveal_splash" ref={addToRefs}>
                     <img
-                        src="https://images.unsplash.com/photo-1666214280557-f1b5022eb634?auto=format&fit=crop&w=900&q=80"
-                        alt="Modern healthcare professional"
+                        src={`${process.env.PUBLIC_URL}/heroimg.png`}
+                        alt="MediSphere Modern Healthcare"
                         className="hero-img_splash"
+                        onError={(e) => { e.target.src = '/heroimg.png'; }}
                     />
                 </div>
 

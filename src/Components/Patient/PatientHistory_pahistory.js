@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Calendar, Clock, ChevronRight, Activity, ClipboardList, CheckCircle2, XCircle } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Calendar, Clock, ChevronRight, Activity, ClipboardList, CheckCircle2, XCircle, Video } from 'lucide-react';
 import api from '../../services/api';
 import './PatientHistory_pahistory.css';
 
 const PatientHistory_pahistory = ({ patientId: propPatientId = "P002" }) => {
     const { patientId: urlPatientId } = useParams();
+    const navigate = useNavigate();
     const patientId = urlPatientId || propPatientId;
 
     const [appointments, setAppointments] = useState([]);
@@ -73,6 +74,15 @@ const PatientHistory_pahistory = ({ patientId: propPatientId = "P002" }) => {
                                         <p><Clock size={14} /> <strong>Time:</strong> {app.appointmentTime}</p>
                                         <p><ClipboardList size={14} /> <strong>Reason:</strong> {app.reason || 'Routine Checkup'}</p>
                                     </div>
+                                    {['APPROVED', 'PAID', 'CONFIRMED'].includes(app.status?.toUpperCase()) && (
+                                        <button 
+                                            className="viewPresBtn_pahistory"
+                                            style={{ background: '#2563eb', color: 'white', marginTop: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}
+                                            onClick={() => navigate(`/patient/consultation/${app.appointmentReferenceId || app.appointmentId}`)}
+                                        >
+                                            <Video size={16} /> Join Live Consultation (Jitsi) <ChevronRight size={16} />
+                                        </button>
+                                    )}
                                     {app.status === 'Completed' && (
                                         <button className="viewPresBtn_pahistory">
                                             View Details <ChevronRight size={16} />

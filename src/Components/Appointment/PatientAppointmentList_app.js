@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Calendar, Clock, Edit3, Trash2, RefreshCw, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Calendar, Clock, Edit3, Trash2, RefreshCw, AlertCircle, Video } from 'lucide-react';
+import { patientApi } from '../../services/api';
 import PatientBookingForm_app from './PatientBookingForm_app';
 import './PatientAppointmentList_app.css';
 
 const PatientAppointmentList_app = ({ patientId }) => {
+    const navigate = useNavigate();
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [editingAppointment, setEditingAppointment] = useState(null);
@@ -16,8 +18,10 @@ const PatientAppointmentList_app = ({ patientId }) => {
     const fetchAppointments = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8084/patient/api/v1/appointments/allAppointmentsByPatientId/${patientId}`);
-            setAppointments(response.data || []);
+            const response = await patientApi.get(`appointments/allAppointmentsByPatientId/${patientId}`);
+            const resData = response.data?.data !== undefined ? response.data.data : response.data;
+            const appointmentData = Array.isArray(resData) ? resData : (resData?.patientAppointments || []);
+            setAppointments(appointmentData);
         } catch (err) {
             console.error("Failed to fetch appointments:", err);
         } finally {
@@ -28,7 +32,7 @@ const PatientAppointmentList_app = ({ patientId }) => {
     const handleDelete = async (refId) => {
         if (!window.confirm("Are you sure you want to cancel this appointment?")) return;
         try {
-            await axios.delete(`http://localhost:8084/patient/api/v1/appointments/cancel/${refId}`);
+            await patientApi.delete(`appointments/cancel/${refId}`);
             alert("Appointment cancelled successfully.");
             fetchAppointments();
         } catch (err) {
@@ -70,6 +74,15 @@ const PatientAppointmentList_app = ({ patientId }) => {
                                 </div>
 
                                 <div className="apptActions_app">
+                                    {['APPROVED', 'PAID', 'CONFIRMED'].includes(appt.status?.toUpperCase()) && (
+                                        <button 
+                                            className="actionBtn_app"
+                                            style={{ background: '#2563eb', color: 'white', border: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
+                                            onClick={() => navigate(`/patient/consultation/${appt.appointmentReferenceId}`)}
+                                        >
+                                            <Video size={16} /> Join Video
+                                        </button>
+                                    )}
                                     <button 
                                         className="actionBtn_app editBtn_app" 
                                         onClick={() => setEditingAppointment(appt)}

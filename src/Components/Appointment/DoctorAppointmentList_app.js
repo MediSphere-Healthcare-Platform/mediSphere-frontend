@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Calendar, Clock, Video, CheckCircle, XCircle, User, MessageSquare } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { doctorApi } from '../../services/api';
 import './DoctorAppointmentList_app.css';
 
 const DoctorAppointmentList_app = ({ doctorId }) => {
@@ -16,8 +16,10 @@ const DoctorAppointmentList_app = ({ doctorId }) => {
     const fetchAppointments = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://localhost:8084/doctor/api/v1/appointments/allAppointmentsByDoctorId/${doctorId}`);
-            setAppointments(response.data || []);
+            const response = await doctorApi.get(`appointments/allAppointmentsByDoctorId/${doctorId}`);
+            const resData = response.data?.data !== undefined ? response.data.data : response.data;
+            const appointmentData = Array.isArray(resData) ? resData : (resData?.doctorAppointments || []);
+            setAppointments(appointmentData);
         } catch (err) {
             console.error("Failed to fetch doctor appointments:", err);
         } finally {
@@ -31,7 +33,7 @@ const DoctorAppointmentList_app = ({ doctorId }) => {
                 appointmentReferenceId: refId,
                 status: newStatus
             };
-            await axios.put('http://localhost:8084/doctor/api/v1/appointments/appointmentStatusChange', payload);
+            await doctorApi.put('appointments/appointmentStatusChange', payload);
             alert(`Appointment ${newStatus.toLowerCase()} successfully.`);
             fetchAppointments();
         } catch (err) {
@@ -93,7 +95,7 @@ const DoctorAppointmentList_app = ({ doctorId }) => {
                                 </div>
                             )}
 
-                            {appt.status === 'APPROVED' && (
+                            {['APPROVED', 'PAID', 'CONFIRMED'].includes(appt.status?.toUpperCase()) && (
                                 <button className="btnConduct_app" onClick={() => handleConductSession(appt.appointmentReferenceId)}>
                                     <Video size={18} /> Conduct Online Session
                                 </button>

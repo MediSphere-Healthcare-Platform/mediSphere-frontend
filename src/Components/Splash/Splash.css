@@ -42,10 +42,11 @@
 .hero-bg-image_splash {
     position: absolute;
     inset: 0;
-    background:
-        url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1600&q=30')
-        center/cover no-repeat;
-    opacity: 0.07;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.14;
+    filter: blur(8px);
     z-index: 0;
 }
 
@@ -199,9 +200,11 @@
     width: 100%;
     border-radius: 32px;
     object-fit: cover;
-    height: 600px;
+    height: auto;
+    max-height: 540px;
     box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
     display: block;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .floater-card_splash {

@@ -61,7 +61,7 @@ const AdminLogin = () => {
             if (err.response?.status === 403 || err.response?.status === 401) {
                 setError('Invalid admin credentials. Please try again.');
             } else if (err.request) {
-                setError('Could not connect to auth service. Make sure it is running on port 8083.');
+                setError('Could not connect to API Gateway. Make sure it is running on port 8080.');
             } else {
                 setError('An unexpected error occurred. Please try again.');
             }

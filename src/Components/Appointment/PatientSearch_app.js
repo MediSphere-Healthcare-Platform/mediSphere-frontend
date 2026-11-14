@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Search, MapPin, Star, Clock, Briefcase, ArrowRight } from 'lucide-react';
+import { patientApi } from '../../services/api';
 import PatientBookingForm_app from './PatientBookingForm_app';
 import './PatientSearch_app.css';
 
@@ -18,9 +18,9 @@ const PatientSearch_app = ({ patientId }) => {
 
     const fetchDoctors = async () => {
         try {
-            const response = await axios.get('http://localhost:8084/patient/api/v1/getAllDoctors');
-            const docs = response.data.data || [];
-            setDoctors(docs);
+            const response = await patientApi.get('getAllDoctors');
+            const docs = response.data?.data || response.data || [];
+            setDoctors(Array.isArray(docs) ? docs : []);
             
             // Extract distinct specialties
             const uniqueSpecs = ['All', ...new Set(docs.map(d => d.specialty).filter(Boolean))];
